@@ -64,6 +64,7 @@ export default function typographyTransform() {
 }
 
 function toTitleCase(input: string): string {
+  if (input === 'ui') return 'UI'
   return input.replace(/\w\S*/g, function (word) {
     return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()
   })
