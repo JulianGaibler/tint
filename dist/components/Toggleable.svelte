@@ -62,20 +62,21 @@ input:not(:disabled):hover, button:not(:disabled):hover {
 input:not(:disabled):active, button:not(:disabled):active {
   background-color: var(--tint-action-secondary-active);
 }
-input:checked, button:checked {
-  border-color: transparent;
-  background-color: var(--tint-action);
-}
-input:checked:not(:disabled):hover, button:checked:not(:disabled):hover {
-  background-color: var(--tint-action-primary-hover);
-}
-input:checked:not(:disabled):active, button:checked:not(:disabled):active {
-  background-color: var(--tint-action-primary-active);
-}
 input::before, button::before {
   content: "";
   display: none;
   background: currentColor;
+}
+
+input:checked, button[aria-checked=true] {
+  border-color: transparent;
+  background-color: var(--tint-action);
+}
+input:checked:not(:disabled):hover, button[aria-checked=true]:not(:disabled):hover {
+  background-color: var(--tint-action-primary-hover);
+}
+input:checked:not(:disabled):active, button[aria-checked=true]:not(:disabled):active {
+  background-color: var(--tint-action-primary-active);
 }
 
 button[role=switch] {
