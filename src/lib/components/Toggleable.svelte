@@ -63,17 +63,18 @@ input, button
     background-color: var(--tint-action-secondary-hover)
   &:not(:disabled):active
     background-color: var(--tint-action-secondary-active)
-  &:checked
-    border-color: transparent
-    background-color: var(--tint-action)
-    &:not(:disabled):hover
-      background-color: var(--tint-action-primary-hover)
-    &:not(:disabled):active
-      background-color: var(--tint-action-primary-active)
   &::before
     content: ""
     display: none
     background: currentColor
+
+input:checked, button[aria-checked="true"]
+  border-color: transparent
+  background-color: var(--tint-action)
+  &:not(:disabled):hover
+    background-color: var(--tint-action-primary-hover)
+  &:not(:disabled):active
+    background-color: var(--tint-action-primary-active)
 
 button[role="switch"]
   width: tint.$size-40
