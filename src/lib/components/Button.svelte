@@ -5,6 +5,8 @@
   export let small = false
   // Expects an icon to be passed in the slot if true
   export let icon = false
+  // If true or false, the button will be a toggle button @type {boolean | undefined}
+  export let toggled: boolean | undefined = undefined
   // Button can act as a link if href is provided @type {string | undefined}
   export let href: string | undefined = undefined
   // If href is provided, this will open the link in a new tab
@@ -23,6 +25,17 @@
   if (icon && !title && !ariaLabel) {
     throw new Error('[tint] Icon buttons need at least a title or aria-label')
   }
+  if (variant === 'primary' && toggled !== undefined) {
+    throw new Error('[tint] Primary buttons cannot be toggled')
+  }
+  if (href && toggled !== undefined) {
+    throw new Error('[tint] Links cannot be toggled')
+  }
+
+  $: role = toggled !== undefined ? 'switch' : undefined
+  $: ariaPressed = toggled !== undefined ? toggled : undefined
+  $: _variant =
+    toggled === undefined ? variant : toggled ? 'primary' : 'secondary'
 </script>
 
 {#if href && disabled}
@@ -32,7 +45,7 @@
     aria-disabled="true"
     aria-label={ariaLabel}
     {title}
-    class={`tint--type-action ${variant}`}><slot /></span
+    class={`tint--type-action ${_variant}`}><slot /></span
   >
 {:else if href}
   <a
@@ -42,7 +55,7 @@
     aria-label={ariaLabel}
     {title}
     {download}
-    class={`tint--type-action ${variant}`}
+    class={`tint--type-action ${_variant}`}
     target={external ? '_blank' : undefined}
     rel={external ? 'noopener' : undefined}><slot /></a
   >
@@ -50,12 +63,14 @@
   <button
     on:click|stopPropagation
     type={submit ? 'submit' : 'button'}
+    {role}
+    aria-pressed={ariaPressed}
     {disabled}
     class:small
     class:icon
     {title}
     aria-label={ariaLabel}
-    class={`tint--type-action ${variant}`}><slot /></button
+    class={`tint--type-action ${_variant}`}><slot /></button
   >
 {/if}
 

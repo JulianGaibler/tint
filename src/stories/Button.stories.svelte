@@ -10,6 +10,10 @@
         control: 'inline-radio',
         options: ['primary', 'secondary', 'ghost'],
       },
+      toggled: {
+        control: 'boolean',
+        defaultValue: undefined,
+      },
       href: {
         control: 'text',
       },

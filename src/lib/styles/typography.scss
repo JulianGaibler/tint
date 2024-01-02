@@ -66,6 +66,40 @@ $typography-styles: (
     font-family: 'HK Grotesk',
     font-weight: 500,
   ),
+  // UI
+  ui:
+    (
+      font-size: 0.875rem,
+      font-family: 'HK Grotesk',
+      font-weight: 500,
+    ),
+  ui-small: (
+    font-size: 0.75rem,
+    font-family: 'HK Grotesk',
+    font-weight: 500,
+  ),
+  ui-bold: (
+    font-size: 0.875rem,
+    font-family: 'HK Grotesk',
+    font-weight: 700,
+  ),
+  ui-small-bold: (
+    font-size: 0.75rem,
+    font-family: 'HK Grotesk',
+    font-weight: 700,
+  ),
+  ui-italic: (
+    font-size: 0.875rem,
+    font-family: 'HK Grotesk',
+    font-weight: 500,
+    font-style: italic,
+  ),
+  ui-small-italic: (
+    font-size: 0.75rem,
+    font-family: 'HK Grotesk',
+    font-weight: 500,
+    font-style: italic,
+  ),
   // Body
   body-serif-large:
     (
