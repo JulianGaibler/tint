@@ -51,8 +51,8 @@ input, button
   appearance: none
   background-color: transparent
   margin: 0
-  width: tint.$size-small
-  height: tint.$size-small
+  width: tint.$size-24
+  height: tint.$size-24
   border: tint.$button-border-width solid var(--tint-action)
   transform: translateY(-0.075em)
   display: flex
@@ -76,7 +76,7 @@ input, button
     background: currentColor
 
 button[role="switch"]
-  width: tint.$size-large
+  width: tint.$size-40
   color: var(--tint-action)
   transform: translateY(-0.075em) // ???
   justify-content: flex-start
@@ -85,11 +85,11 @@ button[role="switch"]
     // prevent weird bug in Chrome
     display: block
     forced-color-adjust: none
-    width: tint.$size-xxsmall
-    height: tint.$size-xxsmall
+    width: tint.$size-12
+    height: tint.$size-12
     border-radius: 50%
     position: relative
-    left: math.div(tint.$size-small - tint.$size-xxsmall, 2) - 1px
+    left: math.div(tint.$size-24 - tint.$size-12, 2) - 1px
     transition: left 0.1s ease-out
     @media (prefers-reduced-motion: reduce)
       transition: none
@@ -97,10 +97,10 @@ button[role="switch"]
     background-color: var(--tint-action)
     color: var(--tint-action-text)
     &::before
-      left: tint.$size-large - tint.$size-xxsmall - math.div(tint.$size-small - tint.$size-xxsmall, 2) - 1px
+      left: tint.$size-40 - tint.$size-12 - math.div(tint.$size-24 - tint.$size-12, 2) - 1px
 
 input[type="checkbox"]
-  border-radius: tint.$size-xxxxsmall
+  border-radius: tint.$size-4
   &::before
     width: 14px
     height: 14px
@@ -110,8 +110,8 @@ input[type="checkbox"]
 input[type="radio"]
   border-radius: 50%
   &::before
-    width: tint.$size-xxsmall
-    height: tint.$size-xxsmall
+    width: tint.$size-12
+    height: tint.$size-12
     border-radius: 50%
 
 input[type="radio"], input[type="checkbox"]
