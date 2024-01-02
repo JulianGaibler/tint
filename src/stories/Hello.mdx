@@ -1,0 +1,27 @@
+import image from './assets/tint-header.png?url'
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Hello" />
+
+<img className="introHeader" src={image} alt="Tint - Design foundation" />
+
+<h1>Hi!</h1>
+
+Tint is the design foundation for my various projects, meant to be used for
+websites, web-apps and extensions. As the word "foundation" implies, it's meant
+to be the foundational layer for a variety of projects with different
+requirements in terms of design and functionality.
+
+This foundation got created after I realized I was re-implementing or
+copy-pasting the same basic components, while having a hard time maintaining
+multiple projects at once. I decided to create a design foundation that I can
+use for all my projects, and that maintain in a single place.
+
+Tint provides SASS/SCSS variables and mixins for colors, typography, and spacing
+in addition to icons and a set of Svelte components. The special thing about
+Tint is that it provides tooling to have two seperate color palettes: One
+regular one and one "tinted" one.
+
+When using the sass bootstrap function `generate-color-variables` tint users can
+switch between the two color palettes by adding `.tint--plain` or `.tint--tinted`
+to any HTML element.

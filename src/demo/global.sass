@@ -1,0 +1,6 @@
+@use '@lib/styles/bootstrap' as bootstrap
+@use './colors'
+
+@include bootstrap.generate-color-variables(colors.$colors)
+
+@include bootstrap.full-bootstrap()

@@ -1,0 +1,78 @@
+@use './font-face-info' as fonts
+@use './typography' as typography
+@use './utils' as utils
+@use 'sass:color'
+
+// Function to generate tint color variables
+@mixin generate-color-variables($colors)
+  :root
+    @each $key, $value in map-get($colors, general)
+      --tint-#{$key}: #{$value}
+  :root, .tint--plain
+    @each $key, $value in map-get($colors, plain)
+      --tint-#{$key}: #{$value}
+  .tint--tinted
+    @each $key, $value in map-get($colors, tint)
+      --tint-#{$key}: #{$value}
+
+// generate-font-faces
+@mixin generate-font-faces($path: '~tint/fonts')
+  @each $font in fonts.$fonts
+    @font-face
+      font-family: map-get($font, family)
+      font-weight: map-get($font, weight)
+      font-style: map-get($font, style)
+      src: url(#{$path}/#{map-get($font, filename)}.woff2) format(woff2)
+
+// Define layers order. If you have more layers, you can use the variable
+$layer-names: tint-reset, tint-typography, tint-global
+@mixin layers()
+  @layer $layer-names
+
+// Define the tint typography classes
+@mixin type-classes()
+  @include typography.generate-tint-classes()
+
+// Define the tint base styles
+@mixin base()
+  @layer tint-reset
+    *, *::before, *::after
+      margin: 0
+      padding: 0
+      font-size: inherit
+      font-family: inherit
+  @layer tint-global
+    body
+      margin: 0
+      background: var(--tint-bg)
+      color: var(--tint-text)
+      font-family: "HK Grotesk"
+      font-weight: 500
+      font-size: 16px
+    h1.tint--type
+      @include typography.type-class(title-serif-1)
+    h2.tint--type
+      @include typography.type-class(title-serif-2)
+    h3.tint--type
+      @include typography.type-class(title-serif-3)
+    .tint--tinted, .tint--plain
+      color: var(--tint-text)
+    a
+      color: inherit
+    .tint--card
+      border-radius: utils.$card-radius
+      border: 1px solid var(--tint-card-border)
+      box-shadow: var(--tint-card-shadow)
+      background: var(--tint-bg)
+    .tint--link
+      color: var(--tint-text-link)
+      text-decoration: none
+      &:hover
+        text-decoration: underline
+
+@mixin full-bootstrap()
+  @include layers()
+  @include base()
+  @layer tint-typography
+    @include type-classes()
+  @include generate-font-faces()
