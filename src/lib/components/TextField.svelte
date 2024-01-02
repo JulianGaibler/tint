@@ -47,7 +47,7 @@
   opacity: 0.5
 .box
   position: relative
-  height: tint.$size-xlarge
+  height: tint.$size-48
   line-height: normal
   > .input
     @include tint.effect-focus
@@ -59,11 +59,11 @@
     width: 100%
     height: 100%
     margin: 0
-    padding: (tint.$size-xxsmall + 7px) tint.$size-xxsmall (tint.$size-xxsmall - 7px) tint.$size-xxsmall
+    padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: tint.$size-xxsmall
+    left: tint.$size-12
     right: initial
     top: 50%
     transform: translateY(-55%) scale(1.166)
@@ -74,7 +74,7 @@
     pointer-events: none
 
 .error .input
-  padding-inline-end: (tint.$size-xxxsmall * 2) + tint.$size-medium
+  padding-inline-end: (tint.$size-8 * 2) + tint.$size-32
 
 .input:focus + label, .input.filled + label, .input:-webkit-autofill + label
   transform: translateY(-106%) scale(1.0)
@@ -85,8 +85,8 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 tint.$size-xxsmall
-  padding-top: tint.$size-xxxxsmall
+  padding: 0 tint.$size-12
+  padding-top: tint.$size-4
 
 .warning-icon
   pointer-events: none
@@ -94,7 +94,7 @@
   right: 0
   top: 0
   line-height: 0
-  margin: tint.$size-xxsmall
+  margin: tint.$size-12
   color: var(--tint-text-accent)
 
 @media (forced-colors: active)

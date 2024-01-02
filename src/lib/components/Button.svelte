@@ -84,7 +84,7 @@ a
 button, a, span
   vertical-align: top
   box-sizing: border-box
-  min-height: tint.$size-xlarge
+  min-height: tint.$size-48
   padding: 8px 24px
   background-color: transparent
   border: tint.$button-border-width solid var(--tint-action)
