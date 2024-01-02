@@ -1,0 +1,43 @@
+import image from './assets/typefaces.png?url'
+import Figure from './utils/Figure'
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Typography/Design" />
+
+# Design
+
+Typography! It's complicated! Tint tries to cover a broad range of use cases
+while keeping the number of styles low. Some styles have been purposefully
+omitted until they are needed. You can browse the available styles in the
+[Library](?path=/docs/typography-library--docs).
+
+## Typefaces
+
+Tint uses two typefaces:
+[Merriweather](https://github.com/SorkinType/Merriweather), a serif typeface,
+and [HK Grotesk](https://hanken.co/products/hk-grotesk), a sans-serif typeface.
+
+<Figure src={image} alt="Merriweather and HK Grotesk">
+  Tint uses Merriweather and HK Grotesk.
+</Figure>
+
+Whether to use a serif or sans-serif typeface is not enforced through the token
+names, and generally depends on the context of where tint is used. Yet there are
+some guidelines that should be followed.
+
+For interactive elements, like inputs, buttons and forms in general, a
+sans-serif typeface should be used. By extension user interfaces of apps and
+extensions, in contrast to content pages, should use a sans-serif typeface.
+Longer body texts, like blog posts, should use the serif typeface.
+
+## Categories
+
+The typography tokens are seperated into multiple categories.
+
+- **Display**: Very large text, used for hero text and other large headings.
+- **Title**: Used for page titles, section titles, and other large headings.
+- **Body**: Used for body text. Primarily aimed aimed at blogs or informational
+  sites.
+- **UI**: Used for user interfaces that are denser, like extensions or apps.
+- **Input**: Used for form input elements.
+- **Action**: Used for buttons and other interactive elements.

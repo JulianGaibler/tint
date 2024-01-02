@@ -1,0 +1,149 @@
+<script lang="ts">
+  // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
+  export let variant: 'primary' | 'secondary' | 'ghost' = 'secondary'
+  // Use small version of the button
+  export let small = false
+  // Expects an icon to be passed in the slot if true
+  export let icon = false
+  // Button can act as a link if href is provided @type {string | undefined}
+  export let href: string | undefined = undefined
+  // If href is provided, this will open the link in a new tab
+  export let external = false
+  // If href is provided, this will download the link @type {string | undefined}
+  export let download: string | undefined = undefined
+  // Disables the button
+  export let disabled = false
+  // If true, the button will be of type submit
+  export let submit = false
+  // title-attribute of the button @type {string | undefined}
+  export let title: string | undefined = undefined
+  // aria-label of the button @type {string | undefined}
+  export let ariaLabel: string | undefined = undefined
+
+  if (icon && !title && !ariaLabel) {
+    throw new Error('[tint] Icon buttons need at least a title or aria-label')
+  }
+</script>
+
+{#if href && disabled}
+  <span
+    class:small
+    class:icon
+    aria-disabled="true"
+    aria-label={ariaLabel}
+    {title}
+    class={`tint--type-action ${variant}`}><slot /></span
+  >
+{:else if href}
+  <a
+    {href}
+    class:small
+    class:icon
+    aria-label={ariaLabel}
+    {title}
+    {download}
+    class={`tint--type-action ${variant}`}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener' : undefined}><slot /></a
+  >
+{:else}
+  <button
+    on:click|stopPropagation
+    type={submit ? 'submit' : 'button'}
+    {disabled}
+    class:small
+    class:icon
+    {title}
+    aria-label={ariaLabel}
+    class={`tint--type-action ${variant}`}><slot /></button
+  >
+{/if}
+
+<style lang="sass">
+a
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  color: inherit
+  text-decoration: none
+button, a, span
+  vertical-align: top
+  box-sizing: border-box
+  min-height: tint.$size-xlarge
+  padding: 8px 24px
+  background-color: transparent
+  border: tint.$button-border-width solid var(--tint-action)
+  color: var(--tint-action)
+  border-radius: tint.$button-radius-large
+  @include tint.effect-focus
+  &.icon
+    padding: 0px
+    display: inline-flex
+    justify-content: center
+    align-items: center
+    width: 48px
+    height: 48px
+  &.small
+    min-height: 32px
+    padding: 2px 16px
+    border-radius: tint.$button-radius-small
+    &.icon
+      padding: 0px
+      width: 32px
+      height: 32px
+  @media (forced-colors: none), (prefers-contrast: no-preference)
+    &:global(.ghost)
+      border-color: transparent
+      outline-offset: 0
+button, a
+  &:not(:disabled):hover
+    background-color: var(--tint-action-secondary-hover)
+  &:not(:disabled):active
+    background-color: var(--tint-action-secondary-active)
+  &:global(.primary)
+    background-color: var(--tint-action)
+    border-color: transparent
+    color: var(--tint-action-text)
+    &:not(:disabled):hover
+      background-color: var(--tint-action-primary-hover)
+    &:not(:disabled):active
+      background-color: var(--tint-action-primary-active)
+
+button:disabled, a:disabled, span
+  opacity: 0.5
+
+@media (forced-colors: active)
+  button, a
+    // this is to prevent a strange backplate issue in chrome
+    forced-color-adjust: none
+    background-color: ButtonFace
+    border-color: ButtonText
+    color: ButtonText
+    &:not(:disabled):hover, &:not(:disabled):active
+      background-color: SelectedItemText
+      border-color: SelectedItem
+      color: SelectedItem
+    &:not(:disabled):active
+      border-color: ButtonText
+    &:disabled
+      opacity: 1
+      background-color: ButtonFace
+      border: 2px solid GrayText
+      color: GrayText
+    // Primary
+    &:global(.primary)
+      background-color: ButtonText
+      border: 2px solid ButtonFace
+      color: ButtonFace
+      &:not(:disabled):hover, &:not(:disabled):active
+        background-color: SelectedItem
+        border-color: SelectedItemText
+        color: SelectedItemText
+      &:not(:disabled):active
+        border-color: SelectedItem
+      &:disabled
+        background-color: GrayText
+        border: 2px solid ButtonFace
+        color: ButtonFace
+
+</style>

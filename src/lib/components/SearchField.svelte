@@ -1,0 +1,101 @@
+<script lang="ts">
+  import Button from './Button.svelte'
+  import IconSearch from '../icons/20-search.svg?raw'
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher()
+
+  // Id of the text field @type {string}
+  export let id: string
+  // Value of the text field (can use bind:value) @type {string}
+  export let value: string
+  // The label of the text field @type {string}
+  export let label = 'Search'
+  // Disables the text field @type {boolean}
+  export let disabled = false
+</script>
+
+<div class="box" class:disabled>
+  <input
+    {id}
+    {disabled}
+    bind:value
+    aria-label={label}
+    placeholder={label}
+    class="input tint--type-input"
+    class:filled={value?.length > 0}
+    on:keydown={(e) => {
+      if (e.key === 'Enter') {
+        dispatch('search', { value })
+      }
+    }}
+  />
+  <Button
+    icon
+    small
+    variant="ghost"
+    disabled={disabled || !value || value.length === 0}
+    ariaLabel="Search"
+    on:click={() => dispatch('search', { value })}
+  >
+    {@html IconSearch}
+  </Button>
+</div>
+
+<style lang="sass">
+.disabled
+  opacity: 0.5
+.box
+  position: relative
+  height: tint.$size-xlarge
+  width: 100%
+  line-height: normal
+  > :global(button)
+    position: absolute
+    right: 0
+    margin: tint.$size-xxxsmall
+    visibility: hidden
+  > .input
+    position: absolute
+    inset: 0
+    @include tint.effect-focus
+    box-sizing: border-box
+    background: transparent
+    border-radius: tint.$input-radius
+    border: 2px solid transparent
+    width: 100%
+    height: 100%
+    margin: 0
+    padding: tint.$size-xxsmall tint.$size-small
+    padding-inline-start: tint.$size-xxxxsmall
+    padding-inline-end: (tint.$size-xxxsmall * 2) + tint.$size-medium
+    transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out
+    @media (prefers-reduced-motion: reduce)
+      transition: none
+    &::placeholder
+      color: var(--tint-text-secondary)
+
+.input:focus, .input.filled, .input:-webkit-autofill
+  padding-inline-start: tint.$size-small
+  background-color: var(--tint-input-bg)
+  & + :global(button)
+    visibility: visible
+// has to be seperate as chrome doesn't apply the rule when using :autofill
+.input:autofill
+  padding-inline-start: tint.$size-small
+  background-color: var(--tint-input-bg)
+  & + :global(button)
+    visibility: visible
+
+@media (forced-colors: active)
+  .box > .input
+    border-color: ButtonText
+    padding-inline-start: tint.$size-small
+  .disabled
+    opacity: 1
+    color: GrayText
+    > .input
+      background-color: ButtonFace
+      color: GrayText
+      border-color: GrayText
+</style>

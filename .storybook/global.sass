@@ -1,0 +1,17 @@
+@use '@lib/styles/bootstrap' as bootstrap
+@use '@demo/colors'
+
+@include bootstrap.generate-color-variables(colors.$colors)
+@include bootstrap.layers()
+@include bootstrap.base()
+@include bootstrap.type-classes()
+
+.docs-type, .sbdocs-preview, .storybook-preview-wrapper
+  @include bootstrap.type-classes()
+
+#storybook-docs
+  p, li
+    font-size: 16px
+
+.introHeader
+  margin-block-end: 2rem
