@@ -2,7 +2,7 @@ import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
         id: string;
-        type?: "checkbox" | "radio" | "switch" | undefined;
+        type?: "switch" | "checkbox" | "radio" | undefined;
         checked: boolean;
         disabled?: boolean | undefined;
         ariaLabel?: string | undefined;

@@ -1,6 +1,7 @@
 <script>export let variant = "secondary";
 export let small = false;
 export let icon = false;
+export let toggled = void 0;
 export let href = void 0;
 export let external = false;
 export let download = void 0;
@@ -11,6 +12,18 @@ export let ariaLabel = void 0;
 if (icon && !title && !ariaLabel) {
   throw new Error("[tint] Icon buttons need at least a title or aria-label");
 }
+if (variant === "primary" && toggled !== void 0) {
+  throw new Error("[tint] Primary buttons cannot be toggled");
+}
+if (href && toggled !== void 0) {
+  throw new Error("[tint] Links cannot be toggled");
+}
+$:
+  role = toggled !== void 0 ? "switch" : void 0;
+$:
+  ariaPressed = toggled !== void 0 ? toggled : void 0;
+$:
+  _variant = toggled === void 0 ? variant : toggled ? "primary" : "secondary";
 </script>
 
 {#if href && disabled}
@@ -20,7 +33,7 @@ if (icon && !title && !ariaLabel) {
     aria-disabled="true"
     aria-label={ariaLabel}
     {title}
-    class={`tint--type-action ${variant}`}><slot /></span
+    class={`tint--type-action ${_variant}`}><slot /></span
   >
 {:else if href}
   <a
@@ -30,7 +43,7 @@ if (icon && !title && !ariaLabel) {
     aria-label={ariaLabel}
     {title}
     {download}
-    class={`tint--type-action ${variant}`}
+    class={`tint--type-action ${_variant}`}
     target={external ? '_blank' : undefined}
     rel={external ? 'noopener' : undefined}><slot /></a
   >
@@ -38,12 +51,14 @@ if (icon && !title && !ariaLabel) {
   <button
     on:click|stopPropagation
     type={submit ? 'submit' : 'button'}
+    {role}
+    aria-pressed={ariaPressed}
     {disabled}
     class:small
     class:icon
     {title}
     aria-label={ariaLabel}
-    class={`tint--type-action ${variant}`}><slot /></button
+    class={`tint--type-action ${_variant}`}><slot /></button
   >
 {/if}
 

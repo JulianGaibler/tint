@@ -4,6 +4,7 @@ declare const __propDef: {
         variant?: "primary" | "secondary" | "ghost" | undefined;
         small?: boolean | undefined;
         icon?: boolean | undefined;
+        toggled?: boolean | undefined;
         href?: string | undefined;
         external?: boolean | undefined;
         download?: string | undefined;
