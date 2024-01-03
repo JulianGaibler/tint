@@ -9,6 +9,7 @@ export let disabled = false;
 export let submit = false;
 export let title = void 0;
 export let ariaLabel = void 0;
+export let tabindex = void 0;
 if (icon && !title && !ariaLabel) {
   throw new Error("[tint] Icon buttons need at least a title or aria-label");
 }
@@ -28,37 +29,39 @@ $:
 
 {#if href && disabled}
   <span
-    class:small
-    class:icon
+    {title}
     aria-disabled="true"
     aria-label={ariaLabel}
-    {title}
+    class:icon
+    class:small
     class={`tint--type-action ${_variant}`}><slot /></span
   >
 {:else if href}
   <a
-    {href}
-    class:small
-    class:icon
-    aria-label={ariaLabel}
-    {title}
     {download}
+    {href}
+    {tabindex}
+    {title}
+    aria-label={ariaLabel}
+    class:icon
+    class:small
     class={`tint--type-action ${_variant}`}
-    target={external ? '_blank' : undefined}
-    rel={external ? 'noopener' : undefined}><slot /></a
+    rel={external ? 'noopener' : undefined}
+    target={external ? '_blank' : undefined}><slot /></a
   >
 {:else}
   <button
-    on:click|stopPropagation
-    type={submit ? 'submit' : 'button'}
-    {role}
-    aria-pressed={ariaPressed}
     {disabled}
-    class:small
-    class:icon
+    {role}
+    {tabindex}
     {title}
     aria-label={ariaLabel}
-    class={`tint--type-action ${_variant}`}><slot /></button
+    aria-pressed={ariaPressed}
+    class:icon
+    class:small
+    class={`tint--type-action ${_variant}`}
+    on:click|stopPropagation
+    type={submit ? 'submit' : 'button'}><slot /></button
   >
 {/if}
 

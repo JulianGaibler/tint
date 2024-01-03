@@ -12,6 +12,7 @@ declare const __propDef: {
         submit?: boolean | undefined;
         title?: string | undefined;
         ariaLabel?: string | undefined;
+        tabindex?: number | undefined;
     };
     events: {
         click: MouseEvent;
