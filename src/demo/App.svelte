@@ -5,7 +5,52 @@
   import Select from '@src/lib/components/Select.svelte'
   import SearchField from '@src/lib/components/SearchField.svelte'
   import IconHome from '@lib/icons/20-home.svg?raw'
+  import Menu, {
+    MENU_SEPARATOR,
+    type MenuItem,
+  } from '@src/lib/components/Menu.svelte'
   let option = 1
+
+  let contextClickHandlers: ((e: Event) => void)[] = []
+
+  function handleContextClick(e: Event | MouseEvent, i: number, j: number) {
+    contextClickHandlers[j + i * 2](e)
+  }
+
+  const items: MenuItem[] = [
+    {
+      label: 'Item 1',
+      onClick: () => console.log('Item 1'),
+    },
+    {
+      label: 'Item 2',
+      checked: true,
+      onClick: () => console.log('Item 2'),
+    },
+    {
+      label: 'Item 3',
+      disabled: true,
+      onClick: () => console.log('Item 3'),
+    },
+    MENU_SEPARATOR,
+    {
+      label: 'Item 4',
+      items: [
+        {
+          label: 'Item 4.1',
+          onClick: () => console.log('Item 4.1'),
+        },
+        {
+          label: 'Item 4.2',
+          onClick: () => console.log('Item 4.2'),
+        },
+      ],
+    },
+    {
+      label: 'Item 5',
+      onClick: () => console.log('Item 5'),
+    },
+  ]
 </script>
 
 <main>
@@ -132,6 +177,27 @@
         <SearchField id="searchfield" label="Label" value="Value" />
         <SearchField id="searchfield" label="Label" value="" />
       </div>
+      <div class="row">
+        <div
+          class="ctxarea"
+          on:contextmenu={(e) => handleContextClick(e, i, 0)}
+          role="button"
+          tabindex="0"
+        >
+          Context Menu
+        </div>
+        <Button on:click={(e) => handleContextClick(e, i, 1)}>Hello!</Button>
+        <Menu
+          variant="context"
+          bind:contextClick={contextClickHandlers[0 + i * 2]}
+          {items}
+        />
+        <Menu
+          variant="button"
+          bind:contextClick={contextClickHandlers[1 + i * 2]}
+          {items}
+        />
+      </div>
     </div>
   {/each}
 </main>
@@ -150,4 +216,9 @@ main
     display: flex
     gap: 16px
     margin-bottom: 16px
+
+.ctxarea
+  user-select: none
+  padding: 16px
+  background-color: var(--tint-action-secondary-hover)
 </style>

@@ -107,7 +107,7 @@ export let element = void 0;
   right: 0;
   top: 0;
   line-height: 0;
-  margin: 12px;
+  margin: 14px;
   color: var(--tint-text-accent);
 }
 

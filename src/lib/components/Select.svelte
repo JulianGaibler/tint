@@ -121,7 +121,7 @@
   margin-inline: tint.$size-12
   color: var(--tint-text-secondary)
 .warning-icon
-  margin: tint.$size-12
+  margin: tint.$size-12 + tint.$size-2
   right: tint.$size-16
   color: var(--tint-text-accent)
 

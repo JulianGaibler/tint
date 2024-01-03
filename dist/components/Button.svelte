@@ -25,7 +25,7 @@ $:
 $:
   ariaPressed = toggled !== void 0 ? toggled : void 0;
 $:
-  _variant = toggled === void 0 ? variant : toggled ? "primary" : "secondary";
+  _variant = toggled === void 0 ? variant : toggled ? "primary" : variant;
 </script>
 
 {#if href && disabled}
