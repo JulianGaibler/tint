@@ -120,7 +120,7 @@ function noValue(val) {
 }
 
 .warning-icon {
-  margin: 12px;
+  margin: 14px;
   right: 16px;
   color: var(--tint-text-accent);
 }

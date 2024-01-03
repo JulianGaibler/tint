@@ -45,7 +45,6 @@
 </script>
 
 <Template let:args>
-  <!--👇 'on:click' allows to forward event to addon-actions  -->
   <Button
     ariaLabel={args.icon ? 'home' : undefined}
     {...args}

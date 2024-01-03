@@ -2,5 +2,6 @@
 @use './colors'
 
 @include bootstrap.generate-color-variables(colors.$colors)
+@include bootstrap.generate-font-faces("@lib/fonts")
 
 @include bootstrap.full-bootstrap()

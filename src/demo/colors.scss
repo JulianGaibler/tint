@@ -27,4 +27,8 @@ $colors: (
     action-secondary-active: #8f2d2d33,
     input-bg: #f5cdce,
   ),
+  general: (
+    card-border: rgba(0, 0, 0, 0.1),
+    card-shadow: '0 5px 40px #0000001a, inset 0 2px 0 -1px #ffffff80',
+  ),
 );

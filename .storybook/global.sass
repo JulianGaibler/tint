@@ -2,6 +2,7 @@
 @use '@demo/colors'
 
 @include bootstrap.generate-color-variables(colors.$colors)
+@include bootstrap.generate-font-faces("@lib/fonts")
 @include bootstrap.layers()
 @include bootstrap.base()
 @include bootstrap.type-classes()
@@ -9,9 +10,12 @@
 .docs-type, .sbdocs-preview, .storybook-preview-wrapper
   @include bootstrap.type-classes()
 
-#storybook-docs
+#storybook-docs .sbdocs-content
   p, li
     font-size: 16px
+  .sbdocs-preview, .docblock-argstable
+    p, li
+      font-size: inherit
 
 .introHeader
   margin-block-end: 2rem

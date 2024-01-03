@@ -42,8 +42,7 @@
 
   $: role = toggled !== undefined ? 'switch' : undefined
   $: ariaPressed = toggled !== undefined ? toggled : undefined
-  $: _variant =
-    toggled === undefined ? variant : toggled ? 'primary' : 'secondary'
+  $: _variant = toggled === undefined ? variant : toggled ? 'primary' : variant
 </script>
 
 {#if href && disabled}

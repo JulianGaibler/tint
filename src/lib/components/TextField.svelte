@@ -97,7 +97,7 @@
   right: 0
   top: 0
   line-height: 0
-  margin: tint.$size-12
+  margin: tint.$size-12 + tint.$size-2
   color: var(--tint-text-accent)
 
 @media (forced-colors: active)
