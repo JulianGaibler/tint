@@ -13,19 +13,22 @@
   export let error: string | undefined = undefined
   // Disables the text field @type {boolean}
   export let disabled = false
+  // HTML element of the text field @type {HTMLInputElement | undefined}
+  export let element: HTMLInputElement | undefined = undefined
 </script>
 
 <div class:error class:disabled>
   <div class="box">
     <input
-      {id}
       {disabled}
-      bind:value
-      aria-invalid={error ? 'true' : undefined}
+      {id}
       aria-describedby={helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
-      class="input tint--type-input"
+      aria-invalid={error ? 'true' : undefined}
+      bind:this={element}
+      bind:value
       class:filled={value?.length > 0}
+      class="input tint--type-input"
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
     {#if error}

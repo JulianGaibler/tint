@@ -8,6 +8,7 @@ declare const __propDef: {
         ariaLabel?: string | undefined;
         ariaLabelledby?: string | undefined;
         ariaDescribedby?: string | undefined;
+        element?: HTMLInputElement | HTMLButtonElement | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;

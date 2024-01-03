@@ -23,6 +23,8 @@
   export let error: string | undefined = undefined
   // Disables the select @type {boolean}
   export let disabled = false
+  // HTML element of the select @type {HTMLSelectElement | undefined}
+  export let element: HTMLSelectElement | undefined = undefined
 
   function noValue(val: T | undefined) {
     return val === undefined || val === ''
@@ -32,14 +34,15 @@
 <div class:error class:disabled>
   <div class="box">
     <select
-      {id}
       {disabled}
-      bind:value
-      aria-invalid={error ? 'true' : undefined}
+      {id}
       aria-describedby={helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
-      class="input tint--type-input"
+      aria-invalid={error ? 'true' : undefined}
+      bind:this={element}
+      bind:value
       class:filled={!noValue(value)}
+      class="input tint--type-input"
     >
       {#if noValue(value)}
         <option value="" disabled selected hidden></option>

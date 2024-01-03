@@ -5,19 +5,21 @@ export let label;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
+export let element = void 0;
 </script>
 
 <div class:error class:disabled>
   <div class="box">
     <input
-      {id}
       {disabled}
-      bind:value
-      aria-invalid={error ? 'true' : undefined}
+      {id}
       aria-describedby={helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
-      class="input tint--type-input"
+      aria-invalid={error ? 'true' : undefined}
+      bind:this={element}
+      bind:value
       class:filled={value?.length > 0}
+      class="input tint--type-input"
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
     {#if error}
