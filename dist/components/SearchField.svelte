@@ -6,30 +6,34 @@ export let id;
 export let value;
 export let label = "Search";
 export let disabled = false;
+export let elementInput = void 0;
+export let elementButton = void 0;
 </script>
 
 <div class="box" class:disabled>
   <input
-    {id}
     {disabled}
-    bind:value
+    {id}
     aria-label={label}
-    placeholder={label}
-    class="input tint--type-input"
+    bind:this={elementInput}
+    bind:value
     class:filled={value?.length > 0}
+    class="input tint--type-input"
     on:keydown={(e) => {
       if (e.key === 'Enter') {
         dispatch('search', { value })
       }
     }}
+    placeholder={label}
   />
   <Button
+    ariaLabel="Search"
+    bind:element={elementButton}
+    disabled={disabled || !value || value.length === 0}
     icon
+    on:click={() => dispatch('search', { value })}
     small
     variant="ghost"
-    disabled={disabled || !value || value.length === 0}
-    ariaLabel="Search"
-    on:click={() => dispatch('search', { value })}
   >
     {@html IconSearch}
   </Button>

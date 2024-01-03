@@ -13,6 +13,7 @@ declare const __propDef: {
         title?: string | undefined;
         ariaLabel?: string | undefined;
         tabindex?: number | undefined;
+        element?: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined;
     };
     events: {
         click: MouseEvent;

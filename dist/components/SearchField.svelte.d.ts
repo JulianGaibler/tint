@@ -5,6 +5,8 @@ declare const __propDef: {
         value: string;
         label?: string | undefined;
         disabled?: boolean | undefined;
+        elementInput?: HTMLInputElement | undefined;
+        elementButton?: HTMLButtonElement | undefined;
     };
     events: {
         search: CustomEvent<any>;

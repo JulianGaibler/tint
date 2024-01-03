@@ -13,6 +13,9 @@
   export let ariaLabelledby: string | undefined = undefined
   // aria-describedby of the toggleable element @type {string | undefined}
   export let ariaDescribedby: string | undefined = undefined
+  // HTML element of the toggleable element @type {HTMLInputElement | HTMLButtonElement | undefined}
+  export let element: HTMLInputElement | HTMLButtonElement | undefined =
+    undefined
 
   function toggle() {
     checked = !checked
@@ -21,24 +24,26 @@
 
 {#if type === 'switch'}
   <button
-    {id}
     {disabled}
-    role="switch"
-    aria-label={ariaLabel}
+    {id}
     aria-checked={checked}
     aria-describedby={ariaDescribedby}
+    aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
+    bind:this={element}
     on:click={toggle}
+    role="switch"
   />
 {:else}
   <input
-    {id}
-    {disabled}
-    {type}
     {checked}
-    aria-label={ariaLabel}
+    {disabled}
+    {id}
+    {type}
     aria-describedby={ariaDescribedby}
+    aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
+    bind:this={element}
     on:click={toggle}
   />
 {/if}

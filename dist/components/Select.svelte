@@ -7,6 +7,7 @@ export let label;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
+export let element = void 0;
 function noValue(val) {
   return val === void 0 || val === "";
 }
@@ -15,14 +16,15 @@ function noValue(val) {
 <div class:error class:disabled>
   <div class="box">
     <select
-      {id}
       {disabled}
-      bind:value
-      aria-invalid={error ? 'true' : undefined}
+      {id}
       aria-describedby={helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
-      class="input tint--type-input"
+      aria-invalid={error ? 'true' : undefined}
+      bind:this={element}
+      bind:value
       class:filled={!noValue(value)}
+      class="input tint--type-input"
     >
       {#if noValue(value)}
         <option value="" disabled selected hidden></option>

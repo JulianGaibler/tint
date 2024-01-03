@@ -7,6 +7,7 @@ declare const __propDef: {
         helperText?: string | undefined;
         error?: string | undefined;
         disabled?: boolean | undefined;
+        element?: HTMLInputElement | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;

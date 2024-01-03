@@ -5,6 +5,7 @@ export let disabled = false;
 export let ariaLabel = void 0;
 export let ariaLabelledby = void 0;
 export let ariaDescribedby = void 0;
+export let element = void 0;
 function toggle() {
   checked = !checked;
 }
@@ -12,24 +13,26 @@ function toggle() {
 
 {#if type === 'switch'}
   <button
-    {id}
     {disabled}
-    role="switch"
-    aria-label={ariaLabel}
+    {id}
     aria-checked={checked}
     aria-describedby={ariaDescribedby}
+    aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
+    bind:this={element}
     on:click={toggle}
+    role="switch"
   />
 {:else}
   <input
-    {id}
-    {disabled}
-    {type}
     {checked}
-    aria-label={ariaLabel}
+    {disabled}
+    {id}
+    {type}
     aria-describedby={ariaDescribedby}
+    aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
+    bind:this={element}
     on:click={toggle}
   />
 {/if}

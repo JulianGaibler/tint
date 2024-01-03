@@ -10,6 +10,7 @@ export let submit = false;
 export let title = void 0;
 export let ariaLabel = void 0;
 export let tabindex = void 0;
+export let element = void 0;
 if (icon && !title && !ariaLabel) {
   throw new Error("[tint] Icon buttons need at least a title or aria-label");
 }
@@ -32,6 +33,7 @@ $:
     {title}
     aria-disabled="true"
     aria-label={ariaLabel}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}><slot /></span
@@ -43,6 +45,7 @@ $:
     {tabindex}
     {title}
     aria-label={ariaLabel}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
@@ -57,6 +60,7 @@ $:
     {title}
     aria-label={ariaLabel}
     aria-pressed={ariaPressed}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}

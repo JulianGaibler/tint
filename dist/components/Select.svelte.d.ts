@@ -12,6 +12,7 @@ declare class __sveltets_Render<T> {
         helperText?: string | undefined;
         error?: string | undefined;
         disabled?: boolean | undefined;
+        element?: HTMLSelectElement | undefined;
     };
     events(): {} & {
         [evt: string]: CustomEvent<any>;

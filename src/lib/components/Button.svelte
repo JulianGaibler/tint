@@ -23,6 +23,12 @@
   export let ariaLabel: string | undefined = undefined
   // tabindex of the button @type {number | undefined}
   export let tabindex: number | undefined = undefined
+  // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
+  export let element:
+    | HTMLButtonElement
+    | HTMLAnchorElement
+    | HTMLSpanElement
+    | undefined = undefined
 
   if (icon && !title && !ariaLabel) {
     throw new Error('[tint] Icon buttons need at least a title or aria-label')
@@ -45,6 +51,7 @@
     {title}
     aria-disabled="true"
     aria-label={ariaLabel}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}><slot /></span
@@ -56,6 +63,7 @@
     {tabindex}
     {title}
     aria-label={ariaLabel}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
@@ -70,6 +78,7 @@
     {title}
     aria-label={ariaLabel}
     aria-pressed={ariaPressed}
+    bind:this={element}
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
