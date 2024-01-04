@@ -17,6 +17,8 @@ declare const __propDef: {
     };
     events: {
         click: MouseEvent;
+        keypress: KeyboardEvent;
+        keydown: KeyboardEvent;
     } & {
         [evt: string]: CustomEvent<any>;
     };

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+  const dispatch = createEventDispatcher()
+
   // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
   export let variant: 'primary' | 'secondary' | 'ghost' = 'secondary'
   // Use small version of the button
@@ -81,7 +84,9 @@
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
-    on:click|stopPropagation
+    on:click
+    on:keypress
+    on:keydown
     type={submit ? 'submit' : 'button'}><slot /></button
   >
 {/if}
