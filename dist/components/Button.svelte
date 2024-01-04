@@ -1,4 +1,6 @@
-<script>export let variant = "secondary";
+<script>import { createEventDispatcher } from "svelte";
+const dispatch = createEventDispatcher();
+export let variant = "secondary";
 export let small = false;
 export let icon = false;
 export let toggled = void 0;
@@ -64,7 +66,9 @@ $:
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
-    on:click|stopPropagation
+    on:click
+    on:keypress
+    on:keydown
     type={submit ? 'submit' : 'button'}><slot /></button
   >
 {/if}
