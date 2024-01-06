@@ -3,6 +3,8 @@
 
   export { MENU_SEPARATOR } from './menu/MenuInternal.svelte'
   export type { MenuItem }
+
+  export type ContextClickHandler = (e: Event | MouseEvent) => void
 </script>
 
 <script lang="ts">
@@ -27,9 +29,9 @@
    * The function to call when the menu should be opened. Ensure event has a
    * target element for the anchor.
    *
-   * @type {((e: Event | MouseEvent) => void) | undefined}
+   * @type {ContextClickHandler | undefined}
    */
-  export const contextClick: ((e: Event | MouseEvent) => void) | undefined =
+  export const contextClick: (ContextClickHandler) | undefined =
     openMenu
 
   function openMenu(e: Event | MouseEvent) {
