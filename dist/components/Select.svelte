@@ -31,6 +31,7 @@ function noValue(val) {
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
       bind:value
+      on:change
       class:filled={!noValue(value)}
       class="input tint--type-input"
     >
