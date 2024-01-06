@@ -1,4 +1,6 @@
-<script>export let id;
+<script>import { createEventDispatcher } from "svelte";
+const dispatch = createEventDispatcher();
+export let id;
 export let type = "checkbox";
 export let checked;
 export let disabled = false;
@@ -8,6 +10,7 @@ export let ariaDescribedby = void 0;
 export let element = void 0;
 function toggle() {
   checked = !checked;
+  dispatch("change", checked);
 }
 </script>
 
