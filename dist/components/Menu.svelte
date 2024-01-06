@@ -10,7 +10,7 @@ function openMenu(e) {
   e.preventDefault();
   if (variant === "context") {
     if (!("clientX" in e && "clientY" in e)) {
-      throw new Error("Event must have clientX and clientY");
+      throw new Error("[tint] Event must have clientX and clientY");
     }
     anchor = { x: e.clientX, y: e.clientY };
   } else {

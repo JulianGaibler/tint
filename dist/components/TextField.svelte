@@ -5,7 +5,11 @@ export let label;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
+export let ariaDescribedby = void 0;
 export let element = void 0;
+if (helperText && ariaDescribedby) {
+  throw new Error("[tint] You can not use both helperText and ariaDescribedby");
+}
 </script>
 
 <div class:error class:disabled>
@@ -13,7 +17,7 @@ export let element = void 0;
     <input
       {disabled}
       {id}
-      aria-describedby={helperText ? 'textfield-helpertext' : undefined}
+      aria-describedby={ariaDescribedby || helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}

@@ -13,8 +13,14 @@
   export let error: string | undefined = undefined
   // Disables the text field @type {boolean}
   export let disabled = false
+  // Id of the element that describes the text field @type {string|undefined}
+  export let ariaDescribedby: string | undefined = undefined
   // HTML element of the text field @type {HTMLInputElement | undefined}
   export let element: HTMLInputElement | undefined = undefined
+
+  if (helperText && ariaDescribedby) {
+    throw new Error('[tint] You can not use both helperText and ariaDescribedby')
+  }
 </script>
 
 <div class:error class:disabled>
@@ -22,7 +28,7 @@
     <input
       {disabled}
       {id}
-      aria-describedby={helperText ? 'textfield-helpertext' : undefined}
+      aria-describedby={ariaDescribedby || helperText ? 'textfield-helpertext' : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
