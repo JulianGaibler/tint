@@ -15,7 +15,9 @@ declare class __sveltets_Render<T> {
         ariaDescribedby?: string | undefined;
         element?: HTMLSelectElement | undefined;
     };
-    events(): {} & {
+    events(): {
+        change: Event;
+    } & {
         [evt: string]: CustomEvent<any>;
     };
     slots(): {};
