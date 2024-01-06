@@ -2,6 +2,7 @@ import { SvelteComponent } from "svelte";
 import type { MenuItem } from './menu/MenuInternal.svelte';
 export { MENU_SEPARATOR } from './menu/MenuInternal.svelte';
 export type { MenuItem };
+export type ContextClickHandler = (e: Event | MouseEvent) => void;
 declare const __propDef: {
     props: {
         /**
@@ -20,8 +21,8 @@ declare const __propDef: {
            * The function to call when the menu should be opened. Ensure event has a
            * target element for the anchor.
            *
-           * @type {((e: Event | MouseEvent) => void) | undefined}
-           */ contextClick?: ((e: Event | MouseEvent) => void) | undefined;
+           * @type {ContextClickHandler | undefined}
+           */ contextClick?: (ContextClickHandler) | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;
@@ -32,5 +33,5 @@ export type MenuProps = typeof __propDef.props;
 export type MenuEvents = typeof __propDef.events;
 export type MenuSlots = typeof __propDef.slots;
 export default class Menu extends SvelteComponent<MenuProps, MenuEvents, MenuSlots> {
-    get contextClick(): (e: MouseEvent | Event) => void;
+    get contextClick(): ContextClickHandler;
 }
