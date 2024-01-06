@@ -22,7 +22,7 @@ declare const __propDef: {
            * target element for the anchor.
            *
            * @type {ContextClickHandler | undefined}
-           */ contextClick?: (ContextClickHandler) | undefined;
+           */ contextClick?: ContextClickHandler | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;

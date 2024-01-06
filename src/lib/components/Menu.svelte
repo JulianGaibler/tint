@@ -31,8 +31,7 @@
    *
    * @type {ContextClickHandler | undefined}
    */
-  export const contextClick: (ContextClickHandler) | undefined =
-    openMenu
+  export const contextClick: ContextClickHandler | undefined = openMenu
 
   function openMenu(e: Event | MouseEvent) {
     e.preventDefault()

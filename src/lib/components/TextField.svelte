@@ -19,7 +19,9 @@
   export let element: HTMLInputElement | undefined = undefined
 
   if (helperText && ariaDescribedby) {
-    throw new Error('[tint] You can not use both helperText and ariaDescribedby')
+    throw new Error(
+      '[tint] You can not use both helperText and ariaDescribedby',
+    )
   }
 </script>
 
@@ -28,7 +30,9 @@
     <input
       {disabled}
       {id}
-      aria-describedby={ariaDescribedby || helperText ? 'textfield-helpertext' : undefined}
+      aria-describedby={ariaDescribedby || helperText
+        ? 'textfield-helpertext'
+        : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}

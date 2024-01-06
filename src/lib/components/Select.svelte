@@ -23,8 +23,16 @@
   export let error: string | undefined = undefined
   // Disables the select @type {boolean}
   export let disabled = false
+  // Id of the element that describes the select @type {string|undefined}
+  export let ariaDescribedby: string | undefined = undefined
   // HTML element of the select @type {HTMLSelectElement | undefined}
   export let element: HTMLSelectElement | undefined = undefined
+
+  if (helperText && ariaDescribedby) {
+    throw new Error(
+      '[tint] You can not use both helperText and ariaDescribedby',
+    )
+  }
 
   function noValue(val: T | undefined) {
     return val === undefined || val === ''
@@ -36,7 +44,9 @@
     <select
       {disabled}
       {id}
-      aria-describedby={helperText ? 'textfield-helpertext' : undefined}
+      aria-describedby={ariaDescribedby || helperText
+        ? 'textfield-helpertext'
+        : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
