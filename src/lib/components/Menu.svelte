@@ -39,7 +39,7 @@
     if (variant === 'context') {
       // throw if no clientX/Y
       if (!('clientX' in e && 'clientY' in e)) {
-        throw new Error('Event must have clientX and clientY')
+        throw new Error('[tint] Event must have clientX and clientY')
       }
       anchor = { x: e.clientX, y: e.clientY }
     } else {
