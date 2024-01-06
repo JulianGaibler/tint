@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher()
+
   // Id of the toggleable element @type {string}
   export let id: string
   // Type of the toggleable element @type {'checkbox' | 'radio' | 'switch'}
@@ -19,6 +23,7 @@
 
   function toggle() {
     checked = !checked
+    dispatch('change', checked)
   }
 </script>
 

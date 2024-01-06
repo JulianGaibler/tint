@@ -11,6 +11,8 @@ declare const __propDef: {
         element?: HTMLInputElement | HTMLButtonElement | undefined;
     };
     events: {
+        change: CustomEvent<any>;
+    } & {
         [evt: string]: CustomEvent<any>;
     };
     slots: {};
