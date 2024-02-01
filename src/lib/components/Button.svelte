@@ -107,6 +107,7 @@ button, a, span
   border: tint.$button-border-width solid var(--tint-action)
   color: var(--tint-action)
   border-radius: tint.$button-radius-large
+  flex-shrink: 0
   @include tint.effect-focus
   &.icon
     padding: 0px
