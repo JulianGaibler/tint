@@ -2,6 +2,8 @@
 export let id;
 export let value;
 export let label;
+export let autocomplete = void 0;
+export let type = void 0;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
@@ -12,6 +14,16 @@ if (helperText && ariaDescribedby) {
     "[tint] You can not use both helperText and ariaDescribedby"
   );
 }
+function setType(type2, element2) {
+  if (type2 && element2) {
+    element2.setAttribute("type", type2);
+  }
+  if (!type2 && element2) {
+    element2.removeAttribute("type");
+  }
+}
+$:
+  setType(type, element);
 </script>
 
 <div class:error class:disabled>
@@ -24,6 +36,7 @@ if (helperText && ariaDescribedby) {
         : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
+      {autocomplete}
       bind:this={element}
       bind:value
       class:filled={value?.length > 0}
