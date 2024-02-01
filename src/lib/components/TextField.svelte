@@ -7,6 +7,10 @@
   export let value: string
   // The label of the text field @type {string}
   export let label: string
+  // The autocomplete of the text field @type {string|undefined}
+  export let autocomplete: string | undefined = undefined
+  // The type of the text field @type {string|undefined}
+  export let type: string | undefined = undefined
   // Adds a helper text to the text field @type {string|undefined}
   export let helperText: string | undefined = undefined
   // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
@@ -23,6 +27,20 @@
       '[tint] You can not use both helperText and ariaDescribedby',
     )
   }
+
+  function setType(
+    type: string | undefined,
+    element: HTMLInputElement | undefined,
+  ) {
+    if (type && element) {
+      element.setAttribute('type', type)
+    }
+    if (!type && element) {
+      element.removeAttribute('type')
+    }
+  }
+
+  $: setType(type, element)
 </script>
 
 <div class:error class:disabled>
@@ -35,6 +53,7 @@
         : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
+      {autocomplete}
       bind:this={element}
       bind:value
       class:filled={value?.length > 0}

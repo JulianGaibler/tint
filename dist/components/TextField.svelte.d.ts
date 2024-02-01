@@ -4,6 +4,8 @@ declare const __propDef: {
         id: string;
         value: string;
         label: string;
+        autocomplete?: string | undefined;
+        type?: string | undefined;
         helperText?: string | undefined;
         error?: string | undefined;
         disabled?: boolean | undefined;
