@@ -9,6 +9,7 @@
     MENU_SEPARATOR,
     type MenuItem,
   } from '@src/lib/components/Menu.svelte'
+  import MessageBox from '@src/lib/components/MessageBox.svelte'
   let option = 1
 
   let contextClickHandlers: ((e: Event) => void)[] = []
@@ -124,6 +125,10 @@
         <Toggleable type="switch" disabled id="switch" checked />
         <Toggleable type="switch" disabled id="switch" checked={false} />
       </div>
+      <MessageBox icon={IconHome}
+        ><h2>Hello</h2>
+        <p>Test test test test Test test</p></MessageBox
+      >
       <div class="row">
         <TextField id="textfield" label="Label" value="Value" />
         <TextField
