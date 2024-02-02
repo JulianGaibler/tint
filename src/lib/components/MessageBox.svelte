@@ -5,7 +5,6 @@
 
   // Icon of the message box @type {string | undefined}
   export let icon: string | undefined = undefined
-
   // Dismissable @type {boolean}
   export let dismissable = true
   // HTML element of the container @type {HTMLDivElement | undefined}
@@ -16,7 +15,7 @@
 
 <div class="box" bind:this={element}>
   {#if icon}
-    <div class="icon">{@html icon}</div>
+    <div class="icon" aria-hidden="true">{@html icon}</div>
   {/if}
   <div class="content"><slot /></div>
   {#if dismissable}
