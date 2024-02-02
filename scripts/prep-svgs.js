@@ -33,8 +33,6 @@ const processSVG = async (filePath) => {
       ],
     })
 
-    console.log(result)
-
     // Write the optimized SVG back to the file
     await writeFileAsync(filePath, `${result.data}${EOL}`, 'utf-8')
 
