@@ -90,6 +90,7 @@ button, a, span {
   border: 2px solid var(--tint-action);
   color: var(--tint-action);
   border-radius: 12px;
+  flex-shrink: 0;
 }
 button:focus-visible, a:focus-visible, span:focus-visible {
   outline: 2px solid var(--tint-action);
