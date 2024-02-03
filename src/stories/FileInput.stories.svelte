@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
-  import FileUpload from '@lib/components/FileUpload.svelte'
+  import FileInput from '@lib/components/FileInput.svelte'
 
   export const meta = {
-    title: 'Components/FileUpload',
-    component: FileUpload,
+    title: 'Components/FileInput',
+    component: FileInput,
     argTypes: {
       id: {
         control: 'text',
@@ -40,7 +40,7 @@
 <!-- This is the most basic usage of the file input. Accepts any file type.
 Files can be dragged and dropped over the input too. -->
 <Story name="Basic" args={{ id: 'input', label: 'Label' }} let:args>
-  <FileUpload {...args} />
+  <FileInput {...args} />
 </Story>
 
 <!-- You can also add a helper text to the file input and specify the accepted file types. -->
@@ -54,7 +54,7 @@ Files can be dragged and dropped over the input too. -->
   }}
   let:args
 >
-  <FileUpload {...args} />
+  <FileInput {...args} />
 </Story>
 
 <!-- You can also add an error text to the file input,
@@ -69,5 +69,5 @@ Files can be dragged and dropped over the input too. -->
   }}
   let:args
 >
-  <FileUpload {...args} />
+  <FileInput {...args} />
 </Story>
