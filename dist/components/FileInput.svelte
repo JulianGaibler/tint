@@ -32,6 +32,10 @@ function handleDragEnter() {
 function handleDragLeave() {
   draggedOver = false;
 }
+function updateValue(event) {
+  const target = event.target;
+  value = target.files?.[0];
+}
 $:
   acceptString = typeof accept === "string" ? accept : accept?.join(",");
 </script>
@@ -55,11 +59,11 @@ $:
       aria-invalid={error ? 'true' : undefined}
       accept={acceptString}
       bind:this={element}
-      bind:value
       type="file"
       class="input tint--type-input"
       class:dragging={!!dragging && !disabled}
       class:draggedOver={!!draggedOver && !disabled}
+      on:change={updateValue}
       on:dragenter={handleDragEnter}
       on:dragover={handleDragEnter}
       on:drop={handleDragEnd}

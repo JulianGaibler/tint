@@ -10,7 +10,7 @@
     type MenuItem,
   } from '@src/lib/components/Menu.svelte'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
-  import FileUpload from '@src/lib/components/FileUpload.svelte'
+  import FileUpload from '@src/lib/components/FileInput.svelte'
   let option = 1
 
   let contextClickHandlers: ((e: Event) => void)[] = []

@@ -4,3 +4,4 @@ export { default as TextField } from './TextField.svelte';
 export { default as Toggleable } from './Toggleable.svelte';
 export { default as SearchField } from './SearchField.svelte';
 export { default as ButtonMenu } from './Menu.svelte';
+export { default as FileInput } from './FileInput.svelte';
