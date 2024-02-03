@@ -26,6 +26,9 @@
       disabled: {
         control: 'boolean',
       },
+      fillWidth: {
+        control: 'boolean',
+      },
     },
   }
 </script>

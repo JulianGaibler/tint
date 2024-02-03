@@ -23,6 +23,8 @@
   export let error: string | undefined = undefined
   // Disables the select @type {boolean}
   export let disabled = false
+  // Fills the width of the parent container @type {boolean}
+  export let fillWidth = true
   // Id of the element that describes the select @type {string|undefined}
   export let ariaDescribedby: string | undefined = undefined
   // HTML element of the select @type {HTMLSelectElement | undefined}
@@ -39,7 +41,7 @@
   }
 </script>
 
-<div class:error class:disabled>
+<div class:error class:disabled class:fillWidth>
   <div class="box">
     <select
       {disabled}
@@ -82,6 +84,8 @@
 <style lang="sass">
 .disabled
   opacity: 0.5
+.fillWidth
+  width: 100%
 .box
   position: relative
   height: tint.$size-48

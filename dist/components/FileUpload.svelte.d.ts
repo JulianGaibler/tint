@@ -2,10 +2,9 @@ import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
         id: string;
-        value: string;
+        value?: File | undefined;
         label: string;
-        autocomplete?: string | undefined;
-        type?: string | undefined;
+        accept?: string | string[] | undefined;
         helperText?: string | undefined;
         error?: string | undefined;
         disabled?: boolean | undefined;
@@ -18,9 +17,9 @@ declare const __propDef: {
     };
     slots: {};
 };
-export type TextFieldProps = typeof __propDef.props;
-export type TextFieldEvents = typeof __propDef.events;
-export type TextFieldSlots = typeof __propDef.slots;
-export default class TextField extends SvelteComponent<TextFieldProps, TextFieldEvents, TextFieldSlots> {
+export type FileUploadProps = typeof __propDef.props;
+export type FileUploadEvents = typeof __propDef.events;
+export type FileUploadSlots = typeof __propDef.slots;
+export default class FileUpload extends SvelteComponent<FileUploadProps, FileUploadEvents, FileUploadSlots> {
 }
 export {};

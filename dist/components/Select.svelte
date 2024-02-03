@@ -7,6 +7,7 @@ export let label;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
+export let fillWidth = true;
 export let ariaDescribedby = void 0;
 export let element = void 0;
 if (helperText && ariaDescribedby) {
@@ -19,7 +20,7 @@ function noValue(val) {
 }
 </script>
 
-<div class:error class:disabled>
+<div class:error class:disabled class:fillWidth>
   <div class="box">
     <select
       {disabled}
@@ -61,6 +62,10 @@ function noValue(val) {
 
 <style>.disabled {
   opacity: 0.5;
+}
+
+.fillWidth {
+  width: 100%;
 }
 
 .box {

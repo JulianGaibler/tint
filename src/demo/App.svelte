@@ -10,6 +10,7 @@
     type MenuItem,
   } from '@src/lib/components/Menu.svelte'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
+  import FileUpload from '@src/lib/components/FileUpload.svelte'
   let option = 1
 
   let contextClickHandlers: ((e: Event) => void)[] = []
@@ -125,10 +126,12 @@
         <Toggleable type="switch" disabled id="switch" checked />
         <Toggleable type="switch" disabled id="switch" checked={false} />
       </div>
-      <MessageBox icon={IconHome}
-        ><h2>Hello</h2>
-        <p>Test test test test Test test</p></MessageBox
-      >
+      <div class="row">
+        <MessageBox icon={IconHome}
+          ><h2>Hello</h2>
+          <p>Test test test test Test test</p></MessageBox
+        >
+      </div>
       <div class="row">
         <TextField id="textfield" label="Label" value="Value" />
         <TextField
@@ -181,6 +184,10 @@
       <div class="row">
         <SearchField id="searchfield" label="Label" value="Value" />
         <SearchField id="searchfield" label="Label" value="" />
+      </div>
+      <div class="row">
+        <FileUpload id="fileupload" label="Label" />
+        <FileUpload error="Error: Don't" id="fileupload" label="Label" />
       </div>
       <div class="row">
         <div
