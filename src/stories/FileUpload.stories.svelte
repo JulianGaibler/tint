@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
-  import TextField from '@lib/components/TextField.svelte'
+  import FileUpload from '@lib/components/FileUpload.svelte'
 
   export const meta = {
-    title: 'Components/TextField',
-    component: TextField,
+    title: 'Components/FileUpload',
+    component: FileUpload,
     argTypes: {
       id: {
         control: 'text',
@@ -12,6 +12,9 @@
         control: 'text',
       },
       label: {
+        control: 'text',
+      },
+      accept: {
         control: 'text',
       },
       helperText: {
@@ -31,37 +34,40 @@
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
+  import { Story } from '@storybook/addon-svelte-csf'
 </script>
 
-<!-- This is the most basic usage of the text field. -->
+<!-- This is the most basic usage of the file input. Accepts any file type.
+Files can be dragged and dropped over the input too. -->
 <Story name="Basic" args={{ id: 'input', label: 'Label' }} let:args>
-  <TextField {...args} />
+  <FileUpload {...args} />
 </Story>
 
-<!-- You can also add a helper text to the text field. -->
+<!-- You can also add a helper text to the file input and specify the accepted file types. -->
 <Story
   name="Helper text"
   args={{
     id: 'input',
-    label: 'New password',
-    helperText: 'Should contain a special character',
+    label: 'Profile picture',
+    accept: 'image/*',
+    helperText: 'Upload a profile picture',
   }}
   let:args
 >
-  <TextField {...args} />
+  <FileUpload {...args} />
 </Story>
 
-<!-- You can also add an error text to the text field,
+<!-- You can also add an error text to the file input,
   which replaces the helper text and adds an error icon. -->
 <Story
   name="Error text"
   args={{
     id: 'input',
-    label: 'New password',
-    error: 'Password must be at least 8 characters long',
+    label: 'Profile picture',
+    error: 'File needs to be an image',
+    accept: 'image/*',
   }}
   let:args
 >
-  <TextField {...args} />
+  <FileUpload {...args} />
 </Story>

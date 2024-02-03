@@ -12,6 +12,7 @@ declare class __sveltets_Render<T> {
         helperText?: string | undefined;
         error?: string | undefined;
         disabled?: boolean | undefined;
+        fillWidth?: boolean | undefined;
         ariaDescribedby?: string | undefined;
         element?: HTMLSelectElement | undefined;
     };

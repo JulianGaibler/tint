@@ -69,6 +69,13 @@ $layer-names: tint-reset, tint-typography, tint-global
       text-decoration: none
       &:hover
         text-decoration: underline
+    .tint--visually-hidden
+      width: 0.001px
+      height: 0.001px
+      opacity: 0.01
+      overflow: hidden
+      position: absolute
+      z-index: -1
 
 @mixin full-bootstrap()
   @include layers()

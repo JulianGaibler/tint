@@ -1,9 +1,9 @@
 <script>import IconWarning from "../icons/20-warning.svg?raw";
+import Button from "./Button.svelte";
 export let id;
-export let value;
+export let value = void 0;
 export let label;
-export let autocomplete = void 0;
-export let type = void 0;
+export let accept = void 0;
 export let helperText = void 0;
 export let error = void 0;
 export let disabled = false;
@@ -15,17 +15,33 @@ if (helperText && ariaDescribedby) {
     "[tint] You can not use both helperText and ariaDescribedby"
   );
 }
-function setType(type2, element2) {
-  if (type2 && element2) {
-    element2.setAttribute("type", type2);
-  }
-  if (!type2 && element2) {
-    element2.removeAttribute("type");
+let dragging = null;
+let draggedOver = false;
+function handleDragStart(event) {
+  dragging = event.target;
+}
+function handleDragEnd(event) {
+  if (dragging === event.target) {
+    dragging = null;
+    draggedOver = false;
   }
 }
+function handleDragEnter() {
+  draggedOver = true;
+}
+function handleDragLeave() {
+  draggedOver = false;
+}
 $:
-  setType(type, element);
+  acceptString = typeof accept === "string" ? accept : accept?.join(",");
 </script>
+
+<svelte:window
+  on:dragenter={handleDragStart}
+  on:dragleave={handleDragEnd}
+  on:drop={handleDragEnd}
+  on:dragend={handleDragEnd}
+/>
 
 <div class:error class:disabled class:fillWidth>
   <div class="box">
@@ -37,16 +53,25 @@ $:
         : undefined}
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
-      {autocomplete}
+      accept={acceptString}
       bind:this={element}
       bind:value
-      class:filled={value?.length > 0}
+      type="file"
       class="input tint--type-input"
+      class:dragging={!!dragging && !disabled}
+      class:draggedOver={!!draggedOver && !disabled}
+      on:dragenter={handleDragEnter}
+      on:dragover={handleDragEnter}
+      on:drop={handleDragEnd}
+      on:dragleave={handleDragLeave}
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
     {#if error}
       <span aria-hidden="true" class="warning-icon">{@html IconWarning}</span>
     {/if}
+    <Button small {disabled} on:click={() => element?.click()}
+      >Select file</Button
+    >
   </div>
   {#if helperText || error}
     <div
@@ -70,18 +95,23 @@ $:
   position: relative;
   height: 48px;
   line-height: normal;
-  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background-color: var(--tint-input-bg);
+  border-radius: 8px;
+  color: currentColor;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  padding-inline-end: 4px;
 }
 .box > .input {
-  box-sizing: border-box;
-  background-color: var(--tint-input-bg);
-  color: currentColor;
   border-radius: 8px;
-  border: 2px solid transparent;
+  padding: 19px 12px 5px 12px;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 19px 12px 5px 12px;
 }
 .box > .input:focus-visible {
   outline: 2px solid var(--tint-action);
@@ -92,15 +122,24 @@ $:
     outline-color: CanvasText;
   }
 }
+.box > .input::file-selector-button {
+  display: none;
+}
+.box > .input.dragging {
+  outline: 2px dashed var(--tint-text-secondary);
+  outline-offset: -2px;
+}
+.box > .input.dragging.draggedOver {
+  background-color: var(--tint-action-secondary-hover);
+}
 .box > label {
   color: var(--tint-text-secondary);
   position: absolute;
   left: 12px;
   right: initial;
   top: 50%;
-  transform: translateY(-55%) scale(1.166);
   transform-origin: left top;
-  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms;
+  transform: translateY(-106%) scale(1);
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -113,14 +152,6 @@ $:
   padding-inline-end: 48px;
 }
 
-.input:focus + label, .input.filled + label, .input:-webkit-autofill + label {
-  transform: translateY(-106%) scale(1);
-}
-
-.input:autofill + label {
-  transform: translateY(-106%) scale(1);
-}
-
 .helper-message {
   line-height: normal;
   color: var(--tint-text-secondary);
@@ -130,11 +161,8 @@ $:
 
 .warning-icon {
   pointer-events: none;
-  position: absolute;
-  right: 0;
-  top: 0;
   line-height: 0;
-  margin: 14px;
+  margin-block: 14px;
   color: var(--tint-text-accent);
 }
 
