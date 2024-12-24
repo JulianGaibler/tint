@@ -127,6 +127,7 @@ export function calculatePosition(
   behavior: MenuBehavior,
   relativeDistance?: number,
 ) {
+  console.trace('calculatePosition')
   const coords: {
     x: number
     y: number

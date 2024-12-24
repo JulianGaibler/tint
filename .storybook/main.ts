@@ -41,9 +41,7 @@ const config: StorybookConfig = {
     name: '@storybook/svelte-vite',
     options: {},
   },
-  docs: {
-    autodocs: true,
-  },
+  docs: {},
   staticDirs: ['../static'],
 }
 
