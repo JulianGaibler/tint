@@ -8,10 +8,6 @@ import type { Addon_DecoratorFunction } from '@storybook/types'
 
 export const decorators: Addon_DecoratorFunction[] = [withTintedClass]
 
-export const globals = {
-  [PARAM_KEY]: false,
-}
-
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -32,6 +28,12 @@ const preview: Preview = {
       theme: tintTheme,
     },
   },
+
+  tags: ['autodocs'],
+
+  initialGlobals: {
+    [PARAM_KEY]: false,
+  }
 }
 
 export default preview
