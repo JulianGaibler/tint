@@ -1,15 +1,33 @@
-<script>import IconWarning from "../icons/20-warning.svg?raw";
+<script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();import IconWarning from "../icons/20-warning.svg?raw";
 import IconDropdown from "../icons/14-dropdown.svg?raw";
-export let id;
-export let value;
-export let items;
-export let label;
-export let helperText = void 0;
-export let error = void 0;
-export let disabled = false;
-export let fillWidth = true;
-export let ariaDescribedby = void 0;
-export let element = void 0;
+  interface Props {
+    id: any;
+    value: any;
+    items: any;
+    label: any;
+    helperText?: any;
+    error?: any;
+    disabled?: boolean;
+    fillWidth?: boolean;
+    ariaDescribedby?: any;
+    element?: any;
+  }
+
+  let {
+    id,
+    value = $bindable(),
+    items,
+    label,
+    helperText = void 0,
+    error = void 0,
+    disabled = false,
+    fillWidth = true,
+    ariaDescribedby = void 0,
+    element = $bindable(void 0)
+  }: Props = $props();
 if (helperText && ariaDescribedby) {
   throw new Error(
     "[tint] You can not use both helperText and ariaDescribedby"
@@ -32,7 +50,7 @@ function noValue(val) {
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
       bind:value
-      on:change
+      onchange={bubble('change')}
       class:filled={!noValue(value)}
       class="input tint--type-input"
     >

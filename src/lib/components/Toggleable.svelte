@@ -1,29 +1,40 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  interface Props {
+    // Id of the toggleable element @type {string}
+    id: string
+    // Type of the toggleable element @type {'checkbox' | 'radio' | 'switch'}
+    type?: 'checkbox' | 'radio' | 'switch'
+    // Whether the toggleable element is checked (can use bind:checked) @type {boolean}
+    checked: boolean
+    // Whether the toggleable element is disabled @type {boolean}
+    disabled?: boolean
+    // aria-label of the toggleable element @type {string | undefined}
+    ariaLabel?: string | undefined
+    // aria-describedby of the toggleable element @type {string | undefined}
+    ariaLabelledby?: string | undefined
+    // aria-describedby of the toggleable element @type {string | undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the toggleable element @type {HTMLInputElement | HTMLButtonElement | undefined}
+    element?: HTMLInputElement | HTMLButtonElement | undefined
+    // Event handler for when the value changes @type {(checked: boolean) => void | undefined}
+    onchange?: (checked: boolean) => void
+  }
 
-  const dispatch = createEventDispatcher()
-
-  // Id of the toggleable element @type {string}
-  export let id: string
-  // Type of the toggleable element @type {'checkbox' | 'radio' | 'switch'}
-  export let type: 'checkbox' | 'radio' | 'switch' = 'checkbox'
-  // Whether the toggleable element is checked (can use bind:checked) @type {boolean}
-  export let checked: boolean
-  // Whether the toggleable element is disabled @type {boolean}
-  export let disabled = false
-  // aria-label of the toggleable element @type {string | undefined}
-  export let ariaLabel: string | undefined = undefined
-  // aria-describedby of the toggleable element @type {string | undefined}
-  export let ariaLabelledby: string | undefined = undefined
-  // aria-describedby of the toggleable element @type {string | undefined}
-  export let ariaDescribedby: string | undefined = undefined
-  // HTML element of the toggleable element @type {HTMLInputElement | HTMLButtonElement | undefined}
-  export let element: HTMLInputElement | HTMLButtonElement | undefined =
-    undefined
+  let {
+    id,
+    type = 'checkbox',
+    checked = $bindable(),
+    disabled = false,
+    ariaLabel = undefined,
+    ariaLabelledby = undefined,
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+    onchange = undefined,
+  }: Props = $props()
 
   function toggle() {
     checked = !checked
-    dispatch('change', checked)
+    onchange?.(checked)
   }
 </script>
 
@@ -36,9 +47,9 @@
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
     bind:this={element}
-    on:click={toggle}
+    onclick={toggle}
     role="switch"
-  />
+  ></button>
 {:else}
   <input
     {checked}
@@ -49,7 +60,7 @@
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
     bind:this={element}
-    on:click={toggle}
+    onclick={toggle}
   />
 {/if}
 
@@ -57,7 +68,6 @@
 @use 'sass:math'
 
 input, button
-  @include tint.effect-focus
   appearance: none
   background-color: transparent
   margin: 0
@@ -69,6 +79,7 @@ input, button
   align-items: center
   justify-content: center
   color: var(--tint-action-text)
+  @include tint.effect-focus
   &:not(:disabled):hover
     background-color: var(--tint-action-secondary-hover)
   &:not(:disabled):active

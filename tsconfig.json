@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/lib/index.d.ts"],
+  "include": ["src/lib/index.d.ts", "src/**/*.svelte"],
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -8,11 +8,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"],
-      "@lib/*": ["src/lib/*"],
-      "@demo/*": ["src/demo/*"]
+      "@src/*": ["./src/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@demo/*": ["./src/demo/*"]
     }
   }
 }

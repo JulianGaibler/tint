@@ -1,15 +1,13 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import Button from '@lib/components/Button.svelte'
+  import { fn } from '@storybook/test'
   import IconHome from '@lib/icons/20-home.svg?raw'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/Button',
     component: Button,
     argTypes: {
-      variant: {
-        control: 'inline-radio',
-        options: ['primary', 'secondary', 'ghost'],
-      },
       toggled: {
         control: 'boolean',
         defaultValue: undefined,
@@ -25,39 +23,28 @@
         control: 'text',
         if: { arg: 'href', value: true },
       },
-      title: {
-        control: 'text',
-      },
-      ariaLabel: {
-        control: 'text',
-      },
     },
-  }
+    args: {
+      onclick: fn(),
+      onkeypress: fn(),
+      onkeydown: fn(),
+    },
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
-
-  let count = 0
-  function handleClick() {
-    count += 1
-  }
+  setTemplate(child)
 </script>
 
-<Template let:args>
-  <Button
-    ariaLabel={args.icon ? 'home' : undefined}
-    {...args}
-    on:click
-    on:click={handleClick}
-  >
+{#snippet child(args: any)}
+  <Button {...args}>
     {#if args.icon}
       {@html IconHome}
     {:else}
-      You clicked: {count}
+      Hello!
     {/if}
   </Button>
-</Template>
+{/snippet}
 
 <Story
   name="Primary"

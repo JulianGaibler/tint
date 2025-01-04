@@ -7,6 +7,7 @@ import {
   type ActiveMenu,
   type ActiveMenuMeta,
   LEFT_MENU_OFFSET,
+  type MenuBehaviorType,
 } from './MenuInternal.svelte'
 
 /**
@@ -41,7 +42,7 @@ export function getMenuItems(
  * @returns ActiveMenus and ActiveMenusMeta object
  */
 export function createActiveMenu(
-  behavior: MenuBehavior,
+  behavior: MenuBehaviorType,
   parentIndex: number,
   parentItemRect: DOMRect,
   menuPath: number[],
@@ -124,10 +125,9 @@ export function calculatePosition(
   depth: number,
   parentItemRect: DOMRect,
   menuRect: DOMRect,
-  behavior: MenuBehavior,
+  behavior: MenuBehaviorType,
   relativeDistance?: number,
 ) {
-  console.trace('calculatePosition')
   const coords: {
     x: number
     y: number
@@ -144,7 +144,6 @@ export function calculatePosition(
   // There are different approaches to calculate the position of the menu
   // depending on whether the menu is a select menu and if not, if the menu
   // is a submenu.
-
   if (
     behavior === MenuBehavior.SELECT ||
     behavior === MenuBehavior.AUTOCOMPLETE
@@ -214,6 +213,10 @@ export function calculatePosition(
     }
   }
 
+  // add scroll offset
+  coords.y += window.scrollY
+  coords.x += window.scrollX
+
   return coords
 }
 
@@ -228,7 +231,7 @@ export function calculatePosition(
  * @returns ActiveMenus and ActiveMenusMeta object
  */
 export function addSubMenu(
-  behavior: MenuBehavior,
+  behavior: MenuBehaviorType,
   propItems: MenuItem[],
   activeMenus: ActiveMenu[],
   activeMenusMeta: ActiveMenuMeta[],

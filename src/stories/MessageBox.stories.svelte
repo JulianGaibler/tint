@@ -1,28 +1,24 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
+  import IconHome from '@lib/icons/20-home.svg?raw'
+  import { fn } from '@storybook/test'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/MessageBox',
     component: MessageBox,
-    argTypes: {
-      dismissable: {
-        control: 'boolean',
-        defaultValue: true,
-      },
-      icon: {
-        control: 'text',
-      },
+    args: {
+      onclose: fn(),
     },
-  }
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
-  import IconHome from '@lib/icons/20-home.svg?raw'
+  setTemplate(child)
 </script>
 
-<Template let:args>
-  <MessageBox {...args} on:close>
+{#snippet child(args: any)}
+  <MessageBox {...args}>
     <h2>Title</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
@@ -30,7 +26,7 @@
       aliquam nunc nisi quis nunc. Nulla facilisi.
     </p>
   </MessageBox>
-</Template>
+{/snippet}
 
 <Story name="Default" args={{ icon: IconHome, dismissable: true }} />
 

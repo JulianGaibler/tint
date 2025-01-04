@@ -1,29 +1,19 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import Menu, {
     MENU_SEPARATOR,
     type MenuItem,
   } from '@lib/components/Menu.svelte'
   import Btn from '@src/lib/components/Button.svelte'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/Menu',
     component: Menu,
-    argTypes: {
-      variant: {
-        control: 'inline-radio',
-        options: ['context', 'button'],
-      },
-      items: {
-        control: 'object',
-      },
-    },
-  }
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
-
-  let contextClickHandlers: (e: Event) => void
+  let contextClickHandlers: ((e: Event) => void) | undefined = $state()
 
   const noop = () => {}
 
@@ -61,23 +51,25 @@
       onClick: () => console.log('Item 5'),
     },
   ]
+
+  setTemplate(child)
 </script>
 
-<Template let:args>
+{#snippet child(args: any)}
   {#if args.variant === 'button'}
-    <Btn on:click={contextClickHandlers}>Open menu</Btn>
+    <Btn onclick={contextClickHandlers}>Open menu</Btn>
   {:else}
     <div
       role="button"
       tabindex="0"
       class="ctx-area"
-      on:contextmenu={contextClickHandlers}
+      oncontextmenu={contextClickHandlers}
     >
       Right click here
     </div>
   {/if}
   <Menu bind:contextClick={contextClickHandlers} {...args} />
-</Template>
+{/snippet}
 
 <!-- A menu that opens attached to the element that triggered the contextmenu event. -->
 <Story name="Button" args={{ variant: 'button', items }} />

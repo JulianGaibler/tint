@@ -11,9 +11,9 @@
   } from '@src/lib/components/Menu.svelte'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
   import FileUpload from '@src/lib/components/FileInput.svelte'
-  let option = 1
+  let option = $state(1)
 
-  let contextClickHandlers: ((e: Event) => void)[] = []
+  let contextClickHandlers: ((e: Event) => void)[] = $state([])
 
   function handleContextClick(e: Event | MouseEvent, i: number, j: number) {
     contextClickHandlers[j + i * 2](e)
@@ -192,13 +192,13 @@
       <div class="row">
         <div
           class="ctxarea"
-          on:contextmenu={(e) => handleContextClick(e, i, 0)}
+          oncontextmenu={(e) => handleContextClick(e, i, 0)}
           role="button"
           tabindex="0"
         >
           Context Menu
         </div>
-        <Button on:click={(e) => handleContextClick(e, i, 1)}>Hello!</Button>
+        <Button onclick={(e) => handleContextClick(e, i, 1)}>Hello!</Button>
         <Menu
           variant="context"
           bind:contextClick={contextClickHandlers[0 + i * 2]}

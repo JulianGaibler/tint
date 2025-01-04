@@ -1,31 +1,20 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import SearchField from '@lib/components/SearchField.svelte'
+  import { fn } from '@storybook/test'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/SearchField',
     component: SearchField,
-    argTypes: {
-      id: {
-        control: 'text',
-      },
-      value: {
-        control: 'text',
-      },
-      label: {
-        control: 'text',
-      },
-      disabled: {
-        control: 'boolean',
-      },
+    args: {
+      onsearch: fn(),
     },
-  }
-</script>
-
-<script lang="ts">
-  import { Story } from '@storybook/addon-svelte-csf'
+  })
 </script>
 
 <!-- Specialized text field for searches, meant to be used in a toolbar. -->
-<Story name="Basic" args={{ id: 'input' }} let:args>
-  <SearchField {...args} on:search />
+<Story name="Basic" args={{ id: 'input' }}>
+  {#snippet children(args: any)}
+    <SearchField {...args} />
+  {/snippet}
 </Story>

@@ -1,28 +1,45 @@
 <script lang="ts">
   import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import type { FullAutoFill } from 'svelte/elements'
 
-  // Id of the text field @type {string}
-  export let id: string
-  // Value of the text field (can use bind:value) @type {string}
-  export let value: string
-  // The label of the text field @type {string}
-  export let label: string
-  // The autocomplete of the text field @type {string|undefined}
-  export let autocomplete: string | undefined = undefined
-  // The type of the text field @type {string|undefined}
-  export let type: string | undefined = undefined
-  // Adds a helper text to the text field @type {string|undefined}
-  export let helperText: string | undefined = undefined
-  // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
-  export let error: string | undefined = undefined
-  // Disables the text field @type {boolean}
-  export let disabled = false
-  // Fills the width of the parent container @type {boolean}
-  export let fillWidth = true
-  // Id of the element that describes the text field @type {string|undefined}
-  export let ariaDescribedby: string | undefined = undefined
-  // HTML element of the text field @type {HTMLInputElement | undefined}
-  export let element: HTMLInputElement | undefined = undefined
+  interface Props {
+    // Id of the text field @type {string}
+    id: string
+    // Value of the text field (can use bind:value) @type {string}
+    value: string
+    // The label of the text field @type {string}
+    label: string
+    // The autocomplete of the text field @type {string|undefined}
+    autocomplete?: FullAutoFill | undefined
+    // The type of the text field @type {string|undefined}
+    type?: string | undefined
+    // Adds a helper text to the text field @type {string|undefined}
+    helperText?: string | undefined
+    // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
+    error?: string | undefined
+    // Disables the text field @type {boolean}
+    disabled?: boolean
+    // Fills the width of the parent container @type {boolean}
+    fillWidth?: boolean
+    // Id of the element that describes the text field @type {string|undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the text field @type {HTMLInputElement | undefined}
+    element?: HTMLInputElement | undefined
+  }
+
+  let {
+    id,
+    value = $bindable(),
+    label,
+    autocomplete = undefined,
+    type = undefined,
+    helperText = undefined,
+    error = undefined,
+    disabled = false,
+    fillWidth = true,
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+  }: Props = $props()
 
   if (helperText && ariaDescribedby) {
     throw new Error(
@@ -42,7 +59,9 @@
     }
   }
 
-  $: setType(type, element)
+  $effect(() => {
+    setType(type, element)
+  })
 </script>
 
 <div class:error class:disabled class:fillWidth>
@@ -87,7 +106,6 @@
   line-height: normal
   width: 100%
   > .input
-    @include tint.effect-focus
     box-sizing: border-box
     background-color: var(--tint-input-bg)
     color: currentColor
@@ -97,6 +115,7 @@
     height: 100%
     margin: 0
     padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
+    @include tint.effect-focus
   > label
     color: var(--tint-text-secondary)
     position: absolute
@@ -106,9 +125,9 @@
     transform: translateY(-55%) scale(1.166)
     transform-origin: left top
     transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1),color 150ms
+    pointer-events: none
     @media (prefers-reduced-motion: reduce)
       transition: none
-    pointer-events: none
 
 .error .input
   padding-inline-end: (tint.$size-8 * 2) + tint.$size-32

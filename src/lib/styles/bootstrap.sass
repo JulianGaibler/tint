@@ -2,27 +2,28 @@
 @use './typography' as typography
 @use './utils' as utils
 @use 'sass:color'
+@use 'sass:map'
 
 // Function to generate tint color variables
 @mixin generate-color-variables($colors)
   :root
-    @each $key, $value in map-get($colors, general)
+    @each $key, $value in map.get($colors, general)
       --tint-#{$key}: #{$value}
   :root, .tint--plain
-    @each $key, $value in map-get($colors, plain)
+    @each $key, $value in map.get($colors, plain)
       --tint-#{$key}: #{$value}
   .tint--tinted
-    @each $key, $value in map-get($colors, tint)
+    @each $key, $value in map.get($colors, tint)
       --tint-#{$key}: #{$value}
 
 // generate-font-faces
 @mixin generate-font-faces($path: '~tint/fonts')
   @each $font in fonts.$fonts
     @font-face
-      font-family: map-get($font, family)
-      font-weight: map-get($font, weight)
-      font-style: map-get($font, style)
-      src: url(#{$path}/#{map-get($font, filename)}.woff2) format(woff2)
+      font-family: map.get($font, family)
+      font-weight: map.get($font, weight)
+      font-style: map.get($font, style)
+      src: url(#{$path}/#{map.get($font, filename)}.woff2) format(woff2)
 
 // Define layers order. If you have more layers, you can use the variable
 $layer-names: tint-reset, tint-typography, tint-global
@@ -77,9 +78,9 @@ $layer-names: tint-reset, tint-typography, tint-global
       position: absolute
       z-index: -1
 
-@mixin full-bootstrap()
+@mixin full-bootstrap($path: '~tint/fonts')
   @include layers()
   @include base()
   @layer tint-typography
     @include type-classes()
-  @include generate-font-faces()
+  @include generate-font-faces($path)
