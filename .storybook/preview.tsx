@@ -10,7 +10,6 @@ export const decorators: Addon_DecoratorFunction[] = [withTintedClass]
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -29,11 +28,11 @@ const preview: Preview = {
     },
   },
 
-  tags: ['autodocs'],
+  tags: ['autodocs', 'autodocs'],
 
   initialGlobals: {
     [PARAM_KEY]: false,
-  }
+  },
 }
 
 export default preview

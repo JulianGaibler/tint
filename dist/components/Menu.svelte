@@ -1,10 +1,14 @@
-<script context="module">export { MENU_SEPARATOR } from "./menu/MenuInternal.svelte";
+<script module>export { MENU_SEPARATOR } from "./menu/MenuInternal.svelte";
 </script>
 
-<script>import { MenuBehavior } from "./menu/MenuInternal.svelte";
+<script lang="ts">import { MenuBehavior } from "./menu/MenuInternal.svelte";
 import MenuInternal from "./menu/MenuInternal.svelte";
-export let variant = "button";
-export let items = void 0;
+  interface Props {
+    variant?: string;
+    items?: any;
+  }
+
+  let { variant = "button", items = void 0 }: Props = $props();
 export const contextClick = openMenu;
 function openMenu(e) {
   e.preventDefault();
@@ -23,9 +27,9 @@ function closeMenu() {
   anchorRef = void 0;
   anchor = void 0;
 }
-let anchorRef = void 0;
-let anchor = void 0;
-let show;
+let anchorRef = $state(void 0);
+let anchor = $state(void 0);
+let show = $state();
 </script>
 
 {#if show && (anchorRef || anchor) && items}

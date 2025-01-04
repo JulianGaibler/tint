@@ -1,41 +1,18 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import Select from '@lib/components/Select.svelte'
+  import { fn } from '@storybook/test'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/Select',
     component: Select,
-    argTypes: {
-      id: {
-        control: 'text',
-      },
-      value: {
-        control: 'number',
-      },
-      items: {
-        control: 'object',
-      },
-      label: {
-        control: 'text',
-      },
-      helperText: {
-        control: 'text',
-      },
-      error: {
-        control: 'text',
-      },
-      disabled: {
-        control: 'boolean',
-      },
-      fillWidth: {
-        control: 'boolean',
-      },
+    args: {
+      onchange: fn(),
     },
-  }
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
-
   let items = [
     { value: 1, label: 'Apple' },
     { value: 2, label: 'Cherry' },
@@ -48,7 +25,8 @@
 <Story
   name="Basic"
   args={{ id: 'select', label: 'Fruit', value: undefined, items }}
-  let:args
 >
-  <Select {...args} />
+  {#snippet children(args: any)}
+    <Select {...args} />
+  {/snippet}
 </Story>

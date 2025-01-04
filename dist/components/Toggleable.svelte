@@ -1,13 +1,26 @@
-<script>import { createEventDispatcher } from "svelte";
+<script lang="ts">import { createEventDispatcher } from "svelte";
 const dispatch = createEventDispatcher();
-export let id;
-export let type = "checkbox";
-export let checked;
-export let disabled = false;
-export let ariaLabel = void 0;
-export let ariaLabelledby = void 0;
-export let ariaDescribedby = void 0;
-export let element = void 0;
+  interface Props {
+    id: any;
+    type?: string;
+    checked: any;
+    disabled?: boolean;
+    ariaLabel?: any;
+    ariaLabelledby?: any;
+    ariaDescribedby?: any;
+    element?: any;
+  }
+
+  let {
+    id,
+    type = "checkbox",
+    checked = $bindable(),
+    disabled = false,
+    ariaLabel = void 0,
+    ariaLabelledby = void 0,
+    ariaDescribedby = void 0,
+    element = $bindable(void 0)
+  }: Props = $props();
 function toggle() {
   checked = !checked;
   dispatch("change", checked);
@@ -23,9 +36,9 @@ function toggle() {
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
     bind:this={element}
-    on:click={toggle}
+    onclick={toggle}
     role="switch"
-  />
+></button>
 {:else}
   <input
     {checked}
@@ -36,7 +49,7 @@ function toggle() {
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
     bind:this={element}
-    on:click={toggle}
+    onclick={toggle}
   />
 {/if}
 

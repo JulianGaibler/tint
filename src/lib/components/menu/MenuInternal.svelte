@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   // --------
   // Constants
   // ----
@@ -14,11 +14,14 @@
   // ----
   export const MENU_SEPARATOR = Symbol('seperator')
 
-  export enum MenuBehavior {
-    MENU = 0,
-    SELECT = 1,
-    AUTOCOMPLETE = 2,
-  }
+  export const MenuBehavior = {
+    MENU: 0,
+    SELECT: 1,
+    AUTOCOMPLETE: 2,
+  } as const
+
+  export type MenuBehaviorType =
+    (typeof MenuBehavior)[keyof typeof MenuBehavior]
 
   export type MenuItem =
     | {
@@ -87,23 +90,36 @@
   import ArrowUp from '@lib/icons/14-chevron-menu-up.svg?raw'
   import ArrowDown from '@lib/icons/14-chevron-menu-down.svg?raw'
   import CheckIcon from '@lib/icons/14-check.svg?raw'
-  import throttle from 'lodash/throttle'
+  import throttle from 'lodash.throttle'
   import { matchSorter } from 'match-sorter'
-  import { onMount, onDestroy } from 'svelte'
+  import { onMount, onDestroy, tick } from 'svelte'
+  import * as focusTrap from 'focus-trap'
 
-  export let anchorRef: HTMLElement | undefined = undefined
-  export let anchor: Vec2 | undefined = undefined
-  export let items: MenuItem[]
-  export let behavior: MenuBehavior
-  export let hide: () => void
-  export let onItemFocus: ((item: MenuItem) => void) | undefined = undefined
+  interface Props {
+    anchorRef?: HTMLElement | undefined
+    anchor?: Vec2 | undefined
+    items: MenuItem[]
+    behavior: MenuBehaviorType
+    hide: () => void
+    onItemFocus?: ((item: MenuItem) => void) | undefined
+    lastActiveElement?: HTMLElement | undefined
+  }
 
-  export let lastActiveElement: HTMLElement | undefined = undefined
+  let {
+    anchorRef = undefined,
+    anchor = undefined,
+    items,
+    behavior,
+    hide,
+    onItemFocus = undefined,
+    lastActiveElement = $bindable(undefined),
+  }: Props = $props()
 
   // React.useState
-  let displayActiveMenus: ActiveMenu[] = []
-  let clickedItem: [number, number] | null = null
+  let displayActiveMenus: ActiveMenu[] = $state([])
+  let clickedItem: [number, number] | null = $state(null)
   let anchorRect: DOMRect | null = null
+  let overlayRef: HTMLElement | null = null
   const ws: {
     activeMenusRef: ActiveMenu[]
     activeMenusMeta: ActiveMenuMeta[]
@@ -120,6 +136,7 @@
     queuedSafeArea: null,
     safeArea: [null, null, null],
   }
+  let trap: focusTrap.FocusTrap | null = null
 
   const setMenuRefHandler = {
     set: function (_target: unknown, prop: string, value: HTMLElement | null) {
@@ -150,6 +167,9 @@
 
   function commitActiveMenus() {
     displayActiveMenus = [...ws.activeMenusRef]
+    tick().then(() => {
+      trap?.updateContainerElements(getTrapElements())
+    })
   }
 
   function setMenuRef(menu: number, menuRef: HTMLElement | null) {
@@ -237,12 +257,34 @@
     ws.activeMenusMeta = [activeMenuMeta]
     commitActiveMenus()
 
+    tick().then(() => {
+      trap = focusTrap.createFocusTrap(getTrapElements(), {
+        clickOutsideDeactivates: false,
+        escapeDeactivates: false,
+        allowOutsideClick: false,
+        returnFocusOnDeactivate: false,
+        fallbackFocus: '.context_menu ul',
+        onPostDeactivate: () => {
+          lastActiveElement?.focus()
+        },
+      })
+      trap?.activate()
+    })
     lastActiveElement = document.activeElement as HTMLElement
   })
 
   onDestroy(() => {
-    lastActiveElement?.focus()
+    trap?.deactivate()
   })
+
+  function getTrapElements(): HTMLElement[] {
+    return [
+      ...(overlayRef ? [overlayRef] : []),
+      ...ws.activeMenusMeta
+        .map((m) => m.menuRef)
+        .filter((m): m is HTMLElement => m !== null),
+    ]
+  }
 
   /**
    * Call on item that has been clicked.
@@ -448,12 +490,16 @@
       itemRef?.focus()
     }
     if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      event.stopPropagation()
       if (currentMenu.focus < menuLength - 1) {
         changeCurrentMenuFocus(currentMenu.focus + 1)
       }
       commitActiveMenus()
       return
     } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      event.stopPropagation()
       if (currentMenu.focus === -1) {
         changeCurrentMenuFocus(menuLength - 1)
       } else if (currentMenu.focus > 0) {
@@ -462,6 +508,8 @@
       commitActiveMenus()
       return
     } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      event.stopPropagation()
       if (currentMenu.focus === -1) {
         changeCurrentMenuFocus(0)
         commitActiveMenus()
@@ -484,6 +532,8 @@
       commitActiveMenus()
       return
     } else if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      event.stopPropagation()
       if (ws.activeMenusRef.length === 1) {
         if (currentMenu.focus === -1) {
           changeCurrentMenuFocus(0)
@@ -566,7 +616,7 @@
    * Throttled to give user a bit more space around the mouse-edge of the safe
    * area.
    */
-  const setMousePosition = throttle((x, y) => {
+  const setMousePosition = throttle((x: number, y: number) => {
     if (ws.safeArea[0] === null) {
       ws.safeArea[0] = { x: 0, y: 0 }
     }
@@ -737,27 +787,28 @@
 </script>
 
 <svelte:window
-  on:keydown={handleKeydown}
-  on:resize={handleResize}
-  on:mouseup={handleMouseUp}
-  on:mousemove={updateMousePosition}
+  onkeydown={handleKeydown}
+  onresize={handleResize}
+  onmouseup={handleMouseUp}
+  onmousemove={updateMousePosition}
 />
 
 <div
   role="presentation"
-  on:click={() => hide()}
+  onclick={() => hide()}
   class="fullscreen_overlay"
-  on:contextmenu={(e) => {
+  bind:this={overlayRef}
+  oncontextmenu={(e) => {
     e.preventDefault()
     hide()
   }}
-/>
+></div>
 {#each displayActiveMenus as { menuPath, position, scrollPosition }, i}
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     bind:this={setMenuRefProxy[i]}
-    on:mouseleave={() => handleMenuMouseLeave(i)}
-    class="context_menu tint--card tint--type-ui"
+    onmouseleave={() => handleMenuMouseLeave(i)}
+    class="context_menu tint--card"
     class:select={behavior}
     style:left={`${position.x}px`}
     style:top={`${position.y}px`}
@@ -774,10 +825,10 @@
         {@html ArrowDown}
       </div>
     {/if}
-    <ul on:scroll={(e) => checkOverflow(i, e)} role="menu" tabIndex={-1}>
+    <ul onscroll={(e) => checkOverflow(i, e)} role="menu" tabIndex={-1}>
       {#each getMenuItemMeta(items, menuPath, i) as info, j}
         {#if typeof info.item === 'object' && 'label' in info.item}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
           <li
             class={`item item_default ${
               clickedItem && clickedItem[0] === i && clickedItem[1] === j
@@ -793,7 +844,7 @@
             aria-checked={info.isChecked}
             tabIndex={info.selected && !info.isDisabled ? 0 : -1}
             data-selected={info.selected}
-            on:click={() => handleItemActivation(i, j)}
+            onclick={() => handleItemActivation(i, j)}
             bind:this={setItemRefProxy[`${i}-${j}`]}
             data-menu={i}
             data-item={j}
@@ -803,6 +854,7 @@
             {#if info.hasSubMenu}{@html ArrowIcon}{/if}
           </li>
         {:else}
+          <!-- <li aria-hidden=true><hr></li> -->
           <hr />
         {/if}
       {/each}
@@ -896,12 +948,12 @@
   &:global(.clicked)
     animation: clicked_animation 200ms linear
   &[aria-disabled="true"]
-    @media (forced-colors: active)
-      color: GrayText
     opacity: 0.5
     cursor: default
     animation: none
     background: unset
+    @media (forced-colors: active)
+      color: GrayText
 
 .item_default
   display: grid

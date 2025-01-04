@@ -1,18 +1,41 @@
-<script>import { createEventDispatcher } from "svelte";
+<script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();import { createEventDispatcher } from "svelte";
 const dispatch = createEventDispatcher();
-export let variant = "secondary";
-export let small = false;
-export let icon = false;
-export let toggled = void 0;
-export let href = void 0;
-export let external = false;
-export let download = void 0;
-export let disabled = false;
-export let submit = false;
-export let title = void 0;
-export let ariaLabel = void 0;
-export let tabindex = void 0;
-export let element = void 0;
+  interface Props {
+    variant?: string;
+    small?: boolean;
+    icon?: boolean;
+    toggled?: any;
+    href?: any;
+    external?: boolean;
+    download?: any;
+    disabled?: boolean;
+    submit?: boolean;
+    title?: any;
+    ariaLabel?: any;
+    tabindex?: any;
+    element?: any;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    variant = "secondary",
+    small = false,
+    icon = false,
+    toggled = void 0,
+    href = void 0,
+    external = false,
+    download = void 0,
+    disabled = false,
+    submit = false,
+    title = void 0,
+    ariaLabel = void 0,
+    tabindex = void 0,
+    element = $bindable(void 0),
+    children
+  }: Props = $props();
 if (icon && !title && !ariaLabel) {
   throw new Error("[tint] Icon buttons need at least a title or aria-label");
 }
@@ -22,12 +45,9 @@ if (variant === "primary" && toggled !== void 0) {
 if (href && toggled !== void 0) {
   throw new Error("[tint] Links cannot be toggled");
 }
-$:
-  role = toggled !== void 0 ? "switch" : void 0;
-$:
-  ariaPressed = toggled !== void 0 ? toggled : void 0;
-$:
-  _variant = toggled === void 0 ? variant : toggled ? "primary" : variant;
+let role = $derived(toggled !== void 0 ? "switch" : void 0);
+let ariaPressed = $derived(toggled !== void 0 ? toggled : void 0);
+let _variant = $derived(toggled === void 0 ? variant : toggled ? "primary" : variant);
 </script>
 
 {#if href && disabled}
@@ -38,7 +58,7 @@ $:
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}><slot /></span
+    class={`tint--type-action ${_variant}`}>{@render children?.()}</span
   >
 {:else if href}
   <a
@@ -52,7 +72,7 @@ $:
     class:small
     class={`tint--type-action ${_variant}`}
     rel={external ? 'noopener' : undefined}
-    target={external ? '_blank' : undefined}><slot /></a
+    target={external ? '_blank' : undefined}>{@render children?.()}</a
   >
 {:else}
   <button
@@ -66,10 +86,10 @@ $:
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
-    on:click
-    on:keypress
-    on:keydown
-    type={submit ? 'submit' : 'button'}><slot /></button
+    onclick={bubble('click')}
+    onkeypress={bubble('keypress')}
+    onkeydown={bubble('keydown')}
+    type={submit ? 'submit' : 'button'}>{@render children?.()}</button
   >
 {/if}
 

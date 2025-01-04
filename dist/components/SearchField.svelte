@@ -1,13 +1,24 @@
-<script>import Button from "./Button.svelte";
+<script lang="ts">import Button from "./Button.svelte";
 import IconSearch from "../icons/20-search.svg?raw";
 import { createEventDispatcher } from "svelte";
 const dispatch = createEventDispatcher();
-export let id;
-export let value;
-export let label = "Search";
-export let disabled = false;
-export let elementInput = void 0;
-export let elementButton = void 0;
+  interface Props {
+    id: any;
+    value: any;
+    label?: string;
+    disabled?: boolean;
+    elementInput?: any;
+    elementButton?: any;
+  }
+
+  let {
+    id,
+    value = $bindable(),
+    label = "Search",
+    disabled = false,
+    elementInput = $bindable(void 0),
+    elementButton = $bindable(void 0)
+  }: Props = $props();
 </script>
 
 <div class="box" class:disabled>
@@ -19,7 +30,7 @@ export let elementButton = void 0;
     bind:value
     class:filled={value?.length > 0}
     class="input tint--type-input"
-    on:keydown={(e) => {
+    onkeydown={(e) => {
       if (e.key === 'Enter') {
         dispatch('search', { value })
       }

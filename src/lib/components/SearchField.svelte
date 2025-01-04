@@ -1,22 +1,33 @@
 <script lang="ts">
   import Button from './Button.svelte'
   import IconSearch from '../icons/20-search.svg?raw'
-  import { createEventDispatcher } from 'svelte'
 
-  const dispatch = createEventDispatcher()
+  interface Props {
+    // Id of the text field @type {string}
+    id: string
+    // Value of the text field (can use bind:value) @type {string}
+    value: string
+    // The label of the text field @type {string}
+    label?: string
+    // Disables the text field @type {boolean}
+    disabled?: boolean
+    // HTML element of the text field @type {HTMLInputElement | undefined}
+    elementInput?: HTMLInputElement | undefined
+    // HTML element of the button @type {HTMLButtonElement | undefined}
+    elementButton?: HTMLButtonElement | undefined
+    // Event handler for when the search button is clicked @type {(value: string) => void}
+    onsearch?: (term: string) => void
+  }
 
-  // Id of the text field @type {string}
-  export let id: string
-  // Value of the text field (can use bind:value) @type {string}
-  export let value: string
-  // The label of the text field @type {string}
-  export let label = 'Search'
-  // Disables the text field @type {boolean}
-  export let disabled = false
-  // HTML element of the text field @type {HTMLInputElement | undefined}
-  export let elementInput: HTMLInputElement | undefined = undefined
-  // HTML element of the button @type {HTMLButtonElement | undefined}
-  export let elementButton: HTMLButtonElement | undefined = undefined
+  let {
+    id,
+    value = $bindable(),
+    label = 'Search',
+    disabled = false,
+    elementInput = $bindable(undefined),
+    elementButton = $bindable(undefined),
+    onsearch = undefined,
+  }: Props = $props()
 </script>
 
 <div class="box" class:disabled>
@@ -28,9 +39,9 @@
     bind:value
     class:filled={value?.length > 0}
     class="input tint--type-input"
-    on:keydown={(e) => {
+    onkeydown={(e) => {
       if (e.key === 'Enter') {
-        dispatch('search', { value })
+        onsearch?.(value)
       }
     }}
     placeholder={label}
@@ -40,7 +51,7 @@
     bind:element={elementButton}
     disabled={disabled || !value || value.length === 0}
     icon
-    on:click={() => dispatch('search', { value })}
+    onclick={() => onsearch?.(value)}
     small
     variant="ghost"
   >
@@ -64,7 +75,6 @@
   > .input
     position: absolute
     inset: 0
-    @include tint.effect-focus
     box-sizing: border-box
     background: transparent
     border-radius: tint.$input-radius
@@ -76,6 +86,7 @@
     padding-inline-start: tint.$size-4
     padding-inline-end: (tint.$size-8 * 2) + tint.$size-32
     transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out
+    @include tint.effect-focus
     @media (prefers-reduced-motion: reduce)
       transition: none
     &::placeholder

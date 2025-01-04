@@ -1,9 +1,19 @@
-<script>import Button from "./Button.svelte";
+<script lang="ts">import Button from "./Button.svelte";
 import IconClose from "../icons/20-close.svg?raw";
 import { createEventDispatcher } from "svelte";
-export let icon = void 0;
-export let dismissable = true;
-export let element = void 0;
+  interface Props {
+    icon?: any;
+    dismissable?: boolean;
+    element?: any;
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    icon = void 0,
+    dismissable = true,
+    element = $bindable(void 0),
+    children
+  }: Props = $props();
 const dispatch = createEventDispatcher();
 </script>
 
@@ -11,7 +21,7 @@ const dispatch = createEventDispatcher();
   {#if icon}
     <div class="icon" aria-hidden="true">{@html icon}</div>
   {/if}
-  <div class="content"><slot /></div>
+  <div class="content">{@render children?.()}</div>
   {#if dismissable}
     <Button
       small
