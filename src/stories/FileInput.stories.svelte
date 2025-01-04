@@ -1,47 +1,24 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import FileInput from '@lib/components/FileInput.svelte'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/FileInput',
     component: FileInput,
-    argTypes: {
-      id: {
-        control: 'text',
-      },
-      value: {
-        control: 'text',
-      },
-      label: {
-        control: 'text',
-      },
-      accept: {
-        control: 'text',
-      },
-      helperText: {
-        control: 'text',
-      },
-      error: {
-        control: 'text',
-      },
-      disabled: {
-        control: 'boolean',
-      },
-      fillWidth: {
-        control: 'boolean',
-      },
-    },
-  }
+  })
 </script>
 
 <script lang="ts">
-  import { Story } from '@storybook/addon-svelte-csf'
+  setTemplate(child)
 </script>
+
+{#snippet child(args: any)}
+  <FileInput {...args} />
+{/snippet}
 
 <!-- This is the most basic usage of the file input. Accepts any file type.
 Files can be dragged and dropped over the input too. -->
-<Story name="Basic" args={{ id: 'input', label: 'Label' }} let:args>
-  <FileInput {...args} />
-</Story>
+<Story name="Basic" args={{ id: 'input', label: 'Label' }} />
 
 <!-- You can also add a helper text to the file input and specify the accepted file types. -->
 <Story
@@ -52,10 +29,7 @@ Files can be dragged and dropped over the input too. -->
     accept: 'image/*',
     helperText: 'Upload a profile picture',
   }}
-  let:args
->
-  <FileInput {...args} />
-</Story>
+/>
 
 <!-- You can also add an error text to the file input,
   which replaces the helper text and adds an error icon. -->
@@ -67,7 +41,4 @@ Files can be dragged and dropped over the input too. -->
     error: 'File needs to be an image',
     accept: 'image/*',
   }}
-  let:args
->
-  <FileInput {...args} />
-</Story>
+/>

@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { MenuItem } from './menu/MenuInternal.svelte'
 
   export { MENU_SEPARATOR } from './menu/MenuInternal.svelte'
@@ -8,30 +8,40 @@
 </script>
 
 <script lang="ts">
-  import { type Vec2, MenuBehavior } from './menu/MenuInternal.svelte'
+  import { MenuBehavior, type Vec2 } from './menu/MenuInternal.svelte'
   import MenuInternal from './menu/MenuInternal.svelte'
 
-  /**
-   * The variant of the menu. If 'context', the menu opens at the location of
-   * the mouse event. If 'button', the menu is attached to the element that
-   * triggered the event.
-   *
-   * @type {'context' | 'button'}
-   */
-  export let variant: 'context' | 'button' = 'button'
-  /**
-   * The items of the menu. Menu does not open when undefined.
-   *
-   * @type {MenuItem[] | undefined}
-   */
-  export let items: MenuItem[] | undefined = undefined
-  /**
-   * The function to call when the menu should be opened. Ensure event has a
-   * target element for the anchor.
-   *
-   * @type {ContextClickHandler | undefined}
-   */
-  export const contextClick: ContextClickHandler | undefined = openMenu
+  interface Props {
+    /**
+     * The variant of the menu. If 'context', the menu opens at the location of
+     * the mouse event. If 'button', the menu is attached to the element that
+     * triggered the event.
+     *
+     * @type {'context' | 'button'}
+     */
+    variant?: 'context' | 'button'
+    /**
+     * The items of the menu. Menu does not open when undefined.
+     *
+     * @type {MenuItem[] | undefined}
+     */
+    items?: MenuItem[] | undefined
+    /**
+     * The function to call when the menu should be opened. Ensure event has a
+     * target element for the anchor.
+     *
+     * @type {ContextClickHandler | undefined}
+     */
+    contextClick?: ContextClickHandler | undefined
+  }
+
+  let {
+    variant = 'button',
+    items = undefined,
+    contextClick = $bindable(undefined),
+  }: Props = $props()
+
+  contextClick = openMenu
 
   function openMenu(e: Event | MouseEvent) {
     e.preventDefault()
@@ -53,9 +63,9 @@
     anchor = undefined
   }
 
-  let anchorRef: HTMLElement | undefined = undefined
-  let anchor: Vec2 | undefined = undefined
-  let show: boolean
+  let anchorRef: HTMLElement | undefined = $state(undefined)
+  let anchor: Vec2 | undefined = $state(undefined)
+  let show: boolean = $state(false)
 </script>
 
 {#if show && (anchorRef || anchor) && items}

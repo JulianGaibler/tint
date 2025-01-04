@@ -1,4 +1,4 @@
-<script context="module">export const WINDOW_PADDING = 8;
+<script module>export const WINDOW_PADDING = 8;
 export const TOP_MENU_OFFSET = 4;
 export const LEFT_MENU_OFFSET = 4;
 export const MENU_SEPARATOR = Symbol("seperator");
@@ -10,7 +10,7 @@ export var MenuBehavior = /* @__PURE__ */ ((MenuBehavior2) => {
 })(MenuBehavior || {});
 </script>
 
-<script>import {
+<script lang="ts">import {
   createActiveMenu,
   addSubMenu,
   getMenuItems,
@@ -25,15 +25,17 @@ import CheckIcon from "../../icons/14-check.svg?raw";
 import throttle from "lodash/throttle";
 import { matchSorter } from "match-sorter";
 import { onMount, onDestroy } from "svelte";
-export let anchorRef = void 0;
-export let anchor = void 0;
-export let items;
-export let behavior;
-export let hide;
-export let onItemFocus = void 0;
-export let lastActiveElement = void 0;
-let displayActiveMenus = [];
-let clickedItem = null;
+  let {
+    anchorRef = void 0,
+    anchor = void 0,
+    items,
+    behavior,
+    hide,
+    onItemFocus = void 0,
+    lastActiveElement = $bindable(void 0)
+  } = $props();
+let displayActiveMenus = $state([]);
+let clickedItem = $state(null);
 let anchorRect = null;
 const ws = {
   activeMenusRef: [],
@@ -51,7 +53,7 @@ const setMenuRefHandler = {
     return true;
   }
 };
-const setMenuRefProxy = new Proxy(ws.activeMenusMeta, setMenuRefHandler);
+const setMenuRefProxy = $state(new Proxy(ws.activeMenusMeta, setMenuRefHandler));
 const setItemRefHandler = {
   set: function(obj, prop, value) {
     if (value === void 0)
@@ -63,7 +65,7 @@ const setItemRefHandler = {
     return true;
   }
 };
-const setItemRefProxy = new Proxy(ws.activeMenusMeta, setItemRefHandler);
+const setItemRefProxy = $state(new Proxy(ws.activeMenusMeta, setItemRefHandler));
 function commitActiveMenus() {
   displayActiveMenus = [...ws.activeMenusRef];
 }
@@ -521,26 +523,26 @@ function getMenuItemMeta(propItems, menuPath, i) {
 </script>
 
 <svelte:window
-  on:keydown={handleKeydown}
-  on:resize={handleResize}
-  on:mouseup={handleMouseUp}
-  on:mousemove={updateMousePosition}
+  onkeydown={handleKeydown}
+  onresize={handleResize}
+  onmouseup={handleMouseUp}
+  onmousemove={updateMousePosition}
 />
 
 <div
   role="presentation"
-  on:click={() => hide()}
+  onclick={() => hide()}
   class="fullscreen_overlay"
-  on:contextmenu={(e) => {
+  oncontextmenu={(e) => {
     e.preventDefault()
     hide()
   }}
-/>
+></div>
 {#each displayActiveMenus as { menuPath, position, scrollPosition }, i}
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     bind:this={setMenuRefProxy[i]}
-    on:mouseleave={() => handleMenuMouseLeave(i)}
+    onmouseleave={() => handleMenuMouseLeave(i)}
     class="context_menu tint--card tint--type-ui"
     class:select={behavior}
     style:left={`${position.x}px`}
@@ -558,10 +560,10 @@ function getMenuItemMeta(propItems, menuPath, i) {
         {@html ArrowDown}
       </div>
     {/if}
-    <ul on:scroll={(e) => checkOverflow(i, e)} role="menu" tabIndex={-1}>
+    <ul onscroll={(e) => checkOverflow(i, e)} role="menu" tabIndex={-1}>
       {#each getMenuItemMeta(items, menuPath, i) as info, j}
         {#if typeof info.item === 'object' && 'label' in info.item}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
           <li
             class={`item item_default ${
               clickedItem && clickedItem[0] === i && clickedItem[1] === j
@@ -577,7 +579,7 @@ function getMenuItemMeta(propItems, menuPath, i) {
             aria-checked={info.isChecked}
             tabIndex={info.selected && !info.isDisabled ? 0 : -1}
             data-selected={info.selected}
-            on:click={() => handleItemActivation(i, j)}
+            onclick={() => handleItemActivation(i, j)}
             bind:this={setItemRefProxy[`${i}-${j}`]}
             data-menu={i}
             data-item={j}
