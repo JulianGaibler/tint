@@ -1,7 +1,9 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import Toggleable from '@lib/components/Toggleable.svelte'
+  import { fn } from '@storybook/test'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/Toggleable',
     component: Toggleable,
     argTypes: {
@@ -25,40 +27,35 @@
         control: 'text',
       },
     },
-  }
+    args: {
+      onchange: fn(),
+    },
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
+  setTemplate(child)
 </script>
+
+{#snippet child(args: any)}
+  <div>
+    <label for={args.id}>Label</label>
+    <Toggleable {...args} />
+  </div>
+{/snippet}
 
 <!-- A standard checkbox that can be toggled on and off. -->
 <Story
   name="Checkbox"
   args={{ checked: true, id: 'input', type: 'checkbox' }}
-  let:args
->
-  <div>
-    <label for={args.id}>Label</label>
-    <Toggleable {...args} />
-  </div>
-</Story>
+/>
 
 <!--
   The individual radio button can also be toggled on and off.
   A higher level component has to manage the state of multiple
   radio buttons.
 -->
-<Story
-  name="Radio"
-  args={{ checked: true, id: 'input', type: 'radio' }}
-  let:args
->
-  <div>
-    <label for={args.id}>Label</label>
-    <Toggleable {...args} />
-  </div>
-</Story>
+<Story name="Radio" args={{ checked: true, id: 'input', type: 'radio' }} />
 
 <!-- A switch that can be toggled on and off. Behaves like a checkbox. -->
 <Story
@@ -68,19 +65,13 @@
     type: 'switch',
     ariaLabelledby: 'switch-label',
   }}
-  let:args
->
-  <div>
-    <p id={args.ariaLabelledby}>Label</p>
-    <Toggleable {...args} />
-  </div>
-</Story>
+/>
 
 <style lang="sass">
 div
   display: flex
   align-items: center
   margin-bottom: 1rem
-  label, p
+  label
     margin-right: 1rem
 </style>

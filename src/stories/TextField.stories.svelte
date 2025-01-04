@@ -1,43 +1,26 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import TextField from '@lib/components/TextField.svelte'
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: 'Components/TextField',
     component: TextField,
     argTypes: {
-      id: {
-        control: 'text',
-      },
-      value: {
-        control: 'text',
-      },
-      label: {
-        control: 'text',
-      },
-      helperText: {
-        control: 'text',
-      },
-      error: {
-        control: 'text',
-      },
-      disabled: {
-        control: 'boolean',
-      },
-      fillWidth: {
-        control: 'boolean',
-      },
+      autocomplete: { control: 'select' },
     },
-  }
+  })
 </script>
 
 <script lang="ts">
-  import { Story, Template } from '@storybook/addon-svelte-csf'
+  setTemplate(child)
 </script>
 
-<!-- This is the most basic usage of the text field. -->
-<Story name="Basic" args={{ id: 'input', label: 'Label' }} let:args>
+{#snippet child(args: any)}
   <TextField {...args} />
-</Story>
+{/snippet}
+
+<!-- This is the most basic usage of the text field. -->
+<Story name="Basic" args={{ id: 'input', label: 'Label' }} />
 
 <!-- You can also add a helper text to the text field. -->
 <Story
@@ -47,10 +30,7 @@
     label: 'New password',
     helperText: 'Should contain a special character',
   }}
-  let:args
->
-  <TextField {...args} />
-</Story>
+/>
 
 <!-- You can also add an error text to the text field,
   which replaces the helper text and adds an error icon. -->
@@ -61,7 +41,4 @@
     label: 'New password',
     error: 'Password must be at least 8 characters long',
   }}
-  let:args
->
-  <TextField {...args} />
-</Story>
+/>

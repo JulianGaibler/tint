@@ -1,22 +1,37 @@
-<script>import IconWarning from "../icons/20-warning.svg?raw";
+<script lang="ts">import IconWarning from "../icons/20-warning.svg?raw";
 import Button from "./Button.svelte";
-export let id;
-export let value = void 0;
-export let label;
-export let accept = void 0;
-export let helperText = void 0;
-export let error = void 0;
-export let disabled = false;
-export let fillWidth = true;
-export let ariaDescribedby = void 0;
-export let element = void 0;
+  interface Props {
+    id: any;
+    value?: any;
+    label: any;
+    accept?: any;
+    helperText?: any;
+    error?: any;
+    disabled?: boolean;
+    fillWidth?: boolean;
+    ariaDescribedby?: any;
+    element?: any;
+  }
+
+  let {
+    id,
+    value = $bindable(void 0),
+    label,
+    accept = void 0,
+    helperText = void 0,
+    error = void 0,
+    disabled = false,
+    fillWidth = true,
+    ariaDescribedby = void 0,
+    element = $bindable(void 0)
+  }: Props = $props();
 if (helperText && ariaDescribedby) {
   throw new Error(
     "[tint] You can not use both helperText and ariaDescribedby"
   );
 }
-let dragging = null;
-let draggedOver = false;
+let dragging = $state(null);
+let draggedOver = $state(false);
 function handleDragStart(event) {
   dragging = event.target;
 }
@@ -36,15 +51,14 @@ function updateValue(event) {
   const target = event.target;
   value = target.files?.[0];
 }
-$:
-  acceptString = typeof accept === "string" ? accept : accept?.join(",");
+let acceptString = $derived(typeof accept === "string" ? accept : accept?.join(","));
 </script>
 
 <svelte:window
-  on:dragenter={handleDragStart}
-  on:dragleave={handleDragEnd}
-  on:drop={handleDragEnd}
-  on:dragend={handleDragEnd}
+  ondragenter={handleDragStart}
+  ondragleave={handleDragEnd}
+  ondrop={handleDragEnd}
+  ondragend={handleDragEnd}
 />
 
 <div class:error class:disabled class:fillWidth>
@@ -63,11 +77,11 @@ $:
       class="input tint--type-input"
       class:dragging={!!dragging && !disabled}
       class:draggedOver={!!draggedOver && !disabled}
-      on:change={updateValue}
-      on:dragenter={handleDragEnter}
-      on:dragover={handleDragEnter}
-      on:drop={handleDragEnd}
-      on:dragleave={handleDragLeave}
+      onchange={updateValue}
+      ondragenter={handleDragEnter}
+      ondragover={handleDragEnter}
+      ondrop={handleDragEnd}
+      ondragleave={handleDragLeave}
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
     {#if error}

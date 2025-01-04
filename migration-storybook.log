@@ -1,9 +1,30 @@
 🔎 checking possible migrations..
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
+WARN An issue occurred while trying to find dependencies metadata using npm.
 
 🔎 found a 'missingStorybookDependencies' migration:
 ╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                                          │
 │   Found the following Storybook packages used in your project, but they are missing from your project dependencies:      │
+│   - @storybook/manager-api: (1 file)                                                                                     │
+│   - @storybook/theming: (2 files)                                                                                        │
 │   - @storybook/types: (1 file)                                                                                           │
 │                                                                                                                          │
 │   Referencing missing packages can cause your project to crash. We can automatically add them to your dependencies.      │
@@ -12,7 +33,7 @@
 │                                                                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ? Do you want to run the 'missingStorybookDependencies' migration on your project? › (Y/n)✔ Do you want to run the 'missingStorybookDependencies' migration on your project? … yes
-✅ Installing the following packages as devDependencies: @storybook/types
+✅ Installing the following packages as devDependencies: @storybook/theming,@storybook/manager-api,@storybook/types
 
 An error occurred while installing dependencies:
 NPM error ERESOLVE - Dependency resolution error.
@@ -22,22 +43,21 @@ Please check the logfile generated at ./storybook.log for troubleshooting and tr
 HandledError: Error: NPM error ERESOLVE - Dependency resolution error.
 
 Please check the logfile generated at ./storybook.log for troubleshooting and try again.
-    at Ar.addDependencies (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19044:72)
-    at async Object.run (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:280:413)
-    ... 4 lines matching cause stack trace ...
-    at async upgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:2078) {
+    at Ar.addDependencies (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/core/dist/common/index.cjs:19044:72)
+    at async Object.run (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:280:413)
+    ... 3 lines matching cause stack trace ...
+    at async Command.<anonymous> (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:601:2888) {
   handled: true,
   cause: Error: NPM error ERESOLVE - Dependency resolution error.
   
   Please check the logfile generated at ./storybook.log for troubleshooting and try again.
-      at Ar.runAddDeps (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19365:24)
-      at async Ar.addDependencies (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19041:9)
-      at async Object.run (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:280:413)
-      at async runFixes (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:533:1801)
-      at async automigrate (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:531:1625)
-      at async doUpgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:1612)
-      at async withTelemetry (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/core-server/index.cjs:35757:12)
-      at async upgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:2078)
+      at Ar.runAddDeps (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/core/dist/common/index.cjs:19365:24)
+      at async Ar.addDependencies (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/core/dist/common/index.cjs:19041:9)
+      at async Object.run (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:280:413)
+      at async runFixes (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:533:1801)
+      at async automigrate (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:531:1625)
+      at async doAutomigrate (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:531:636)
+      at async Command.<anonymous> (/Users/julian/.npm/_npx/7122ab1f221a777a/node_modules/@storybook/cli/dist/bin/index.cjs:601:2888)
 }
 
 
@@ -47,13 +67,13 @@ Please check the logfile generated at ./storybook.log for troubleshooting and tr
 │   Attention: We've detected that you're using argTypesRegex:                                 │
 │                                                                                              │
 │   .storybook/preview.tsx                                                                     │
-│     15 | const preview: Preview = {                                                          │
-│     16 |   parameters: {                                                                     │
-│   > 17 |     actions: { argTypesRegex: '^on[A-Z].*' },                                       │
+│     11 | const preview: Preview = {                                                          │
+│     12 |   parameters: {                                                                     │
+│   > 13 |     actions: { argTypesRegex: '^on[A-Z].*' },                                       │
 │        |                ^^^^^^^^^^^^^                                                        │
-│     18 |     controls: {                                                                     │
-│     19 |       matchers: {                                                                   │
-│     20 |         color: /(background|color)$/i,                                              │
+│     14 |     controls: {                                                                     │
+│     15 |       matchers: {                                                                   │
+│     16 |         color: /(background|color)$/i,                                              │
 │                                                                                              │
 │   Storybook's play functions let you render your stories interactively.                      │
 │                                                                                              │
@@ -87,86 +107,60 @@ Please check the logfile generated at ./storybook.log for troubleshooting and tr
 │                                                                                                                                                   │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ? Do you want to run the 'github-flavored-markdown-mdx' migration on your project? › (Y/n)✔ Do you want to run the 'github-flavored-markdown-mdx' migration on your project? … yes
+✅ Adding "@storybook/addon-mdx-gfm" addon
+✅ ran github-flavored-markdown-mdx migration
 
-An error occurred while installing dependencies:
-NPM error ERESOLVE - Dependency resolution error.
-
-Please check the logfile generated at ./storybook.log for troubleshooting and try again.
-❌ error when running github-flavored-markdown-mdx migration
-HandledError: Error: NPM error ERESOLVE - Dependency resolution error.
-
-Please check the logfile generated at ./storybook.log for troubleshooting and try again.
-    at Ar.addDependencies (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19044:72)
-    at async Object.run (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:239:247)
-    ... 4 lines matching cause stack trace ...
-    at async upgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:2078) {
-  handled: true,
-  cause: Error: NPM error ERESOLVE - Dependency resolution error.
-  
-  Please check the logfile generated at ./storybook.log for troubleshooting and try again.
-      at Ar.runAddDeps (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19365:24)
-      at async Ar.addDependencies (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/common/index.cjs:19041:9)
-      at async Object.run (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:239:247)
-      at async runFixes (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:533:1801)
-      at async automigrate (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:531:1625)
-      at async doUpgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:1612)
-      at async withTelemetry (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/core/dist/core-server/index.cjs:35757:12)
-      at async upgrade (/Users/julian/.npm/_npx/3ff80db6ecc2a2d9/node_modules/@storybook/cli/dist/bin/index.cjs:600:2078)
-}
-
+🔎 found a 'autodocsTrue' migration:
+╭ Automigration detected ────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                    │
+│   We've changed the configuration of autodocs (previous docsPage), so now the value:               │
+│     - docs.autodocs: true -- means automatically create docs for every CSF file                    │
+│     - docs.autodocs: 'tag' -- means only create autodocs for CSF files with the 'autodocs' tag     │
+│     - docs.autodocs: false -- means never create autodocs                                          │
+│                                                                                                    │
+│   Based on your prior configuration,  we can set the `docs.autodocs` to keep your old behaviour:   │
+│                                                                                                    │
+│   docs: { autodocs: true }                                                                         │
+│                                                                                                    │
+│   More info: https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#autodocs-changes      │
+│                                                                                                    │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
+? Do you want to run the 'autodocsTrue' migration on your project? › (Y/n)✔ Do you want to run the 'autodocsTrue' migration on your project? … yes
+✅ Setting 'docs.autodocs' to true in main.js
+✅ ran autodocsTrue migration
 
 🔎 found a 'remove-react-dependency' migration:
-╭ Manual migration detected ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                                                                                                        │
-│   We detected that your project has a dependency for "react" that it might not need.                                                                                                   │
-│   Nothing breaks by having it, you can safely ignore this message, if you wish.                                                                                                        │
-│                                                                                                                                                                                        │
-│   Storybook asked you to add "react" as a direct dependency in the past when upgrading from Storybook 6 to 7.                                                                          │
-│   However, since version 8.0, Storybook no longer requires you to provide "react" as a dependency.                                                                                     │
-│   Some community addons might still wrongfully list "react" and "react-dom" as required peer dependencies, but since Storybook 7.6 it should not be needed in the majority of cases.   │
-│                                                                                                                                                                                        │
-│   If you know you are not using React outside of Storybook, it should be safe to remove the "react" and "react-dom" dependencies from your project's package.json.                     │
-│   Storybook cannot do this automatically as removing it might break your project, so it should be done manually with care.                                                             │
-│                                                                                                                                                                                        │
-╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭ Manual migration detected ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                                                  │
+│   We detected that your project has a dependency for "react" that it might not need.                                                                                             │
+│   Nothing breaks by having it, you can safely ignore this message, if you wish.                                                                                                  │
+│                                                                                                                                                                                  │
+│   Storybook asked you to add "react" as a direct dependency in the past when upgrading from Storybook 6 to 7.                                                                    │
+│   However, since version 8.0, Storybook no longer requires you to provide "react" as a dependency.                                                                               │
+│   Some community addons might still wrongfully list "react" and "react-dom" as required peer dependencies, but since Storybook 7.6 it should not be needed in the majority of    │
+│   cases.                                                                                                                                                                         │
+│                                                                                                                                                                                  │
+│   If you know you are not using React outside of Storybook, it should be safe to remove the "react" and "react-dom" dependencies from your project's package.json.               │
+│   Storybook cannot do this automatically as removing it might break your project, so it should be done manually with care.                                                       │
+│                                                                                                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ? Select continue once you have made the required changes, or quit to exit the migration process › quit / continue✔ Select continue once you have made the required changes, or quit to exit the migration process … quit / continue
 
-🔎 found a 'upgradeStorybookRelatedDependencies' migration:
-╭ Automigration detected ────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                                                        │
-│   You're upgrading to the latest version of Storybook. We recommend upgrading the following packages:                                  │
-│   - @storybook/addon-svelte-csf: 4.1.0 => 4.1.7                                                                                        │
-│   - eslint-plugin-storybook: 0.6.15 => 0.10.1                                                                                          │
-│                                                                                                                                        │
-│   After upgrading, we will run the dedupe command, which could possibly have effects on dependencies that are not Storybook related.   │
-│   see: https://docs.npmjs.com/cli/commands/npm-dedupe                                                                                  │
-│                                                                                                                                        │
-│   Do you want to proceed (upgrade the detected packages)?                                                                              │
-│                                                                                                                                        │
-╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-? Do you want to run the 'upgradeStorybookRelatedDependencies' migration on your project? › (y/N)✔ Do you want to run the 'upgradeStorybookRelatedDependencies' migration on your project? … yes
-Installing dependencies...
-
-
-We upgraded 2 packages:
-- @storybook/addon-svelte-csf: 4.1.0 => 4.1.7
-- eslint-plugin-storybook: 0.6.15 => 0.10.1
-
-✅ ran upgradeStorybookRelatedDependencies migration
-
 🔎 found a 'visual-tests-addon' migration:
-╭ Automigration detected ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                                                                                                                │
-│   New to Storybook 8: Storybook's Visual Tests addon helps you catch unintentional changes/bugs in your stories. The addon is powered by Chromatic, a cloud-based testing tool developed by    │
-│   Storybook's core team.                                                                                                                                                                       │
-│                                                                                                                                                                                                │
-│   Learn more: https://storybook.js.org/docs/writing-tests/visual-testing                                                                                                                       │
-│                                                                                                                                                                                                │
-│   Install Visual Tests addon in your project?                                                                                                                                                  │
-│                                                                                                                                                                                                │
-╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-? Do you want to run the 'visual-tests-addon' migration on your project? › (Y/n)✔ Do you want to run the 'visual-tests-addon' migration on your project? … no
+╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                                                  │
+│   New to Storybook 8: Storybook's Visual Tests addon helps you catch unintentional changes/bugs in your stories. The addon is powered by Chromatic, a cloud-based testing tool   │
+│   developed by Storybook's core team.                                                                                                                                            │
+│                                                                                                                                                                                  │
+│   Learn more: https://storybook.js.org/docs/writing-tests/visual-testing                                                                                                         │
+│                                                                                                                                                                                  │
+│   Install Visual Tests addon in your project?                                                                                                                                    │
+│                                                                                                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+? Do you want to run the 'visual-tests-addon' migration on your project? › (Y/n)✔ Do you want to run the 'visual-tests-addon' migration on your project? … yes
+✅ Adding "@chromatic-com/storybook" addon
+✅ ran visual-tests-addon migration
 
 🔎 found a 'autodocs-tags' migration:
 ╭ Automigration detected ───────────────────────────────────────────────────────────────────────────────────────────╮
@@ -182,34 +176,17 @@ We upgraded 2 packages:
 ✅ Adding "autodocs" tag to .storybook/preview.tsx
 ✅ Removing "docs.autodocs" from .storybook/main.ts
 ✅ ran autodocs-tags migration
-
-🔎 found a 'initial-globals' migration:
-╭ Automigration detected ─────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                                             │
-│   The globals setting in .storybook/preview.tsx is deprecated                                                               │
-│   and has been renamed to initialGlobals.                                                                                   │
-│                                                                                                                             │
-│   Learn more: https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#previewjs-globals-renamed-to-initialglobals   │
-│                                                                                                                             │
-│   Rename globals to initalGlobals?                                                                                          │
-│                                                                                                                             │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-? Do you want to run the 'initial-globals' migration on your project? › (Y/n)✔ Do you want to run the 'initial-globals' migration on your project? … yes
-✅ ran initial-globals migration
+WARN An issue occurred while trying to find dependencies metadata using npm.
 
 ╭ Migration check ran with failures ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                                                                               │
 │   Successful migrations:                                                                                                                                      │
 │                                                                                                                                                               │
-│   upgradeStorybookRelatedDependencies, autodocs-tags, initial-globals                                                                                         │
+│   github-flavored-markdown-mdx, autodocsTrue, visual-tests-addon, autodocs-tags                                                                               │
 │                                                                                                                                                               │
 │   Failed migrations:                                                                                                                                          │
 │                                                                                                                                                               │
 │   missingStorybookDependencies:                                                                                                                               │
-│   Error: NPM error ERESOLVE - Dependency resolution error.                                                                                                    │
-│                                                                                                                                                               │
-│   Please check the logfile generated at ./storybook.log for troubleshooting and try again.                                                                    │
-│   github-flavored-markdown-mdx:                                                                                                                               │
 │   Error: NPM error ERESOLVE - Dependency resolution error.                                                                                                    │
 │                                                                                                                                                               │
 │   Please check the logfile generated at ./storybook.log for troubleshooting and try again.                                                                    │
@@ -219,10 +196,6 @@ We upgraded 2 packages:
 │   Manual migrations:                                                                                                                                          │
 │                                                                                                                                                               │
 │   remove-argtypes-regex, remove-react-dependency                                                                                                              │
-│                                                                                                                                                               │
-│   Skipped migrations:                                                                                                                                         │
-│                                                                                                                                                               │
-│   visual-tests-addon                                                                                                                                          │
 │                                                                                                                                                               │
 │   ─────────────────────────────────────────────────                                                                                                           │
 │                                                                                                                                                               │

@@ -1,15 +1,33 @@
-<script>import IconWarning from "../icons/20-warning.svg?raw";
-export let id;
-export let value;
-export let label;
-export let autocomplete = void 0;
-export let type = void 0;
-export let helperText = void 0;
-export let error = void 0;
-export let disabled = false;
-export let fillWidth = true;
-export let ariaDescribedby = void 0;
-export let element = void 0;
+<script lang="ts">
+  import { run } from 'svelte/legacy';
+import IconWarning from "../icons/20-warning.svg?raw";
+  interface Props {
+    id: any;
+    value: any;
+    label: any;
+    autocomplete?: any;
+    type?: any;
+    helperText?: any;
+    error?: any;
+    disabled?: boolean;
+    fillWidth?: boolean;
+    ariaDescribedby?: any;
+    element?: any;
+  }
+
+  let {
+    id,
+    value = $bindable(),
+    label,
+    autocomplete = void 0,
+    type = void 0,
+    helperText = void 0,
+    error = void 0,
+    disabled = false,
+    fillWidth = true,
+    ariaDescribedby = void 0,
+    element = $bindable(void 0)
+  }: Props = $props();
 if (helperText && ariaDescribedby) {
   throw new Error(
     "[tint] You can not use both helperText and ariaDescribedby"
@@ -23,8 +41,9 @@ function setType(type2, element2) {
     element2.removeAttribute("type");
   }
 }
-$:
-  setType(type, element);
+run(() => {
+    setType(type, element);
+  });
 </script>
 
 <div class:error class:disabled class:fillWidth>

@@ -1,9 +1,10 @@
+@use 'sass:map';
+
 // [!] Carefuly when changing:
 // This format is expected by storybook docs generator
 $typography-styles: (
   // Display
-  display-serif-3:
-    (
+  display-serif-3: (
       font-size: 3rem,
       font-family: 'Merriweather',
       font-weight: 700,
@@ -14,8 +15,7 @@ $typography-styles: (
     font-weight: 700,
   ),
   // Title
-  title-serif-1:
-    (
+  title-serif-1: (
       font-size: 2rem,
       font-family: 'Merriweather',
       font-weight: 700,
@@ -46,8 +46,7 @@ $typography-styles: (
     font-weight: 700,
   ),
   // Action
-  action:
-    (
+  action: (
       font-size: 0.875rem,
       font-family: 'HK Grotesk',
       font-weight: 700,
@@ -55,8 +54,7 @@ $typography-styles: (
       text-transform: uppercase,
     ),
   // Input
-  input:
-    (
+  input: (
       font-size: 0.875rem,
       font-family: 'HK Grotesk',
       font-weight: 500,
@@ -67,8 +65,7 @@ $typography-styles: (
     font-weight: 500,
   ),
   // UI
-  ui:
-    (
+  ui: (
       font-size: 0.938rem,
       font-family: 'HK Grotesk',
       font-weight: 500,
@@ -101,8 +98,7 @@ $typography-styles: (
     font-style: italic,
   ),
   // Body
-  body-serif-large:
-    (
+  body-serif-large: (
       font-size: 1.166rem,
       font-family: 'Merriweather',
       font-weight: 400,
@@ -179,8 +175,8 @@ $typography-styles: (
 );
 
 @mixin type-class($key) {
-  @if map-has-key($typography-styles, $key) {
-    @each $property, $value in map-get($typography-styles, $key) {
+  @if map.has-key($typography-styles, $key) {
+    @each $property, $value in map.get($typography-styles, $key) {
       #{$property}: $value;
     }
   } @else {

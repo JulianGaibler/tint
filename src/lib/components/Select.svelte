@@ -9,26 +9,44 @@
     disabled?: boolean
   }
 
-  // Id of the select @type {string}
-  export let id: string
-  // Value of the current selected item (can use bind:value) @type {string|undefined}
-  export let value: T | undefined
-  // The items of the select @type {SelectItem[]}
-  export let items: SelectItem[]
-  // The label of the select @type {string}
-  export let label: string
-  // Adds a helper text to the select @type {string|undefined}
-  export let helperText: string | undefined = undefined
-  // Marks the select as invalid and adds the error text and icon @type {string|undefined}
-  export let error: string | undefined = undefined
-  // Disables the select @type {boolean}
-  export let disabled = false
-  // Fills the width of the parent container @type {boolean}
-  export let fillWidth = true
-  // Id of the element that describes the select @type {string|undefined}
-  export let ariaDescribedby: string | undefined = undefined
-  // HTML element of the select @type {HTMLSelectElement | undefined}
-  export let element: HTMLSelectElement | undefined = undefined
+  interface Props {
+    // Id of the select @type {string}
+    id: string
+    // Value of the current selected item (can use bind:value) @type {string|undefined}
+    value: T | undefined
+    // The items of the select @type {SelectItem[]}
+    items: SelectItem[]
+    // The label of the select @type {string}
+    label: string
+    // Adds a helper text to the select @type {string|undefined}
+    helperText?: string | undefined
+    // Marks the select as invalid and adds the error text and icon @type {string|undefined}
+    error?: string | undefined
+    // Disables the select @type {boolean}
+    disabled?: boolean
+    // Fills the width of the parent container @type {boolean}
+    fillWidth?: boolean
+    // Id of the element that describes the select @type {string|undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the select @type {HTMLSelectElement | undefined}
+    element?: HTMLSelectElement | undefined
+    // Event handler for when the value changes @type {(e: Event) => void|undefined}
+    onchange?: (e: Event) => void
+  }
+
+  let {
+    id,
+    value = $bindable(),
+    items,
+    label,
+    helperText = undefined,
+    error = undefined,
+    disabled = false,
+    fillWidth = true,
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+    onchange = undefined,
+  }: Props = $props()
 
   if (helperText && ariaDescribedby) {
     throw new Error(
@@ -53,7 +71,7 @@
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
       bind:value
-      on:change
+      {onchange}
       class:filled={!noValue(value)}
       class="input tint--type-input"
     >
@@ -91,7 +109,6 @@
   height: tint.$size-48
   line-height: normal
   > .input
-    @include tint.effect-focus
     appearance: none
     box-sizing: border-box
     background-color: var(--tint-input-bg)
@@ -103,6 +120,7 @@
     margin: 0
     padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
     padding-inline-end: (tint.$size-8 * 3) + tint.$size-32
+    @include tint.effect-focus
   > label
     color: var(--tint-text-secondary)
     position: absolute
