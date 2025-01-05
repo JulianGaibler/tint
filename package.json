@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -28,7 +28,7 @@
   "peerDependencies": {
     "match-sorter": "^8.0.0",
     "sass": "^1.83.1",
-    "svelte": "^4.0.0"
+    "svelte": "^5.16.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.4.7",
