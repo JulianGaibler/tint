@@ -1,30 +1,41 @@
-<script lang="ts">import { createEventDispatcher } from "svelte";
-const dispatch = createEventDispatcher();
+<script lang="ts">
   interface Props {
-    id: any;
-    type?: string;
-    checked: any;
-    disabled?: boolean;
-    ariaLabel?: any;
-    ariaLabelledby?: any;
-    ariaDescribedby?: any;
-    element?: any;
+    // Id of the toggleable element @type {string}
+    id: string
+    // Type of the toggleable element @type {'checkbox' | 'radio' | 'switch'}
+    type?: 'checkbox' | 'radio' | 'switch'
+    // Whether the toggleable element is checked (can use bind:checked) @type {boolean}
+    checked: boolean
+    // Whether the toggleable element is disabled @type {boolean}
+    disabled?: boolean
+    // aria-label of the toggleable element @type {string | undefined}
+    ariaLabel?: string | undefined
+    // aria-describedby of the toggleable element @type {string | undefined}
+    ariaLabelledby?: string | undefined
+    // aria-describedby of the toggleable element @type {string | undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the toggleable element @type {HTMLInputElement | HTMLButtonElement | undefined}
+    element?: HTMLInputElement | HTMLButtonElement | undefined
+    // Event handler for when the value changes @type {(checked: boolean) => void | undefined}
+    onchange?: (checked: boolean) => void
   }
 
   let {
     id,
-    type = "checkbox",
+    type = 'checkbox',
     checked = $bindable(),
     disabled = false,
-    ariaLabel = void 0,
-    ariaLabelledby = void 0,
-    ariaDescribedby = void 0,
-    element = $bindable(void 0)
-  }: Props = $props();
-function toggle() {
-  checked = !checked;
-  dispatch("change", checked);
-}
+    ariaLabel = undefined,
+    ariaLabelledby = undefined,
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+    onchange = undefined,
+  }: Props = $props()
+
+  function toggle() {
+    checked = !checked
+    onchange?.(checked)
+  }
 </script>
 
 {#if type === 'switch'}
@@ -38,7 +49,7 @@ function toggle() {
     bind:this={element}
     onclick={toggle}
     role="switch"
-></button>
+  ></button>
 {:else}
   <input
     {checked}

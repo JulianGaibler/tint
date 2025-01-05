@@ -1,19 +1,37 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
+  import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import IconDropdown from '@lib/icons/14-dropdown.svg?raw'
 
-  const bubble = createBubbler();import IconWarning from "../icons/20-warning.svg?raw";
-import IconDropdown from "../icons/14-dropdown.svg?raw";
+  type T = $$Generic
+  interface SelectItem {
+    value: T
+    label: string
+    disabled?: boolean
+  }
+
   interface Props {
-    id: any;
-    value: any;
-    items: any;
-    label: any;
-    helperText?: any;
-    error?: any;
-    disabled?: boolean;
-    fillWidth?: boolean;
-    ariaDescribedby?: any;
-    element?: any;
+    // Id of the select @type {string}
+    id: string
+    // Value of the current selected item (can use bind:value) @type {string|undefined}
+    value: T | undefined
+    // The items of the select @type {SelectItem[]}
+    items: SelectItem[]
+    // The label of the select @type {string}
+    label: string
+    // Adds a helper text to the select @type {string|undefined}
+    helperText?: string | undefined
+    // Marks the select as invalid and adds the error text and icon @type {string|undefined}
+    error?: string | undefined
+    // Disables the select @type {boolean}
+    disabled?: boolean
+    // Fills the width of the parent container @type {boolean}
+    fillWidth?: boolean
+    // Id of the element that describes the select @type {string|undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the select @type {HTMLSelectElement | undefined}
+    element?: HTMLSelectElement | undefined
+    // Event handler for when the value changes @type {(e: Event) => void|undefined}
+    onchange?: (e: Event) => void
   }
 
   let {
@@ -21,21 +39,24 @@ import IconDropdown from "../icons/14-dropdown.svg?raw";
     value = $bindable(),
     items,
     label,
-    helperText = void 0,
-    error = void 0,
+    helperText = undefined,
+    error = undefined,
     disabled = false,
     fillWidth = true,
-    ariaDescribedby = void 0,
-    element = $bindable(void 0)
-  }: Props = $props();
-if (helperText && ariaDescribedby) {
-  throw new Error(
-    "[tint] You can not use both helperText and ariaDescribedby"
-  );
-}
-function noValue(val) {
-  return val === void 0 || val === "";
-}
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+    onchange = undefined,
+  }: Props = $props()
+
+  if (helperText && ariaDescribedby) {
+    throw new Error(
+      '[tint] You can not use both helperText and ariaDescribedby',
+    )
+  }
+
+  function noValue(val: T | undefined) {
+    return val === undefined || val === ''
+  }
 </script>
 
 <div class:error class:disabled class:fillWidth>
@@ -50,7 +71,7 @@ function noValue(val) {
       aria-invalid={error ? 'true' : undefined}
       bind:this={element}
       bind:value
-      onchange={bubble('change')}
+      {onchange}
       class:filled={!noValue(value)}
       class="input tint--type-input"
     >

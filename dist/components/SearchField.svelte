@@ -1,24 +1,33 @@
-<script lang="ts">import Button from "./Button.svelte";
-import IconSearch from "../icons/20-search.svg?raw";
-import { createEventDispatcher } from "svelte";
-const dispatch = createEventDispatcher();
+<script lang="ts">
+  import Button from './Button.svelte'
+  import IconSearch from '../icons/20-search.svg?raw'
+
   interface Props {
-    id: any;
-    value: any;
-    label?: string;
-    disabled?: boolean;
-    elementInput?: any;
-    elementButton?: any;
+    // Id of the text field @type {string}
+    id: string
+    // Value of the text field (can use bind:value) @type {string}
+    value: string
+    // The label of the text field @type {string}
+    label?: string
+    // Disables the text field @type {boolean}
+    disabled?: boolean
+    // HTML element of the text field @type {HTMLInputElement | undefined}
+    elementInput?: HTMLInputElement | undefined
+    // HTML element of the button @type {HTMLButtonElement | undefined}
+    elementButton?: HTMLButtonElement | undefined
+    // Event handler for when the search button is clicked @type {(value: string) => void}
+    onsearch?: (term: string) => void
   }
 
   let {
     id,
     value = $bindable(),
-    label = "Search",
+    label = 'Search',
     disabled = false,
-    elementInput = $bindable(void 0),
-    elementButton = $bindable(void 0)
-  }: Props = $props();
+    elementInput = $bindable(undefined),
+    elementButton = $bindable(undefined),
+    onsearch = undefined,
+  }: Props = $props()
 </script>
 
 <div class="box" class:disabled>
@@ -32,7 +41,7 @@ const dispatch = createEventDispatcher();
     class="input tint--type-input"
     onkeydown={(e) => {
       if (e.key === 'Enter') {
-        dispatch('search', { value })
+        onsearch?.(value)
       }
     }}
     placeholder={label}
@@ -42,7 +51,7 @@ const dispatch = createEventDispatcher();
     bind:element={elementButton}
     disabled={disabled || !value || value.length === 0}
     icon
-    on:click={() => dispatch('search', { value })}
+    onclick={() => onsearch?.(value)}
     small
     variant="ghost"
   >

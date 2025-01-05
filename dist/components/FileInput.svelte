@@ -1,57 +1,77 @@
-<script lang="ts">import IconWarning from "../icons/20-warning.svg?raw";
-import Button from "./Button.svelte";
+<script lang="ts">
+  import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import Button from './Button.svelte'
+
   interface Props {
-    id: any;
-    value?: any;
-    label: any;
-    accept?: any;
-    helperText?: any;
-    error?: any;
-    disabled?: boolean;
-    fillWidth?: boolean;
-    ariaDescribedby?: any;
-    element?: any;
+    // Id of the text field @type {string}
+    id: string
+    // Value of the file input @type {File|undefined}
+    value?: File | undefined
+    // The types of files that the file input can accept @type {string|string[]|undefined}
+    label: string
+    // The type of the text field @type {string|undefined}
+    accept?: string | string[] | undefined
+    // The label of the text field @type {string}
+    helperText?: string | undefined
+    // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
+    error?: string | undefined
+    // Disables the text field @type {boolean}
+    disabled?: boolean
+    // Fills the width of the parent container @type {boolean}
+    fillWidth?: boolean
+    // Id of the element that describes the text field @type {string|undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the text field @type {HTMLInputElement | undefined}
+    element?: HTMLInputElement | undefined
   }
 
   let {
     id,
-    value = $bindable(void 0),
+    value = $bindable(undefined),
     label,
-    accept = void 0,
-    helperText = void 0,
-    error = void 0,
+    accept = undefined,
+    helperText = undefined,
+    error = undefined,
     disabled = false,
     fillWidth = true,
-    ariaDescribedby = void 0,
-    element = $bindable(void 0)
-  }: Props = $props();
-if (helperText && ariaDescribedby) {
-  throw new Error(
-    "[tint] You can not use both helperText and ariaDescribedby"
-  );
-}
-let dragging = $state(null);
-let draggedOver = $state(false);
-function handleDragStart(event) {
-  dragging = event.target;
-}
-function handleDragEnd(event) {
-  if (dragging === event.target) {
-    dragging = null;
-    draggedOver = false;
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+  }: Props = $props()
+
+  if (helperText && ariaDescribedby) {
+    throw new Error(
+      '[tint] You can not use both helperText and ariaDescribedby',
+    )
   }
-}
-function handleDragEnter() {
-  draggedOver = true;
-}
-function handleDragLeave() {
-  draggedOver = false;
-}
-function updateValue(event) {
-  const target = event.target;
-  value = target.files?.[0];
-}
-let acceptString = $derived(typeof accept === "string" ? accept : accept?.join(","));
+
+  let dragging: HTMLElement | null = $state(null)
+  let draggedOver = $state(false)
+
+  function handleDragStart(event: DragEvent) {
+    dragging = event.target as HTMLElement
+  }
+  function handleDragEnd(event: DragEvent) {
+    if (dragging === event.target) {
+      dragging = null
+      draggedOver = false
+    }
+  }
+
+  function handleDragEnter() {
+    draggedOver = true
+  }
+  function handleDragLeave() {
+    draggedOver = false
+  }
+
+  function updateValue(event: Event) {
+    const target = event.target as HTMLInputElement
+    value = target.files?.[0]
+  }
+
+  let acceptString = $derived(
+    typeof accept === 'string' ? accept : accept?.join(','),
+  )
 </script>
 
 <svelte:window
@@ -87,7 +107,7 @@ let acceptString = $derived(typeof accept === "string" ? accept : accept?.join("
     {#if error}
       <span aria-hidden="true" class="warning-icon">{@html IconWarning}</span>
     {/if}
-    <Button small {disabled} on:click={() => element?.click()}
+    <Button small {disabled} onclick={() => element?.click()}
       >Select file</Button
     >
   </div>

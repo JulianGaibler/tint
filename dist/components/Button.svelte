@@ -1,53 +1,80 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();import { createEventDispatcher } from "svelte";
-const dispatch = createEventDispatcher();
   interface Props {
-    variant?: string;
-    small?: boolean;
-    icon?: boolean;
-    toggled?: any;
-    href?: any;
-    external?: boolean;
-    download?: any;
-    disabled?: boolean;
-    submit?: boolean;
-    title?: any;
-    ariaLabel?: any;
-    tabindex?: any;
-    element?: any;
-    children?: import('svelte').Snippet;
+    // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
+    variant?: 'primary' | 'secondary' | 'ghost'
+    // Use small version of the button
+    small?: boolean
+    // Expects an icon to be passed in the slot if true
+    icon?: boolean
+    // If true or false, the button will be a toggle button @type {boolean | undefined}
+    toggled?: boolean | undefined
+    // Button can act as a link if href is provided @type {string | undefined}
+    href?: string | undefined
+    // If href is provided, this will open the link in a new tab
+    external?: boolean
+    // If href is provided, this will download the link @type {string | undefined}
+    download?: string | undefined
+    // Disables the button
+    disabled?: boolean
+    // If true, the button will be of type submit
+    submit?: boolean
+    // title-attribute of the button @type {string | undefined}
+    title?: string | undefined
+    // aria-label of the button @type {string | undefined}
+    ariaLabel?: string | undefined
+    // tabindex of the button @type {number | undefined}
+    tabindex?: number | undefined
+    // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
+    element?:
+      | HTMLButtonElement
+      | HTMLAnchorElement
+      | HTMLSpanElement
+      | undefined
+    // Content of the button @type {Snippet | undefined}
+    children?: import('svelte').Snippet
+    // Click event handler @type {(e: MouseEvent) => void | undefined}
+    onclick?: (e: MouseEvent) => void
+    // Keypress event handler @type {(e: KeyboardEvent) => void | undefined}
+    onkeypress?: (e: KeyboardEvent) => void
+    // Keydown event handler @type {(e: KeyboardEvent) => void | undefined}
+    onkeydown?: (e: KeyboardEvent) => void
   }
 
   let {
-    variant = "secondary",
+    variant = 'secondary',
     small = false,
     icon = false,
-    toggled = void 0,
-    href = void 0,
+    toggled = undefined,
+    href = undefined,
     external = false,
-    download = void 0,
+    download = undefined,
     disabled = false,
     submit = false,
-    title = void 0,
-    ariaLabel = void 0,
-    tabindex = void 0,
-    element = $bindable(void 0),
-    children
-  }: Props = $props();
-if (icon && !title && !ariaLabel) {
-  throw new Error("[tint] Icon buttons need at least a title or aria-label");
-}
-if (variant === "primary" && toggled !== void 0) {
-  throw new Error("[tint] Primary buttons cannot be toggled");
-}
-if (href && toggled !== void 0) {
-  throw new Error("[tint] Links cannot be toggled");
-}
-let role = $derived(toggled !== void 0 ? "switch" : void 0);
-let ariaPressed = $derived(toggled !== void 0 ? toggled : void 0);
-let _variant = $derived(toggled === void 0 ? variant : toggled ? "primary" : variant);
+    title = undefined,
+    ariaLabel = undefined,
+    tabindex = undefined,
+    element = $bindable(undefined),
+    children,
+    onclick = undefined,
+    onkeypress = undefined,
+    onkeydown = undefined,
+  }: Props = $props()
+
+  if (icon && !title && !ariaLabel) {
+    throw new Error('[tint] Icon buttons need at least a title or aria-label')
+  }
+  if (variant === 'primary' && toggled !== undefined) {
+    throw new Error('[tint] Primary buttons cannot be toggled')
+  }
+  if (href && toggled !== undefined) {
+    throw new Error('[tint] Links cannot be toggled')
+  }
+
+  let role = $derived(toggled !== undefined ? 'switch' : undefined)
+  let ariaPressed = $derived(toggled !== undefined ? toggled : undefined)
+  let _variant = $derived(
+    toggled === undefined ? variant : toggled ? 'primary' : variant,
+  )
 </script>
 
 {#if href && disabled}
@@ -86,9 +113,9 @@ let _variant = $derived(toggled === void 0 ? variant : toggled ? "primary" : var
     class:icon
     class:small
     class={`tint--type-action ${_variant}`}
-    onclick={bubble('click')}
-    onkeypress={bubble('keypress')}
-    onkeydown={bubble('keydown')}
+    {onclick}
+    {onkeypress}
+    {onkeydown}
     type={submit ? 'submit' : 'button'}>{@render children?.()}</button
   >
 {/if}
