@@ -1,23 +1,11 @@
-import { SvelteComponent } from "svelte";
-declare const __propDef: {
-    props: {
-        id: string;
-        value: string;
-        label?: string | undefined;
-        disabled?: boolean | undefined;
-        elementInput?: HTMLInputElement | undefined;
-        elementButton?: HTMLButtonElement | undefined;
-    };
-    events: {
-        search: CustomEvent<any>;
-    } & {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-};
-export type SearchFieldProps = typeof __propDef.props;
-export type SearchFieldEvents = typeof __propDef.events;
-export type SearchFieldSlots = typeof __propDef.slots;
-export default class SearchField extends SvelteComponent<SearchFieldProps, SearchFieldEvents, SearchFieldSlots> {
-}
-export {};
+declare const SearchField: import("svelte").Component<{
+    id: string;
+    value: string;
+    label?: string;
+    disabled?: boolean;
+    elementInput?: HTMLInputElement | undefined;
+    elementButton?: HTMLButtonElement | undefined;
+    onsearch?: (term: string) => void;
+}, {}, "value" | "elementInput" | "elementButton">;
+type SearchField = ReturnType<typeof SearchField>;
+export default SearchField;

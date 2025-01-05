@@ -1,49 +1,67 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-import IconWarning from "../icons/20-warning.svg?raw";
+  import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import type { FullAutoFill } from 'svelte/elements'
+
   interface Props {
-    id: any;
-    value: any;
-    label: any;
-    autocomplete?: any;
-    type?: any;
-    helperText?: any;
-    error?: any;
-    disabled?: boolean;
-    fillWidth?: boolean;
-    ariaDescribedby?: any;
-    element?: any;
+    // Id of the text field @type {string}
+    id: string
+    // Value of the text field (can use bind:value) @type {string}
+    value: string
+    // The label of the text field @type {string}
+    label: string
+    // The autocomplete of the text field @type {string|undefined}
+    autocomplete?: FullAutoFill | undefined
+    // The type of the text field @type {string|undefined}
+    type?: string | undefined
+    // Adds a helper text to the text field @type {string|undefined}
+    helperText?: string | undefined
+    // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
+    error?: string | undefined
+    // Disables the text field @type {boolean}
+    disabled?: boolean
+    // Fills the width of the parent container @type {boolean}
+    fillWidth?: boolean
+    // Id of the element that describes the text field @type {string|undefined}
+    ariaDescribedby?: string | undefined
+    // HTML element of the text field @type {HTMLInputElement | undefined}
+    element?: HTMLInputElement | undefined
   }
 
   let {
     id,
     value = $bindable(),
     label,
-    autocomplete = void 0,
-    type = void 0,
-    helperText = void 0,
-    error = void 0,
+    autocomplete = undefined,
+    type = undefined,
+    helperText = undefined,
+    error = undefined,
     disabled = false,
     fillWidth = true,
-    ariaDescribedby = void 0,
-    element = $bindable(void 0)
-  }: Props = $props();
-if (helperText && ariaDescribedby) {
-  throw new Error(
-    "[tint] You can not use both helperText and ariaDescribedby"
-  );
-}
-function setType(type2, element2) {
-  if (type2 && element2) {
-    element2.setAttribute("type", type2);
+    ariaDescribedby = undefined,
+    element = $bindable(undefined),
+  }: Props = $props()
+
+  if (helperText && ariaDescribedby) {
+    throw new Error(
+      '[tint] You can not use both helperText and ariaDescribedby',
+    )
   }
-  if (!type2 && element2) {
-    element2.removeAttribute("type");
+
+  function setType(
+    type: string | undefined,
+    element: HTMLInputElement | undefined,
+  ) {
+    if (type && element) {
+      element.setAttribute('type', type)
+    }
+    if (!type && element) {
+      element.removeAttribute('type')
+    }
   }
-}
-run(() => {
-    setType(type, element);
-  });
+
+  $effect(() => {
+    setType(type, element)
+  })
 </script>
 
 <div class:error class:disabled class:fillWidth>

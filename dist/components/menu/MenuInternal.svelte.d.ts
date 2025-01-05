@@ -1,15 +1,15 @@
-import { SvelteComponent } from "svelte";
 /** Padding of menus to each side of the window */
 export declare const WINDOW_PADDING = 8;
 /** Distance between menus */
 export declare const TOP_MENU_OFFSET = 4;
 export declare const LEFT_MENU_OFFSET = 4;
 export declare const MENU_SEPARATOR: unique symbol;
-export declare enum MenuBehavior {
-    MENU = 0,
-    SELECT = 1,
-    AUTOCOMPLETE = 2
-}
+export declare const MenuBehavior: {
+    readonly MENU: 0;
+    readonly SELECT: 1;
+    readonly AUTOCOMPLETE: 2;
+};
+export type MenuBehaviorType = (typeof MenuBehavior)[keyof typeof MenuBehavior];
 export type MenuItem = {
     label: string;
     checked?: boolean | (() => boolean);
@@ -57,24 +57,14 @@ export type ActiveMenuMeta = {
     searchTerm: string;
     lastSearchTime: number;
 };
-declare const __propDef: {
-    props: {
-        anchorRef?: HTMLElement | undefined;
-        anchor?: Vec2 | undefined;
-        items: MenuItem[];
-        behavior: MenuBehavior;
-        hide: () => void;
-        onItemFocus?: ((item: MenuItem) => void) | undefined;
-        lastActiveElement?: HTMLElement | undefined;
-    };
-    events: {
-        [evt: string]: CustomEvent<any>;
-    };
-    slots: {};
-};
-export type MenuInternalProps = typeof __propDef.props;
-export type MenuInternalEvents = typeof __propDef.events;
-export type MenuInternalSlots = typeof __propDef.slots;
-export default class MenuInternal extends SvelteComponent<MenuInternalProps, MenuInternalEvents, MenuInternalSlots> {
-}
-export {};
+declare const MenuInternal: import("svelte").Component<{
+    anchorRef?: HTMLElement | undefined;
+    anchor?: Vec2 | undefined;
+    items: MenuItem[];
+    behavior: MenuBehaviorType;
+    hide: () => void;
+    onItemFocus?: ((item: MenuItem) => void) | undefined;
+    lastActiveElement?: HTMLElement | undefined;
+}, {}, "lastActiveElement">;
+type MenuInternal = ReturnType<typeof MenuInternal>;
+export default MenuInternal;

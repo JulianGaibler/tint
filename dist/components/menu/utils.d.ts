@@ -1,4 +1,4 @@
-import { type MenuItem, MenuBehavior, type Vec2, type ActiveMenu, type ActiveMenuMeta } from './MenuInternal.svelte';
+import { type MenuItem, type Vec2, type ActiveMenu, type ActiveMenuMeta, type MenuBehaviorType } from './MenuInternal.svelte';
 /**
  * Menu items are always fetched from the props items to prevent data
  * duplication. This helper method is used to get the nested items.
@@ -17,7 +17,7 @@ export declare function getMenuItems(propItems: MenuItem[], menuPath: number[]):
  * @param propItems Props.items value
  * @returns ActiveMenus and ActiveMenusMeta object
  */
-export declare function createActiveMenu(behavior: MenuBehavior, parentIndex: number, parentItemRect: DOMRect, menuPath: number[], propItems: MenuItem[]): [ActiveMenu, ActiveMenuMeta];
+export declare function createActiveMenu(behavior: MenuBehaviorType, parentIndex: number, parentItemRect: DOMRect, menuPath: number[], propItems: MenuItem[]): [ActiveMenu, ActiveMenuMeta];
 /**
  * Quick check to see if s is in a triangle defined by a, b and c
  *
@@ -38,7 +38,7 @@ export declare function checkIfInTriangle(a: Vec2, b: Vec2, c: Vec2, s: Vec2): b
  * @param relativeDistance Distance between menu and item
  * @returns Position information for the menu
  */
-export declare function calculatePosition(depth: number, parentItemRect: DOMRect, menuRect: DOMRect, behavior: MenuBehavior, relativeDistance?: number): {
+export declare function calculatePosition(depth: number, parentItemRect: DOMRect, menuRect: DOMRect, behavior: MenuBehaviorType, relativeDistance?: number): {
     x: number;
     y: number;
     endAlign: boolean;
@@ -55,7 +55,7 @@ export declare function calculatePosition(depth: number, parentItemRect: DOMRect
  * @param index Index of the item from which to create a submenu
  * @returns ActiveMenus and ActiveMenusMeta object
  */
-export declare function addSubMenu(behavior: MenuBehavior, propItems: MenuItem[], activeMenus: ActiveMenu[], activeMenusMeta: ActiveMenuMeta[], menu: number, index: number): [ActiveMenu[], ActiveMenuMeta[]] | null;
+export declare function addSubMenu(behavior: MenuBehaviorType, propItems: MenuItem[], activeMenus: ActiveMenu[], activeMenusMeta: ActiveMenuMeta[], menu: number, index: number): [ActiveMenu[], ActiveMenuMeta[]] | null;
 /**
  * Removes a menu from the active menus
  *

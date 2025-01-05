@@ -170,6 +170,9 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
             coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2;
         }
     }
+    // add scroll offset
+    coords.y += window.scrollY;
+    coords.x += window.scrollX;
     return coords;
 }
 /**

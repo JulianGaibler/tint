@@ -1,20 +1,27 @@
-<script lang="ts">import Button from "./Button.svelte";
-import IconClose from "../icons/20-close.svg?raw";
-import { createEventDispatcher } from "svelte";
+<script lang="ts">
+  import Button from '@lib/components/Button.svelte'
+  import IconClose from '@lib/icons/20-close.svg?raw'
+
   interface Props {
-    icon?: any;
-    dismissable?: boolean;
-    element?: any;
-    children?: import('svelte').Snippet;
+    // Icon of the message box @type {string | undefined}
+    icon?: string | undefined
+    // Dismissable @type {boolean}
+    dismissable?: boolean
+    // HTML element of the container @type {HTMLDivElement | undefined}
+    element?: HTMLDivElement | undefined
+    // Content of the message box @type {Snippet | undefined}
+    children?: import('svelte').Snippet
+    // Event handler for when closing the message box @type {(e: MouseEvent) => void | undefined}
+    onclose?: (e: MouseEvent) => void
   }
 
   let {
-    icon = void 0,
+    icon = undefined,
     dismissable = true,
-    element = $bindable(void 0),
-    children
-  }: Props = $props();
-const dispatch = createEventDispatcher();
+    element = $bindable(undefined),
+    onclose = undefined,
+    children,
+  }: Props = $props()
 </script>
 
 <div class="box" bind:this={element}>
@@ -23,13 +30,7 @@ const dispatch = createEventDispatcher();
   {/if}
   <div class="content">{@render children?.()}</div>
   {#if dismissable}
-    <Button
-      small
-      icon
-      ariaLabel="close"
-      variant="ghost"
-      on:click={(e) => dispatch('close', e)}
-    >
+    <Button small icon ariaLabel="close" variant="ghost" onclick={onclose}>
       {@html IconClose}
     </Button>
   {/if}

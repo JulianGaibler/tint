@@ -1,4 +1,3 @@
-import { SvelteComponent } from "svelte";
 declare class __sveltets_Render<T> {
     props(): {
         id: string;
@@ -6,26 +5,29 @@ declare class __sveltets_Render<T> {
         items: {
             value: T;
             label: string;
-            disabled?: boolean | undefined;
+            disabled?: boolean;
         }[];
         label: string;
         helperText?: string | undefined;
         error?: string | undefined;
-        disabled?: boolean | undefined;
-        fillWidth?: boolean | undefined;
+        disabled?: boolean;
+        fillWidth?: boolean;
         ariaDescribedby?: string | undefined;
         element?: HTMLSelectElement | undefined;
+        onchange?: ((e: Event) => void) | undefined;
     };
-    events(): {
-        change: Event;
-    } & {
-        [evt: string]: CustomEvent<any>;
-    };
+    events(): {};
     slots(): {};
+    bindings(): "element" | "value";
+    exports(): {};
 }
-export type SelectProps<T> = ReturnType<__sveltets_Render<T>['props']>;
-export type SelectEvents<T> = ReturnType<__sveltets_Render<T>['events']>;
-export type SelectSlots<T> = ReturnType<__sveltets_Render<T>['slots']>;
-export default class Select<T> extends SvelteComponent<SelectProps<T>, SelectEvents<T>, SelectSlots<T>> {
+interface $$IsomorphicComponent {
+    new <T>(options: import('svelte').ComponentConstructorOptions<ReturnType<__sveltets_Render<T>['props']>>): import('svelte').SvelteComponent<ReturnType<__sveltets_Render<T>['props']>, ReturnType<__sveltets_Render<T>['events']>, ReturnType<__sveltets_Render<T>['slots']>> & {
+        $$bindings?: ReturnType<__sveltets_Render<T>['bindings']>;
+    } & ReturnType<__sveltets_Render<T>['exports']>;
+    <T>(internal: unknown, props: ReturnType<__sveltets_Render<T>['props']> & {}): ReturnType<__sveltets_Render<T>['exports']>;
+    z_$$bindings?: ReturnType<__sveltets_Render<any>['bindings']>;
 }
-export {};
+declare const Select: $$IsomorphicComponent;
+type Select<T> = InstanceType<typeof Select<T>>;
+export default Select;
