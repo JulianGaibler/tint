@@ -1,8 +1,8 @@
 <script module lang="ts">
   import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
-  import Button from '$lib/components/Button.svelte'
+  import Button from '@lib/components/Button.svelte'
   import { fn } from '@storybook/test'
-  import IconHome from '$lib/icons/20-home.svg?raw'
+  import IconHome from '@lib/icons/20-home.svg?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Button',

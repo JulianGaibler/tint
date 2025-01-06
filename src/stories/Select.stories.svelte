@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
-  import Select from '$lib/components/Select.svelte'
+  import Select from '@lib/components/Select.svelte'
   import { fn } from '@storybook/test'
 
   const { Story } = defineMeta({

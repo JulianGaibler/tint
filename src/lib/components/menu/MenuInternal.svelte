@@ -86,10 +86,10 @@
     checkIfInTriangle,
     removeSubMenu,
   } from './utils'
-  import ArrowIcon from '$lib/icons/14-chevron-menu-right.svg?raw'
-  import ArrowUp from '$lib/icons/14-chevron-menu-up.svg?raw'
-  import ArrowDown from '$lib/icons/14-chevron-menu-down.svg?raw'
-  import CheckIcon from '$lib/icons/14-check.svg?raw'
+  import ArrowIcon from '@lib/icons/14-chevron-menu-right.svg?raw'
+  import ArrowUp from '@lib/icons/14-chevron-menu-up.svg?raw'
+  import ArrowDown from '@lib/icons/14-chevron-menu-down.svg?raw'
+  import CheckIcon from '@lib/icons/14-check.svg?raw'
   import throttle from 'lodash.throttle'
   import { matchSorter } from 'match-sorter'
   import { onMount, onDestroy, tick } from 'svelte'

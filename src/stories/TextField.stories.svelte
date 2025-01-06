@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
-  import TextField from '$lib/components/TextField.svelte'
+  import TextField from '@lib/components/TextField.svelte'
 
   const { Story } = defineMeta({
     title: 'Components/TextField',
