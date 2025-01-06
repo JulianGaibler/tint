@@ -1,5 +1,5 @@
 <script lang="ts">
-  import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import IconWarning from '../icons/20-warning.svg?raw'
   import Button from './Button.svelte'
 
   interface Props {

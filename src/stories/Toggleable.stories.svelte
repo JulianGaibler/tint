@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
-  import Toggleable from '@lib/components/Toggleable.svelte'
+  import Toggleable from '$lib/components/Toggleable.svelte'
   import { fn } from '@storybook/test'
 
   const { Story } = defineMeta({
