@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
-  import FileInput from '$lib/components/FileInput.svelte'
+  import FileInput from '@lib/components/FileInput.svelte'
 
   const { Story } = defineMeta({
     title: 'Components/FileInput',

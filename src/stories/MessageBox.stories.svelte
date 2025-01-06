@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
-  import IconHome from '$lib/icons/20-home.svg?raw'
+  import IconHome from '@lib/icons/20-home.svg?raw'
   import { fn } from '@storybook/test'
 
   const { Story } = defineMeta({

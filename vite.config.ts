@@ -6,9 +6,10 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [svelte()],
   resolve: {
+    // [!] Also update in svelte.config.js and tsconfig.json
     alias: {
       '@src': path.resolve(__dirname, './src'),
-      '$lib': path.resolve(__dirname, './src/lib'),
+      '@lib': path.resolve(__dirname, './src/lib'),
       '@demo': path.resolve(__dirname, './src/demo'),
     },
   },
