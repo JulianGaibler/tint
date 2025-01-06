@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Button from '@lib/components/Button.svelte'
+  import Button from '$lib/components/Button.svelte'
   import Toggleable from '@src/lib/components/Toggleable.svelte'
   import TextField from '@src/lib/components/TextField.svelte'
   import Select from '@src/lib/components/Select.svelte'
   import SearchField from '@src/lib/components/SearchField.svelte'
-  import IconHome from '@lib/icons/20-home.svg?raw'
+  import IconHome from '$lib/icons/20-home.svg?raw'
   import Menu, {
     MENU_SEPARATOR,
     type MenuItem,

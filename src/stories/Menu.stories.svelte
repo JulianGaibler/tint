@@ -3,7 +3,7 @@
   import Menu, {
     MENU_SEPARATOR,
     type MenuItem,
-  } from '@lib/components/Menu.svelte'
+  } from '$lib/components/Menu.svelte'
   import Btn from '@src/lib/components/Button.svelte'
 
   const { Story } = defineMeta({

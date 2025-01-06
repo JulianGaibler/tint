@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Button from '@lib/components/Button.svelte'
-  import IconClose from '@lib/icons/20-close.svg?raw'
+  import Button from '$lib/components/Button.svelte'
+  import IconClose from '$lib/icons/20-close.svg?raw'
 
   interface Props {
     // Icon of the message box @type {string | undefined}

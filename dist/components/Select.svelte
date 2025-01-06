@@ -1,6 +1,6 @@
 <script lang="ts">
-  import IconWarning from '@lib/icons/20-warning.svg?raw'
-  import IconDropdown from '@lib/icons/14-dropdown.svg?raw'
+  import IconWarning from '../icons/20-warning.svg?raw'
+  import IconDropdown from '../icons/14-dropdown.svg?raw'
 
   type T = $$Generic
   interface SelectItem {

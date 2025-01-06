@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@src': path.resolve(__dirname, './src'),
-      '@lib': path.resolve(__dirname, './src/lib'),
+      '$lib': path.resolve(__dirname, './src/lib'),
       '@demo': path.resolve(__dirname, './src/demo'),
     },
   },

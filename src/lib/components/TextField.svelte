@@ -1,5 +1,5 @@
 <script lang="ts">
-  import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import IconWarning from '$lib/icons/20-warning.svg?raw'
   import type { FullAutoFill } from 'svelte/elements'
 
   interface Props {
