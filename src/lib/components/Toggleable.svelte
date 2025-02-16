@@ -73,12 +73,12 @@ input, button
   margin: 0
   width: tint.$size-24
   height: tint.$size-24
-  border: tint.$button-border-width solid var(--tint-action)
+  border: tint.$button-border-width solid var(--tint-action-primary)
   transform: translateY(-0.075em)
   display: flex
   align-items: center
   justify-content: center
-  color: var(--tint-action-text)
+  color: var(--tint-action-primary-text)
   @include tint.effect-focus
   &:not(:disabled):hover
     background-color: var(--tint-action-secondary-hover)
@@ -91,7 +91,7 @@ input, button
 
 input:checked, button[aria-checked="true"]
   border-color: transparent
-  background-color: var(--tint-action)
+  background-color: var(--tint-action-primary)
   &:not(:disabled):hover
     background-color: var(--tint-action-primary-hover)
   &:not(:disabled):active
@@ -99,7 +99,7 @@ input:checked, button[aria-checked="true"]
 
 button[role="switch"]
   width: tint.$size-40
-  color: var(--tint-action)
+  color: var(--tint-action-primary)
   transform: translateY(-0.075em) // ???
   justify-content: flex-start
   border-radius: tint.$button-radius-small
@@ -116,8 +116,8 @@ button[role="switch"]
     @media (prefers-reduced-motion: reduce)
       transition: none
   &[aria-checked="true"]
-    background-color: var(--tint-action)
-    color: var(--tint-action-text)
+    background-color: var(--tint-action-primary)
+    color: var(--tint-action-primary-text)
     &::before
       left: tint.$size-40 - tint.$size-12 - math.div(tint.$size-24 - tint.$size-12, 2) - 1px
 
