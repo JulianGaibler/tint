@@ -57,7 +57,7 @@ export type ActiveMenuMeta = {
     searchTerm: string;
     lastSearchTime: number;
 };
-declare const MenuInternal: import("svelte").Component<{
+interface Props {
     anchorRef?: HTMLElement | undefined;
     anchor?: Vec2 | undefined;
     items: MenuItem[];
@@ -65,6 +65,7 @@ declare const MenuInternal: import("svelte").Component<{
     hide: () => void;
     onItemFocus?: ((item: MenuItem) => void) | undefined;
     lastActiveElement?: HTMLElement | undefined;
-}, {}, "lastActiveElement">;
+}
+declare const MenuInternal: import("svelte").Component<Props, {}, "lastActiveElement">;
 type MenuInternal = ReturnType<typeof MenuInternal>;
 export default MenuInternal;

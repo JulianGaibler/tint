@@ -91,7 +91,7 @@
   transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 .box > .input:focus-visible {
-  outline: 2px solid var(--tint-action);
+  outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {

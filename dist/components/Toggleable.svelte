@@ -70,15 +70,15 @@
   margin: 0;
   width: 24px;
   height: 24px;
-  border: 2px solid var(--tint-action);
+  border: 2px solid var(--tint-action-primary);
   transform: translateY(-0.075em);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tint-action-text);
+  color: var(--tint-action-primary-text);
 }
 input:focus-visible, button:focus-visible {
-  outline: 2px solid var(--tint-action);
+  outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {
@@ -100,7 +100,7 @@ input::before, button::before {
 
 input:checked, button[aria-checked=true] {
   border-color: transparent;
-  background-color: var(--tint-action);
+  background-color: var(--tint-action-primary);
 }
 input:checked:not(:disabled):hover, button[aria-checked=true]:not(:disabled):hover {
   background-color: var(--tint-action-primary-hover);
@@ -111,7 +111,7 @@ input:checked:not(:disabled):active, button[aria-checked=true]:not(:disabled):ac
 
 button[role=switch] {
   width: 40px;
-  color: var(--tint-action);
+  color: var(--tint-action-primary);
   transform: translateY(-0.075em);
   justify-content: flex-start;
   border-radius: 80px;
@@ -132,8 +132,8 @@ button[role=switch]::before {
   }
 }
 button[role=switch][aria-checked=true] {
-  background-color: var(--tint-action);
-  color: var(--tint-action-text);
+  background-color: var(--tint-action-primary);
+  color: var(--tint-action-primary-text);
 }
 button[role=switch][aria-checked=true]::before {
   left: 21px;
