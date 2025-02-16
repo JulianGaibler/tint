@@ -1,5 +1,5 @@
-declare const Button: import("svelte").Component<{
-    variant?: "primary" | "secondary" | "ghost";
+interface Props {
+    variant?: 'primary' | 'secondary' | 'ghost';
     small?: boolean;
     icon?: boolean;
     toggled?: boolean | undefined;
@@ -12,10 +12,11 @@ declare const Button: import("svelte").Component<{
     ariaLabel?: string | undefined;
     tabindex?: number | undefined;
     element?: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined;
-    children?: import("svelte").Snippet;
+    children?: import('svelte').Snippet;
     onclick?: (e: MouseEvent) => void;
     onkeypress?: (e: KeyboardEvent) => void;
     onkeydown?: (e: KeyboardEvent) => void;
-}, {}, "element">;
+}
+declare const Button: import("svelte").Component<Props, {}, "element">;
 type Button = ReturnType<typeof Button>;
 export default Button;

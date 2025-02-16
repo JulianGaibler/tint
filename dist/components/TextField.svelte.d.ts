@@ -1,5 +1,5 @@
 import type { FullAutoFill } from 'svelte/elements';
-declare const TextField: import("svelte").Component<{
+interface Props {
     id: string;
     value: string;
     label: string;
@@ -11,6 +11,7 @@ declare const TextField: import("svelte").Component<{
     fillWidth?: boolean;
     ariaDescribedby?: string | undefined;
     element?: HTMLInputElement | undefined;
-}, {}, "element" | "value">;
+}
+declare const TextField: import("svelte").Component<Props, {}, "element" | "value">;
 type TextField = ReturnType<typeof TextField>;
 export default TextField;

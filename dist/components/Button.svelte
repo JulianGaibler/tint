@@ -134,13 +134,13 @@ button, a, span {
   min-height: 48px;
   padding: 8px 24px;
   background-color: transparent;
-  border: 2px solid var(--tint-action);
-  color: var(--tint-action);
+  border: 2px solid var(--tint-action-secondary);
+  color: var(--tint-action-secondary-text);
   border-radius: 12px;
   flex-shrink: 0;
 }
 button:focus-visible, a:focus-visible, span:focus-visible {
-  outline: 2px solid var(--tint-action);
+  outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {
@@ -180,9 +180,9 @@ button:not(:disabled):active, a:not(:disabled):active {
   background-color: var(--tint-action-secondary-active);
 }
 button:global(.primary), a:global(.primary) {
-  background-color: var(--tint-action);
+  background-color: var(--tint-action-primary);
   border-color: transparent;
-  color: var(--tint-action-text);
+  color: var(--tint-action-primary-text);
 }
 button:global(.primary):not(:disabled):hover, a:global(.primary):not(:disabled):hover {
   background-color: var(--tint-action-primary-hover);

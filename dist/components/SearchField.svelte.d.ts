@@ -1,4 +1,4 @@
-declare const SearchField: import("svelte").Component<{
+interface Props {
     id: string;
     value: string;
     label?: string;
@@ -6,6 +6,7 @@ declare const SearchField: import("svelte").Component<{
     elementInput?: HTMLInputElement | undefined;
     elementButton?: HTMLButtonElement | undefined;
     onsearch?: (term: string) => void;
-}, {}, "value" | "elementInput" | "elementButton">;
+}
+declare const SearchField: import("svelte").Component<Props, {}, "value" | "elementInput" | "elementButton">;
 type SearchField = ReturnType<typeof SearchField>;
 export default SearchField;

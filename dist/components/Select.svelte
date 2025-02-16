@@ -126,7 +126,7 @@
   padding-inline-end: 56px;
 }
 .box > .input:focus-visible {
-  outline: 2px solid var(--tint-action);
+  outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {

@@ -1,4 +1,4 @@
-declare const FileInput: import("svelte").Component<{
+interface Props {
     id: string;
     value?: File | undefined;
     label: string;
@@ -9,6 +9,7 @@ declare const FileInput: import("svelte").Component<{
     fillWidth?: boolean;
     ariaDescribedby?: string | undefined;
     element?: HTMLInputElement | undefined;
-}, {}, "element" | "value">;
+}
+declare const FileInput: import("svelte").Component<Props, {}, "element" | "value">;
 type FileInput = ReturnType<typeof FileInput>;
 export default FileInput;

@@ -1,6 +1,6 @@
-declare const Toggleable: import("svelte").Component<{
+interface Props {
     id: string;
-    type?: "checkbox" | "radio" | "switch";
+    type?: 'checkbox' | 'radio' | 'switch';
     checked: boolean;
     disabled?: boolean;
     ariaLabel?: string | undefined;
@@ -8,6 +8,7 @@ declare const Toggleable: import("svelte").Component<{
     ariaDescribedby?: string | undefined;
     element?: HTMLInputElement | HTMLButtonElement | undefined;
     onchange?: (checked: boolean) => void;
-}, {}, "element" | "checked">;
+}
+declare const Toggleable: import("svelte").Component<Props, {}, "element" | "checked">;
 type Toggleable = ReturnType<typeof Toggleable>;
 export default Toggleable;
