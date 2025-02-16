@@ -133,8 +133,8 @@ button, a, span
   min-height: tint.$size-48
   padding: 8px 24px
   background-color: transparent
-  border: tint.$button-border-width solid var(--tint-action)
-  color: var(--tint-action)
+  border: tint.$button-border-width solid var(--tint-action-secondary)
+  color: var(--tint-action-secondary-text)
   border-radius: tint.$button-radius-large
   flex-shrink: 0
   @include tint.effect-focus
@@ -163,9 +163,9 @@ button, a
   &:not(:disabled):active
     background-color: var(--tint-action-secondary-active)
   &:global(.primary)
-    background-color: var(--tint-action)
+    background-color: var(--tint-action-primary)
     border-color: transparent
-    color: var(--tint-action-text)
+    color: var(--tint-action-primary-text)
     &:not(:disabled):hover
       background-color: var(--tint-action-primary-hover)
     &:not(:disabled):active
