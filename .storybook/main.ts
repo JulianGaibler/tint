@@ -1,7 +1,9 @@
-import typographyImporter from '../scripts/typography-importer'
+import typographyImporter from '../scripts/typography-importer.ts'
 import type { StorybookConfig } from '@storybook/svelte-vite'
 import * as path from 'path'
 import { mergeConfig, loadConfigFromFile } from 'vite'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|ts|svelte)'],
