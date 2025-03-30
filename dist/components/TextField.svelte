@@ -25,6 +25,12 @@
     ariaDescribedby?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
     element?: HTMLInputElement | undefined
+    // Function to call when the value of the text field changes @type {function}
+    oninput?: (e: Event) => void
+    // Function to call when the text field is focused @type {function}
+    onfocus?: (e: Event) => void
+    // Function to call when the text field is blurred @type {function}
+    onblur?: (e: Event) => void
   }
 
   let {
@@ -39,6 +45,9 @@
     fillWidth = true,
     ariaDescribedby = undefined,
     element = $bindable(undefined),
+    oninput = undefined,
+    onfocus = undefined,
+    onblur = undefined,
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -75,6 +84,9 @@
       aria-errormessage={error ? 'textfield-helpertext' : undefined}
       aria-invalid={error ? 'true' : undefined}
       {autocomplete}
+      {oninput}
+      {onfocus}
+      {onblur}
       bind:this={element}
       bind:value
       class:filled={value?.length > 0}
