@@ -11,6 +11,9 @@ interface Props {
     fillWidth?: boolean;
     ariaDescribedby?: string | undefined;
     element?: HTMLInputElement | undefined;
+    oninput?: (e: Event) => void;
+    onfocus?: (e: Event) => void;
+    onblur?: (e: Event) => void;
 }
 declare const TextField: import("svelte").Component<Props, {}, "element" | "value">;
 type TextField = ReturnType<typeof TextField>;
