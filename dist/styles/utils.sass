@@ -1,11 +1,14 @@
 @forward "./typography"
 
+@mixin effect-focus-base
+  outline: 2px solid var(--tint-action-primary)
+  outline-offset: 2px
+  @media (forced-colors: active)
+    outline-color: CanvasText
+
 @mixin effect-focus
   &:focus-visible
-    outline: 2px solid var(--tint-action-primary)
-    outline-offset: 2px
-    @media (forced-colors: active)
-      outline-color: CanvasText
+    @include effect-focus-base
 
 // Spacing and sizing
 $size-2: 2px

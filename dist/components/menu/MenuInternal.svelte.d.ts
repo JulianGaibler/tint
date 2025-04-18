@@ -10,15 +10,15 @@ export declare const MenuBehavior: {
     readonly AUTOCOMPLETE: 2;
 };
 export type MenuBehaviorType = (typeof MenuBehavior)[keyof typeof MenuBehavior];
-export type MenuItem = {
+export type MenuItem<T = unknown> = {
     label: string;
     checked?: boolean | (() => boolean);
     onClick: () => void;
-    data?: unknown;
+    data?: T;
     disabled?: boolean;
 } | {
     label: string;
-    items: MenuItem[];
+    items: MenuItem<T>[];
     disabled?: boolean;
 } | typeof MENU_SEPARATOR;
 export type Vec2 = {
@@ -58,14 +58,17 @@ export type ActiveMenuMeta = {
     lastSearchTime: number;
 };
 interface Props {
-    anchorRef?: HTMLElement | undefined;
+    id?: string;
+    anchorRef?: HTMLElement;
     anchor?: Vec2 | undefined;
     items: MenuItem[];
     behavior: MenuBehaviorType;
+    closeOnClick?: boolean;
     hide: () => void;
-    onItemFocus?: ((item: MenuItem) => void) | undefined;
-    lastActiveElement?: HTMLElement | undefined;
+    onItemFocus?: (item: MenuItem) => void;
+    recalculatePosition?: () => void;
+    lastActiveElement?: HTMLElement;
 }
-declare const MenuInternal: import("svelte").Component<Props, {}, "lastActiveElement">;
+declare const MenuInternal: import("svelte").Component<Props, {}, "recalculatePosition" | "lastActiveElement">;
 type MenuInternal = ReturnType<typeof MenuInternal>;
 export default MenuInternal;

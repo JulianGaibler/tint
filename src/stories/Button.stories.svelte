@@ -61,7 +61,13 @@
 
 <Story
   name="Icon"
-  args={{ variant: 'secondary', small: false, disabled: false, icon: true }}
+  args={{
+    variant: 'secondary',
+    small: false,
+    disabled: false,
+    icon: true,
+    ariaLabel: 'Home',
+  }}
 />
 
 <Story

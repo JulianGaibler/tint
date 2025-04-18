@@ -4,7 +4,6 @@ import { ADDON_ID, TOOL_ID } from './toggle-tint/constants'
 import { addons, types } from '@storybook/manager-api'
 import React from 'react'
 
-
 addons.register(ADDON_ID, () => {
   addons.add(TOOL_ID, {
     type: types.TOOL,

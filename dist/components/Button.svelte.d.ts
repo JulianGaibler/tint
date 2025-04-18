@@ -1,4 +1,5 @@
-interface Props {
+import type { HTMLButtonAttributes } from 'svelte/elements';
+interface Props extends HTMLButtonAttributes {
     variant?: 'primary' | 'secondary' | 'ghost';
     small?: boolean;
     icon?: boolean;

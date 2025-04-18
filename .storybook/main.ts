@@ -1,9 +1,6 @@
 import typographyImporter from '../scripts/typography-importer.ts'
 import type { StorybookConfig } from '@storybook/svelte-vite'
-import * as path from 'path'
 import { mergeConfig, loadConfigFromFile } from 'vite'
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|ts|svelte)'],
@@ -29,7 +26,7 @@ const config: StorybookConfig = {
   staticDirs: ['../static'],
   async viteFinal(config, { configType }) {
     const result = await loadConfigFromFile(
-      path.resolve(__dirname, '../vite.config.ts') as any,
+      new URL('../vite.config.ts', import.meta.url).pathname as any,
     )
 
     if (!result) {

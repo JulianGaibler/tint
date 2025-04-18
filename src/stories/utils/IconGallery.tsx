@@ -221,7 +221,7 @@ const IconGallery: FC<PropsWithChildren<GalleryProps>> = ({
       />
       <Gallery className="icon-gallery">
         {filteredIcons.map(({ size, name, svg }) => (
-          <IconElement key={name} size={size} name={name} svg={svg} />
+          <IconElement key={name + size} size={size} name={name} svg={svg} />
         ))}
       </Gallery>
     </GalleryWrapper>
