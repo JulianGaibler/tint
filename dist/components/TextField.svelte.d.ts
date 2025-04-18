@@ -4,13 +4,16 @@ interface Props {
     value: string;
     label: string;
     autocomplete?: FullAutoFill | undefined;
+    variant?: 'input' | 'textarea';
     type?: string | undefined;
+    rows?: number;
+    maxHeight?: number;
     helperText?: string | undefined;
     error?: string | undefined;
     disabled?: boolean;
     fillWidth?: boolean;
     ariaDescribedby?: string | undefined;
-    element?: HTMLInputElement | undefined;
+    element?: HTMLInputElement | HTMLTextAreaElement | undefined;
     oninput?: (e: Event) => void;
     onfocus?: (e: Event) => void;
     onblur?: (e: Event) => void;

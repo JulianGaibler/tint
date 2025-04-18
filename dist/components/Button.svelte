@@ -1,5 +1,10 @@
 <script lang="ts">
-  interface Props {
+  import type {
+    HTMLButtonAttributes,
+    HTMLAnchorAttributes,
+  } from 'svelte/elements'
+
+  interface Props extends HTMLButtonAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
     variant?: 'primary' | 'secondary' | 'ghost'
     // Use small version of the button
@@ -18,9 +23,9 @@
     disabled?: boolean
     // If true, the button will be of type submit
     submit?: boolean
-    // title-attribute of the button @type {string | undefined}
-    title?: string | undefined
     // aria-label of the button @type {string | undefined}
+    title?: string | undefined
+    // formmethod of the button @type {string | undefined}
     ariaLabel?: string | undefined
     // tabindex of the button @type {number | undefined}
     tabindex?: number | undefined
@@ -50,6 +55,7 @@
     download = undefined,
     disabled = false,
     submit = false,
+    formmethod = undefined,
     title = undefined,
     ariaLabel = undefined,
     tabindex = undefined,
@@ -58,6 +64,7 @@
     onclick = undefined,
     onkeypress = undefined,
     onkeydown = undefined,
+    ...elementProps
   }: Props = $props()
 
   if (icon && !title && !ariaLabel) {
@@ -116,7 +123,8 @@
     {onclick}
     {onkeypress}
     {onkeydown}
-    type={submit ? 'submit' : 'button'}>{@render children?.()}</button
+    type={submit ? 'submit' : 'button'}
+    {...elementProps}>{@render children?.()}</button
   >
 {/if}
 

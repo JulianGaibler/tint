@@ -23,17 +23,17 @@
   export type MenuBehaviorType =
     (typeof MenuBehavior)[keyof typeof MenuBehavior]
 
-  export type MenuItem =
+  export type MenuItem<T = unknown> =
     | {
         label: string
         checked?: boolean | (() => boolean)
         onClick: () => void
-        data?: unknown
+        data?: T
         disabled?: boolean
       }
     | {
         label: string
-        items: MenuItem[]
+        items: MenuItem<T>[]
         disabled?: boolean
       }
     | typeof MENU_SEPARATOR
@@ -90,28 +90,34 @@
   import ArrowUp from '@lib/icons/14-chevron-menu-up.svg?raw'
   import ArrowDown from '@lib/icons/14-chevron-menu-down.svg?raw'
   import CheckIcon from '@lib/icons/14-check.svg?raw'
-  import throttle from 'lodash.throttle'
+  import { throttle } from 'lodash-es'
   import { matchSorter } from 'match-sorter'
   import { onMount, onDestroy, tick } from 'svelte'
   import * as focusTrap from 'focus-trap'
 
   interface Props {
-    anchorRef?: HTMLElement | undefined
+    id?: string
+    anchorRef?: HTMLElement
     anchor?: Vec2 | undefined
     items: MenuItem[]
     behavior: MenuBehaviorType
+    closeOnClick?: boolean
     hide: () => void
-    onItemFocus?: ((item: MenuItem) => void) | undefined
-    lastActiveElement?: HTMLElement | undefined
+    onItemFocus?: (item: MenuItem) => void
+    recalculatePosition?: () => void
+    lastActiveElement?: HTMLElement
   }
 
   let {
+    id = undefined,
     anchorRef = undefined,
     anchor = undefined,
     items,
     behavior,
+    closeOnClick = true,
     hide,
     onItemFocus = undefined,
+    recalculatePosition = $bindable(undefined),
     lastActiveElement = $bindable(undefined),
   }: Props = $props()
 
@@ -120,6 +126,9 @@
   let clickedItem: [number, number] | null = $state(null)
   let anchorRect: DOMRect | null = null
   let overlayRef: HTMLElement | null = null
+  let menuRole = $derived(
+    behavior === MenuBehavior.AUTOCOMPLETE ? 'listbox' : 'menu',
+  )
   const ws: {
     activeMenusRef: ActiveMenu[]
     activeMenusMeta: ActiveMenuMeta[]
@@ -143,6 +152,7 @@
       // ignore if value === undefined
       if (value === undefined) return true
       const menu = parseInt(prop, 10)
+      value?.showPopover()
       setMenuRef(menu, value)
       return true
     },
@@ -183,7 +193,7 @@
 
     if (behavior !== MenuBehavior.SELECT) {
       if (menuRef.childNodes[0] && menuRef.childNodes[0].nodeType === 1) {
-        ;(menuRef.childNodes[0] as HTMLElement)?.focus()
+        ;(menuRef.childNodes[0] as HTMLElement)?.focus({ preventScroll: true })
       }
       activeMenu.position = calculatePosition(
         menu,
@@ -231,6 +241,8 @@
   }
 
   onMount(() => {
+    recalculatePosition = handleAnchorMove
+
     if (anchorRef) {
       anchorRect = anchorRef.getBoundingClientRect()
     } else if (anchor) {
@@ -258,6 +270,10 @@
     commitActiveMenus()
 
     tick().then(() => {
+      lastActiveElement = document.activeElement as HTMLElement
+      if (behavior === MenuBehavior.AUTOCOMPLETE) {
+        return
+      }
       trap = focusTrap.createFocusTrap(getTrapElements(), {
         clickOutsideDeactivates: false,
         escapeDeactivates: false,
@@ -270,11 +286,13 @@
       })
       trap?.activate()
     })
-    lastActiveElement = document.activeElement as HTMLElement
   })
 
   onDestroy(() => {
     trap?.deactivate()
+    if (behavior === MenuBehavior.AUTOCOMPLETE) {
+      lastActiveElement?.focus()
+    }
   })
 
   function getTrapElements(): HTMLElement[] {
@@ -299,11 +317,20 @@
     if ('disabled' in item && item.disabled) return
 
     if ('onClick' in item) {
-      const itemRef = ws.activeMenusMeta[menu].itemRefs[index]
-      itemRef?.addEventListener('animationend', () => {
+      if (closeOnClick) {
+        const itemRef = ws.activeMenusMeta[menu].itemRefs[index]
+        itemRef?.addEventListener('animationend', () => {
+          item.onClick()
+          hide()
+          itemRef?.removeEventListener('animationend', () => {})
+          clickedItem = null
+        })
+      } else {
         item.onClick()
-        hide()
-      })
+        setTimeout(() => {
+          clickedItem = null
+        }, 100)
+      }
       clickedItem = [menu, index]
       return
     }
@@ -408,10 +435,10 @@
     const activeMenuMeta = ws.activeMenusMeta[menu]
     if (!itemRef || activeMenuMeta.itemRefs[item] === itemRef) return
 
-    if (behavior) {
+    if (behavior !== MenuBehavior.AUTOCOMPLETE) {
       const i = getMenuItems(items, ws.activeMenusRef[menu].menuPath)[item]
       if (typeof i === 'object' && 'checked' in i && i.checked) {
-        itemRef.focus()
+        itemRef.focus({ preventScroll: true })
       }
     }
     activeMenuMeta.itemRefs[item] = itemRef
@@ -422,6 +449,7 @@
    * style clicks.
    */
   const handleMouseUp = () => {
+    if (behavior !== MenuBehavior.MENU) return
     if (ws.unixTimeout.timeout !== null) {
       clearTimeout(ws.unixTimeout.timeout)
       ws.unixTimeout.timeout = null
@@ -458,7 +486,7 @@
     const currentMenu = ws.activeMenusRef[ws.activeMenusRef.length - 1]
     const menuLength = getMenuItems(items, currentMenu.menuPath).length
 
-    const changeCurrentMenuFocus = (index: number) => {
+    const changeCurrentMenuFocus = (index: number, fromUserInput = false) => {
       // Direction where the focus is changed
       const direction = index > currentMenu.focus ? 1 : -1
       // If the new focus is out of bounds already, do nothing
@@ -485,15 +513,15 @@
         onItemFocus(item)
       }
 
-      if (behavior === MenuBehavior.AUTOCOMPLETE) return
+      if (!fromUserInput && behavior === MenuBehavior.AUTOCOMPLETE) return
 
-      itemRef?.focus()
+      itemRef?.focus({ preventScroll: true })
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault()
       event.stopPropagation()
       if (currentMenu.focus < menuLength - 1) {
-        changeCurrentMenuFocus(currentMenu.focus + 1)
+        changeCurrentMenuFocus(currentMenu.focus + 1, true)
       }
       commitActiveMenus()
       return
@@ -501,9 +529,9 @@
       event.preventDefault()
       event.stopPropagation()
       if (currentMenu.focus === -1) {
-        changeCurrentMenuFocus(menuLength - 1)
+        changeCurrentMenuFocus(menuLength - 1, true)
       } else if (currentMenu.focus > 0) {
-        changeCurrentMenuFocus(currentMenu.focus - 1)
+        changeCurrentMenuFocus(currentMenu.focus - 1, true)
       }
       commitActiveMenus()
       return
@@ -511,7 +539,7 @@
       event.preventDefault()
       event.stopPropagation()
       if (currentMenu.focus === -1) {
-        changeCurrentMenuFocus(0)
+        changeCurrentMenuFocus(0, true)
         commitActiveMenus()
         return
       }
@@ -536,7 +564,7 @@
       event.stopPropagation()
       if (ws.activeMenusRef.length === 1) {
         if (currentMenu.focus === -1) {
-          changeCurrentMenuFocus(0)
+          changeCurrentMenuFocus(0, true)
         }
         commitActiveMenus()
         return
@@ -668,7 +696,6 @@
         x: ev.clientX,
         y: ev.clientY,
       }
-
       if (
         ws.safeArea[0] !== null &&
         ws.safeArea[1] !== null &&
@@ -756,6 +783,38 @@
     commitActiveMenus()
   }
 
+  const handleAnchorMove = async () => {
+    await tick()
+    ws.activeMenusRef.map((activeMenu, i) => {
+      const meta = ws.activeMenusMeta[i]
+      if (i > 0) {
+        const k =
+          meta.itemRefs[ws.activeMenusRef[i - 1].focus]?.getBoundingClientRect()
+        if (k) {
+          meta.parentItemRect = k
+        }
+      } else {
+        if (anchorRef) {
+          anchorRect = anchorRef.getBoundingClientRect()
+        } else if (anchor) {
+          const rect = new DOMRect()
+          rect.x = anchor.x
+          rect.y = anchor.y
+          anchorRect = rect
+        }
+        if (!anchorRect) return
+        meta.parentItemRect = anchorRect
+      }
+      activeMenu.position = calculatePosition(
+        i,
+        meta.parentItemRect,
+        meta.menuRect,
+        behavior,
+      )
+    })
+    commitActiveMenus()
+  }
+
   function getMenuItemMeta(
     propItems: MenuItem[],
     menuPath: number[],
@@ -807,6 +866,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     bind:this={setMenuRefProxy[i]}
+    popover="manual"
     onmouseleave={() => handleMenuMouseLeave(i)}
     class="context_menu tint--card"
     class:select={behavior}
@@ -825,10 +885,14 @@
         {@html ArrowDown}
       </div>
     {/if}
-    <ul onscroll={(e) => checkOverflow(i, e)} role="menu" tabIndex={-1}>
+    <ul
+      onscroll={(e) => checkOverflow(i, e)}
+      {id}
+      role={menuRole}
+      tabIndex={-1}
+    >
       {#each getMenuItemMeta(items, menuPath, i) as info, j}
         {#if typeof info.item === 'object' && 'label' in info.item}
-          <!-- svelte-ignore a11y_click_events_have_key_events -->
           <li
             class={`item item_default ${
               clickedItem && clickedItem[0] === i && clickedItem[1] === j
@@ -883,6 +947,7 @@
   border-radius: tint.$size-8
   padding: tint.$size-4
   overflow: hidden
+  inset: unset
   &:global(.select)
     min-width: auto
   :global(> ul)
