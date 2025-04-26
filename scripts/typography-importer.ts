@@ -22,7 +22,7 @@ type TypeInfo = {
   size?: 'Small' | 'Large'
 }
 
-type TypeDefinition = {
+export type TypeDefinition = {
   name: string
   category: string
 } & TypeInfo

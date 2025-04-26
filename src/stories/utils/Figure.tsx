@@ -1,5 +1,3 @@
-import icons from './icon-import'
-import { DownloadIcon, CopyIcon } from '@storybook/icons'
 import { styled } from '@storybook/theming'
 import type { FC, PropsWithChildren } from 'react'
 import React from 'react'
@@ -10,7 +8,7 @@ export interface FigureProps {
   caption: string
 }
 
-const FigureEl = styled.div(({ theme }) => ({
+const FigureEl = styled.div((_) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

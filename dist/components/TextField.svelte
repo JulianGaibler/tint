@@ -93,7 +93,7 @@
     if (!element) return
     const textarea = element as HTMLTextAreaElement
     textarea.style.height = 'auto'
-    textarea.style.height = `${textarea.scrollHeight + 4}px`
+    textarea.style.height = `${textarea.scrollHeight}px`
   }
 
   $effect(() => {
@@ -101,13 +101,17 @@
   })
 
   $effect(() => {
-    if (value && variant === 'textarea') {
+    if (value !== undefined && variant === 'textarea') {
       updateTextAreaHeight()
     }
   })
 
   onMount(() => {
-    updateTextAreaHeight
+    if (value !== undefined && variant === 'textarea') {
+      // On some browsers the textarea height is not set correctly on mount
+      // so we need to wait for the next tick to set it
+      setTimeout(() => updateTextAreaHeight(), 0)
+    }
   })
 </script>
 
@@ -182,20 +186,22 @@
 
 .box {
   position: relative;
-  height: 48px;
-  line-height: normal;
   width: 100%;
   line-height: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  display: flex;
 }
 .box > * {
   line-height: normal;
 }
 .box > .input {
   box-sizing: border-box;
+  min-height: 48px;
+  border-radius: 8px;
+  border: none;
   background-color: var(--tint-input-bg);
   color: currentColor;
-  border-radius: 8px;
-  border: 2px solid transparent;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -218,7 +224,7 @@
   position: absolute;
   left: 12px;
   right: initial;
-  top: calc(24px - 0.55lh);
+  top: calc(24px - 0.6lh);
   transform: scale(1.166);
   transform-origin: left top;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms;
@@ -231,7 +237,6 @@
 }
 
 .textarea .box {
-  height: auto;
   min-height: 48px;
 }
 

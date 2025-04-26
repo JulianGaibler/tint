@@ -2,7 +2,6 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Dialog, { type OpenDialog } from '@lib/components/Dialog.svelte'
   import Button from '@lib/components/Button.svelte'
-  import { fn } from '@storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/Dialog',

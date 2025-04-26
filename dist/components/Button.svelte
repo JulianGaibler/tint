@@ -1,8 +1,5 @@
 <script lang="ts">
-  import type {
-    HTMLButtonAttributes,
-    HTMLAnchorAttributes,
-  } from 'svelte/elements'
+  import type { HTMLButtonAttributes } from 'svelte/elements'
 
   interface Props extends HTMLButtonAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
@@ -114,6 +111,7 @@
     {role}
     {tabindex}
     {title}
+    {formmethod}
     aria-label={ariaLabel}
     aria-pressed={ariaPressed}
     bind:this={element}

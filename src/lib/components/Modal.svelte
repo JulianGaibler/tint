@@ -29,10 +29,12 @@
 
   $effect(() => {
     if (open == isOpen) return
+    console.log('open', open, isOpen)
     untrack(() => {
       if (open && dialogElement && !dialogElement.open) {
         dialogElement.showModal()
         isOpen = true
+        console.log('opened', dialogElement)
       } else if (!open && dialogElement && dialogElement.open) {
         dialogElement.close()
         isOpen = false
@@ -58,25 +60,26 @@
     position: fixed
     inset: 0
     margin: auto
-    opacity: 0
+    opacity: 0.2
     transform: scale(0.5)
-    @media (prefers-reduced-motion: no-preference)
-      transition: opacity var(--ease-time) var(--ease-curve), transform var(--ease-time) var(--ease-curve)
-    &:open
-      opacity: 1
-      transform: scaleY(1)
+    animation: openDialog var(--ease-time) var(--ease-curve) forwards
     &::backdrop
       forced-color-adjust: none
       background-color: rgb(0 0 0 / 0%)
-      @media (prefers-reduced-motion: no-preference)
-        transition: display var(--ease-time) allow-discrete, overlay var(--ease-time) allow-discrete, background-color var(--ease-time)
-    &:open::backdrop
+      animation: openBackdrop var(--ease-time) var(--ease-curve) forwards
+
+  @keyframes openDialog
+    from
+      opacity: 0.2
+      transform: scale(0.5)
+    to
+      opacity: 1
+      transform: scaleY(1)
+
+  @keyframes openBackdrop
+    from
+      background-color: rgb(0 0 0 / 0%)
+    to
       background-color: rgb(0 0 0 / 25%)
 
-  @starting-style
-    dialog:open
-      opacity: 0
-      transform: scale(0.5)
-    dialog:open::backdrop
-      background-color: rgb(0 0 0 / 0%)
 </style>

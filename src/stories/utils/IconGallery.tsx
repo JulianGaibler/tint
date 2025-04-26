@@ -1,6 +1,6 @@
 import icons from './icon-import'
 import { DownloadIcon, CopyIcon } from '@storybook/icons'
-import { styled } from '@storybook/theming'
+import { styled, type Theme } from '@storybook/theming'
 import type { FC, PropsWithChildren } from 'react'
 import React from 'react'
 
@@ -14,12 +14,12 @@ export interface GalleryItemProps {
   svg: string
 }
 
-const GalleryWrapper = styled.div(({ theme }) => ({
+const GalleryWrapper = styled.div((_) => ({
   display: 'flex',
   flexDirection: 'column',
   flex: 'none',
 }))
-const Gallery = styled.ul(({ theme }) => ({
+const Gallery = styled.ul((_) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(192px, 1fr))',
   gridGap: '1rem',
@@ -68,7 +68,7 @@ const IconPreview = styled.div(({ theme }) => ({
     },
   },
 }))
-const IconName = styled.div(({ theme }) => ({
+const IconName = styled.div((_) => ({
   fontSize: '0.9rem',
   border: 'none',
   background: 'none',
@@ -92,7 +92,7 @@ const SearchInput = styled.input(({ theme }) => ({
   },
 }))
 
-const sharedButtonBubble = (theme) => ({
+const sharedButtonBubble = (theme: Theme) => ({
   margin: 0,
   padding: '4px 10px',
   borderRadius: `4px`,

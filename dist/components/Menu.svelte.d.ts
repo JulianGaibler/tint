@@ -1,6 +1,6 @@
 import type { MenuItem } from './menu/MenuInternal.svelte';
-export { MENU_SEPARATOR } from './menu/MenuInternal.svelte';
 export type { MenuItem };
+export { MENU_SEPARATOR } from './menu/MenuInternal.svelte';
 export type ContextClickHandler = (e: Event | MouseEvent) => void;
 interface Props {
     /**

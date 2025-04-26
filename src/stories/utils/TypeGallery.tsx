@@ -1,15 +1,16 @@
 import { CopyIcon } from '@storybook/icons'
-import { styled } from '@storybook/theming'
+import { styled, type Theme } from '@storybook/theming'
 import type { FC } from 'react'
 import React from 'react'
 import { typeDefinitons } from 'virtual:typography-importer'
+import { type TypeDefinition } from '../../../scripts/typography-importer'
 
-const GalleryWrapper = styled.div(({ theme }) => ({
+const GalleryWrapper = styled.div((_) => ({
   display: 'flex',
   flexDirection: 'column',
   flex: 'none',
 }))
-const Gallery = styled.ul(({ theme }) => ({
+const Gallery = styled.ul((_) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
   gridGap: '1rem',
@@ -18,7 +19,7 @@ const Gallery = styled.ul(({ theme }) => ({
   margin: 0,
 }))
 
-const sharedButtonBubble = (theme) => ({
+const sharedButtonBubble = (theme: Theme) => ({
   margin: 0,
   padding: '4px 8px',
   borderRadius: `4px`,
@@ -135,7 +136,7 @@ const TypePreview = styled.div(({ theme }) => ({
   userSelect: 'none',
 }))
 
-const TypeDefItem: FC<{ definition: any }> = ({ definition }) => {
+const TypeDefItem: FC<{ definition: TypeDefinition }> = ({ definition }) => {
   function copyClass(e: React.MouseEvent<HTMLButtonElement>) {
     const path = `tint--type-${definition.name}`
     // add the path to the clipboard

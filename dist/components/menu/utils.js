@@ -12,9 +12,12 @@ export function getMenuItems(propItems, menuPath) {
         return propItems;
     let items = propItems;
     for (let i = 0; i < menuPath.length; i++) {
+        const item = items[menuPath[i]];
         // We know that these items are menus because they have submenus
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        items = items[menuPath[i]].items;
+        if (!(typeof item === 'object' && 'items' in item)) {
+            throw new Error('Invalid menu path');
+        }
+        items = item.items;
     }
     return items;
 }
