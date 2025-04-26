@@ -10,7 +10,5 @@
 
 <!-- A indefinite loading indicator. -->
 <Story name="Default">
-  {#snippet children()}
-    <LoadingIndicator />
-  {/snippet}
+  <LoadingIndicator />
 </Story>

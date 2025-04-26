@@ -1,3 +1,4 @@
+<!-- eslint-disable svelte/require-each-key -->
 <script lang="ts" module>
   // --------
   // Constants
@@ -862,6 +863,7 @@
     hide()
   }}
 ></div>
+<!-- eslint-disable-next-line svelte/require-each-key -->
 {#each displayActiveMenus as { menuPath, position, scrollPosition }, i}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -891,6 +893,7 @@
       role={menuRole}
       tabIndex={-1}
     >
+      <!-- eslint-disable-next-line svelte/require-each-key -->
       {#each getMenuItemMeta(items, menuPath, i) as info, j}
         {#if typeof info.item === 'object' && 'label' in info.item}
           <li

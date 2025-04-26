@@ -79,7 +79,7 @@
 </script>
 
 <main>
-  {#each [0, 1] as i}
+  {#each [0, 1] as i (i)}
     <div class:tint--tinted={i === 1} class="panel">
       <div class="category tint--card">
         <h2>Headline</h2>
