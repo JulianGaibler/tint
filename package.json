@@ -11,7 +11,8 @@
     "prettier": "prettier --write --check 'src/**/*.*'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prep-svgs": "node ./scripts/prep-svgs.js"
+    "prep-svgs": "node ./scripts/prep-svgs.js",
+    "prepare": "husky install"
   },
   "exports": {
     ".": {
@@ -52,6 +53,7 @@
     "eslint-plugin-storybook": "^0.11.3",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^16.0.0",
+    "husky": "^8.0.0",
     "prettier": "^3.5.3",
     "prettier-plugin-jsdoc": "^1.3.2",
     "prettier-plugin-svelte": "^3.3.3",
