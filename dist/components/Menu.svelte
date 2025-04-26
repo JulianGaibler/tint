@@ -1,8 +1,9 @@
 <script lang="ts" module>
   import type { MenuItem } from './menu/MenuInternal.svelte'
 
-  export { MENU_SEPARATOR } from './menu/MenuInternal.svelte'
+  // eslint-disable-next-line no-import-assign
   export type { MenuItem }
+  export { MENU_SEPARATOR } from './menu/MenuInternal.svelte'
 
   export type ContextClickHandler = (e: Event | MouseEvent) => void
 </script>

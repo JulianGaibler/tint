@@ -1,15 +1,18 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/lib/index.d.ts", "src/**/*.svelte"],
+  "include": ["src/lib/index.d.ts", "src/**/*.svelte", "src/**/*.ts", "src/**/*.tsx", "scripts/**/*.ts",],
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "jsx": "react",
     "sourceMap": true,
     "strict": true,
     "allowJs": true,
+    "types": ["vite/client"],
     "baseUrl": ".",
+    "lib": ["ES2022"],
     "paths": {
       "@src/*": ["./src/*"],
       "@lib/*": ["./src/lib/*"],

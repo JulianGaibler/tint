@@ -8,12 +8,6 @@ declare module '*?raw' {
   export default content
 }
 
-declare module 'vite' {
-  interface ImportMeta {
-    glob(pattern: string): Record<string, () => Promise<any>>
-  }
-}
-
 declare module 'virtual:typography-importer' {
-  export const typeDefinitons: any[]
+  export const typeDefinitons: import('../scripts/typography-importer').TypeCategories
 }

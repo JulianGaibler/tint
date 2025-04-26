@@ -93,7 +93,7 @@
     if (!element) return
     const textarea = element as HTMLTextAreaElement
     textarea.style.height = 'auto'
-    textarea.style.height = `${textarea.scrollHeight + 4}px`
+    textarea.style.height = `${textarea.scrollHeight}px`
   }
 
   $effect(() => {
@@ -101,13 +101,17 @@
   })
 
   $effect(() => {
-    if (value && variant === 'textarea') {
+    if (value !== undefined && variant === 'textarea') {
       updateTextAreaHeight()
     }
   })
 
   onMount(() => {
-    updateTextAreaHeight
+    if (value !== undefined && variant === 'textarea') {
+      // On some browsers the textarea height is not set correctly on mount
+      // so we need to wait for the next tick to set it
+      setTimeout(() => updateTextAreaHeight(), 0)
+    }
   })
 </script>
 
@@ -179,18 +183,20 @@
   width: 100%
 .box
   position: relative
-  height: tint.$size-48
-  line-height: normal
   width: 100%
   line-height: 0
+  border: 2px solid transparent
+  border-radius: tint.$input-radius
+  display: flex
   > *
     line-height: normal
   > .input
     box-sizing: border-box
+    min-height: tint.$size-48
+    border-radius: tint.$input-radius
+    border: none
     background-color: var(--tint-input-bg)
     color: currentColor
-    border-radius: tint.$input-radius
-    border: 2px solid transparent
     width: 100%
     height: 100%
     margin: 0
@@ -203,7 +209,7 @@
     position: absolute
     left: tint.$size-12
     right: initial
-    top: calc(tint.$size-48 * 0.5 - 1lh * 0.55)
+    top: calc(tint.$size-48 * 0.5 - 1lh * 0.60)
     transform: scale(1.166)
     // transform: translateY(-55%) scale(1.166)
     transform-origin: left top
@@ -213,7 +219,6 @@
       transition: none
 
 .textarea .box
-  height: auto
   min-height: tint.$size-48
 
 .error .input

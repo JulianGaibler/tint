@@ -1,9 +1,12 @@
 // using vite, re-export all files ending with *.svg
-const modules = import.meta.glob('../../lib/icons/*.svg', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-})
+const modules: Record<string, string> = import.meta.glob<string>(
+  '../../lib/icons/*.svg',
+  {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  },
+)
 
 const imported = Object.fromEntries(
   Object.entries(modules).map(([key, value]) => [key, value]),

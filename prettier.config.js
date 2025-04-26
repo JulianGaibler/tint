@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   semi: false,
   trailingComma: 'all',
   singleQuote: true,
@@ -14,3 +14,5 @@ module.exports = {
     },
   ],
 }
+
+export default config

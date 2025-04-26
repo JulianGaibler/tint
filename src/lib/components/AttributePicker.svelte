@@ -105,7 +105,9 @@
     }))
 
     if (allowAdd) {
-      items.length && updatedMenuItems.push(MENU_SEPARATOR)
+      if (items.length) {
+        updatedMenuItems.push(MENU_SEPARATOR)
+      }
       updatedMenuItems.push({
         label: `Add "${fieldValue}"`,
         data: undefined,
@@ -126,7 +128,7 @@
   $effect(() => {
     fieldValueChanged(fieldValue)
   })
-  function fieldValueChanged(value: string) {
+  function fieldValueChanged(_value: string) {
     if (throttelDynamicItems === undefined) {
       const filteredItems = items.filter((item) =>
         item.label.toLowerCase().includes(fieldValue.toLowerCase()),

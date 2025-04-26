@@ -1,6 +1,9 @@
 node_modules
 dist/
 .DS_Store
+*.woff2
+*.txt
+*.png
 *.svg
 *.sass
 .vscode/

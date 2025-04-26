@@ -162,7 +162,7 @@
   }
 
   const setItemRefHandler = {
-    set: function (obj: unknown, prop: string, value: HTMLElement | null) {
+    set: function (_obj: unknown, prop: string, value: HTMLElement | null) {
       if (value === undefined) return true
       const [i, j] = prop.split('-')
       const menu = parseInt(i, 10)
@@ -873,7 +873,7 @@
     style:left={`${position.x}px`}
     style:top={`${position.y}px`}
     style:height={position.height ? `${position.height}px` : 'auto'}
-    style:minWidth={position.minWidth ? `${position.minWidth}px` : 'auto'}
+    style:min-width={position.minWidth ? `${position.minWidth}px` : 'auto'}
   >
     {#if position.height && scrollPosition > -1}
       <div class="overflow_top" aria-hidden="true">
