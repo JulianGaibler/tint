@@ -8,6 +8,7 @@ interface Props extends HTMLButtonAttributes {
     external?: boolean;
     download?: string | undefined;
     disabled?: boolean;
+    loading?: boolean;
     submit?: boolean;
     title?: string | undefined;
     ariaLabel?: string | undefined;

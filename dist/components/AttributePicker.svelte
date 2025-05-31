@@ -9,6 +9,23 @@
     type MenuItem,
   } from './menu/MenuInternal.svelte'
   import { untrack } from 'svelte'
+  import { cubicOut } from 'svelte/easing'
+
+  function animateIn(_node: Element, { duration = 150 } = {}) {
+    return {
+      duration,
+      easing: cubicOut,
+      css: (t: number) => {
+        const percent = 100 - t * 100
+        const scale = 0.8 + 0.2 * t
+        return `
+          clip-path: inset(0 ${percent}% 0 0 round 9999px);
+          transform: scale(${scale}, ${scale});
+          transform-origin: left center;
+        `
+      },
+    }
+  }
 
   type T = $$Generic
   interface AttributePickerItem {
@@ -222,7 +239,12 @@
       {#each value as tagId (tagId)}
         {@const label = items.find((item) => item.value === tagId)?.label}
         {@const labelId = `${id}-tag-${tagId}`}
-        <div class="tag tint--type-input" role="option" aria-selected="true">
+        <div
+          class="tag tint--type-input"
+          role="option"
+          aria-selected="true"
+          in:animateIn
+        >
           <span id={labelId}>{label}</span>
           <button
             title="Remove"

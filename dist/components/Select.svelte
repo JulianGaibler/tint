@@ -194,4 +194,12 @@
   .disabled .helper-message, .disabled .warning-icon, .disabled .dropdown {
     color: GrayText;
   }
+}
+select option {
+  font-size: 0.875rem;
+  font-family: "HK Grotesk", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+}
+select, select::picker(select) {
+  appearance: base-select;
 }</style>

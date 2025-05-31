@@ -54,14 +54,19 @@
 </dialog>
 
 <style>dialog {
-  --ease-curve: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-time: 200ms;
+  --ease-curve: cubic-bezier(0.42, 1.67, 0.21, 0.90);
+  --ease-time: 350ms;
   position: fixed;
   inset: 0;
   margin: auto;
   opacity: 0.2;
   transform: scale(0.5);
   animation: openDialog var(--ease-time) var(--ease-curve) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog {
+    animation-name: openDialog-noMotion;
+  }
 }
 dialog::backdrop {
   forced-color-adjust: none;
@@ -73,6 +78,16 @@ dialog::backdrop {
   from {
     opacity: 0.2;
     transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+@keyframes openDialog-noMotion {
+  from {
+    opacity: 0;
+    transform: scale(1);
   }
   to {
     opacity: 1;

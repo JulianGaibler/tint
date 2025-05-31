@@ -5,3 +5,4 @@ npm run prep-svgs
 npm run lint
 npm run prettier
 npm run package
+git add --all
