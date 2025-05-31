@@ -188,8 +188,6 @@
   position: relative;
   width: 100%;
   line-height: 0;
-  border: 2px solid transparent;
-  border-radius: 8px;
   display: flex;
 }
 .box > * {
@@ -199,6 +197,7 @@
   box-sizing: border-box;
   min-height: 48px;
   border-radius: 8px;
+  border: 2px solid transparent;
   border: none;
   background-color: var(--tint-input-bg);
   color: currentColor;
