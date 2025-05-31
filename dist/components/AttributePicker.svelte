@@ -321,12 +321,12 @@
 .box > .input:focus-visible {
   outline: none;
 }
-.box:has(.input:focus-visible), .box.fake-focus {
+.box:has(:global(.input:focus-visible)), .box.fake-focus {
   outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {
-  .box:has(.input:focus-visible), .box.fake-focus {
+  .box:has(:global(.input:focus-visible)), .box.fake-focus {
     outline-color: CanvasText;
   }
 }

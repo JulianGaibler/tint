@@ -112,7 +112,7 @@ button[role="switch"]
     border-radius: 50%
     position: relative
     left: math.div(tint.$size-24 - tint.$size-12, 2) - 1px
-    transition: left 0.1s ease-out
+    transition: left 250ms cubic-bezier(0.42, 1.67, 0.21, 0.90)
     @media (prefers-reduced-motion: reduce)
       transition: none
   &[aria-checked="true"]
@@ -120,6 +120,14 @@ button[role="switch"]
     color: var(--tint-action-primary-text)
     &::before
       left: tint.$size-40 - tint.$size-12 - math.div(tint.$size-24 - tint.$size-12, 2) - 1px
+
+/* Common styles for ::before pseudo-elements of toggleable inputs */
+input[type="checkbox"]::before,
+input[type="radio"]::before
+  display: block
+  scale: 0
+  @media (prefers-reduced-motion: no-preference)
+    transition: scale 250ms cubic-bezier(0.42, 1.67, 0.21, 0.90)
 
 input[type="checkbox"]
   border-radius: tint.$size-4
@@ -139,7 +147,7 @@ input[type="radio"]
 input[type="radio"], input[type="checkbox"]
   &:checked
     &::before
-      display: block
+      scale: 1
 
 input:disabled, button:disabled
   opacity: 0.5

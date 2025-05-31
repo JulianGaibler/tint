@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
+  import LoadingIndicator from '@lib/components/LoadingIndicator.svelte'
 
   interface Props extends HTMLButtonAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
@@ -18,6 +19,8 @@
     download?: string | undefined
     // Disables the button
     disabled?: boolean
+    // Shows loading state for buttons (has no effect on links)
+    loading?: boolean
     // If true, the button will be of type submit
     submit?: boolean
     // aria-label of the button @type {string | undefined}
@@ -51,6 +54,7 @@
     external = false,
     download = undefined,
     disabled = false,
+    loading = false,
     submit = false,
     formmethod = undefined,
     title = undefined,
@@ -79,6 +83,10 @@
   let _variant = $derived(
     toggled === undefined ? variant : toggled ? 'primary' : variant,
   )
+
+  // For buttons, disable when loading. For links, loading has no effect
+  let isDisabled = $derived(href ? disabled : disabled || loading)
+  let loadingSize = $derived<16 | 24>(small ? 16 : 24)
 </script>
 
 {#if href && disabled}
@@ -89,7 +97,8 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}>{@render children?.()}</span
+    class={`tint--button tint--type-action ${_variant}`}
+    >{@render children?.()}</span
   >
 {:else if href}
   <a
@@ -101,13 +110,13 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}
+    class={`tint--button tint--type-action ${_variant}`}
     rel={external ? 'noopener' : undefined}
     target={external ? '_blank' : undefined}>{@render children?.()}</a
   >
 {:else}
   <button
-    {disabled}
+    disabled={isDisabled}
     {role}
     {tabindex}
     {title}
@@ -117,23 +126,33 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}
+    class:loading
+    class={`tint--button tint--type-action ${_variant}`}
     {onclick}
     {onkeypress}
     {onkeydown}
     type={submit ? 'submit' : 'button'}
-    {...elementProps}>{@render children?.()}</button
+    {...elementProps}
   >
+    <span class="button-content" class:visually-hidden={loading}>
+      {@render children?.()}
+    </span>
+    {#if loading}
+      <div class="loading-overlay">
+        <LoadingIndicator size={loadingSize} />
+      </div>
+    {/if}
+  </button>
 {/if}
 
 <style lang="sass">
-a
+a.tint--button
   display: inline-flex
   align-items: center
   justify-content: center
   color: inherit
   text-decoration: none
-button, a, span
+.tint--button
   vertical-align: top
   box-sizing: border-box
   min-height: tint.$size-48
@@ -163,7 +182,27 @@ button, a, span
     &:global(.ghost)
       border-color: transparent
       outline-offset: 0
-button, a
+
+button.tint--button
+  position: relative
+  &.loading
+    pointer-events: none
+  .button-content
+    display: inherit
+    &.visually-hidden
+      opacity: 0
+  .loading-overlay
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    pointer-events: none
+
+button.tint--button, a.tint--button
   &:not(:disabled):hover
     background-color: var(--tint-action-secondary-hover)
   &:not(:disabled):active
@@ -177,11 +216,11 @@ button, a
     &:not(:disabled):active
       background-color: var(--tint-action-primary-active)
 
-button:disabled, a:disabled, span
+button.tint--button:disabled, a:disabled, span.tint--button
   opacity: 0.5
 
 @media (forced-colors: active)
-  button, a
+  button.tint--button, a.tint--button
     // this is to prevent a strange backplate issue in chrome
     forced-color-adjust: none
     background-color: ButtonFace
@@ -213,5 +252,4 @@ button:disabled, a:disabled, span
         background-color: GrayText
         border: 2px solid ButtonFace
         color: ButtonFace
-
 </style>

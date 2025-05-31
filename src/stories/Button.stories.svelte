@@ -46,19 +46,25 @@
   </Button>
 {/snippet}
 
+<!-- Default button with text -->
 <Story
   name="Primary"
   args={{ variant: 'primary', small: false, disabled: false, icon: false }}
 />
+
+<!-- Secondary button with text -->
 <Story
   name="Secondary"
   args={{ variant: 'secondary', small: false, disabled: false, icon: false }}
 />
+
+<!-- Ghost button with text, has no border -->
 <Story
   name="Ghost"
   args={{ variant: 'ghost', small: false, disabled: false, icon: false }}
 />
 
+<!-- Button with an icon -->
 <Story
   name="Icon"
   args={{
@@ -70,7 +76,11 @@
   }}
 />
 
+<!-- Small button with text -->
 <Story
   name="Small"
   args={{ variant: 'secondary', small: true, disabled: false, icon: false }}
 />
+
+<!-- Button in a loading state, where it is disabled and shows a loading indicator -->
+<Story name="Loading" args={{ variant: 'secondary', loading: true }} />
