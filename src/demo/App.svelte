@@ -15,6 +15,7 @@
   import Modal from '@src/lib/components/Modal.svelte'
   import Dialog, { type OpenDialog } from '@src/lib/components/Dialog.svelte'
   import LoadingIndicator from '@src/lib/components/LoadingIndicator.svelte'
+  import ProgressIndicator from '@src/lib/components/ProgressBar.svelte'
   let modalOpen = $state(false)
   let openDialog1 = $state<OpenDialog | undefined>(undefined)
   let openDialog2 = $state<OpenDialog | undefined>(undefined)
@@ -76,6 +77,16 @@
       label: 'Fox',
     },
   ]
+
+  let active = $state(false)
+
+  $effect(() => {
+    // every 5 seconds toggle active state
+    const interval = setInterval(() => {
+      active = !active
+    }, 1000)
+    return () => clearInterval(interval)
+  })
 </script>
 
 <main>
@@ -125,6 +136,17 @@
             <Button disabled icon ariaLabel="home">{@html IconHome}</Button>
             <Button disabled icon ariaLabel="home" variant="ghost"
               >{@html IconHome}</Button
+            >
+          </div>
+          <div class="row">
+            <Button loading variant="primary">Hello!</Button>
+            <Button loading>Hello!</Button>
+            <Button icon loading ariaLabel="home">{@html IconHome}</Button>
+          </div>
+          <div class="row">
+            <Button loading small variant="primary">Hi!</Button>
+            <Button loading small>Hi!</Button>
+            <Button icon loading small ariaLabel="home">{@html IconHome}</Button
             >
           </div>
           <div class="row">
@@ -419,6 +441,7 @@
         <div class="rows">
           <div class="row">
             <LoadingIndicator />
+            <ProgressIndicator {active} showProgress />
           </div>
         </div>
       </div>

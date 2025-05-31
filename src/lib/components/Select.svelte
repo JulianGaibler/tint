@@ -170,4 +170,11 @@
       border-color: GrayText
     .helper-message, .warning-icon, .dropdown
       color: GrayText
+
+
+select
+  option
+    @include tint.type-class(input)
+  &, &::picker(select)
+    appearance: base-select
 </style>
