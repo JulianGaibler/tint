@@ -185,8 +185,6 @@
   position: relative
   width: 100%
   line-height: 0
-  border: 2px solid transparent
-  border-radius: tint.$input-radius
   display: flex
   > *
     line-height: normal
@@ -194,6 +192,7 @@
     box-sizing: border-box
     min-height: tint.$size-48
     border-radius: tint.$input-radius
+    border: 2px solid transparent
     border: none
     background-color: var(--tint-input-bg)
     color: currentColor
