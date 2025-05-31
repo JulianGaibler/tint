@@ -198,7 +198,6 @@
   min-height: 48px;
   border-radius: 8px;
   border: 2px solid transparent;
-  border: none;
   background-color: var(--tint-input-bg);
   color: currentColor;
   width: 100%;
