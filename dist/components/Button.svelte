@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
+  import LoadingIndicator from './LoadingIndicator.svelte'
 
   interface Props extends HTMLButtonAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
@@ -18,6 +19,8 @@
     download?: string | undefined
     // Disables the button
     disabled?: boolean
+    // Shows loading state for buttons (has no effect on links)
+    loading?: boolean
     // If true, the button will be of type submit
     submit?: boolean
     // aria-label of the button @type {string | undefined}
@@ -51,6 +54,7 @@
     external = false,
     download = undefined,
     disabled = false,
+    loading = false,
     submit = false,
     formmethod = undefined,
     title = undefined,
@@ -79,6 +83,10 @@
   let _variant = $derived(
     toggled === undefined ? variant : toggled ? 'primary' : variant,
   )
+
+  // For buttons, disable when loading. For links, loading has no effect
+  let isDisabled = $derived(href ? disabled : disabled || loading)
+  let loadingSize = $derived<16 | 24>(small ? 16 : 24)
 </script>
 
 {#if href && disabled}
@@ -89,7 +97,8 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}>{@render children?.()}</span
+    class={`tint--button tint--type-action ${_variant}`}
+    >{@render children?.()}</span
   >
 {:else if href}
   <a
@@ -101,13 +110,13 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}
+    class={`tint--button tint--type-action ${_variant}`}
     rel={external ? 'noopener' : undefined}
     target={external ? '_blank' : undefined}>{@render children?.()}</a
   >
 {:else}
   <button
-    {disabled}
+    disabled={isDisabled}
     {role}
     {tabindex}
     {title}
@@ -117,16 +126,26 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--type-action ${_variant}`}
+    class:loading
+    class={`tint--button tint--type-action ${_variant}`}
     {onclick}
     {onkeypress}
     {onkeydown}
     type={submit ? 'submit' : 'button'}
-    {...elementProps}>{@render children?.()}</button
+    {...elementProps}
   >
+    <span class="button-content" class:visually-hidden={loading}>
+      {@render children?.()}
+    </span>
+    {#if loading}
+      <div class="loading-overlay">
+        <LoadingIndicator size={loadingSize} />
+      </div>
+    {/if}
+  </button>
 {/if}
 
-<style>a {
+<style>a.tint--button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +153,7 @@
   text-decoration: none;
 }
 
-button, a, span {
+.tint--button {
   vertical-align: top;
   box-sizing: border-box;
   min-height: 48px;
@@ -145,16 +164,16 @@ button, a, span {
   border-radius: 12px;
   flex-shrink: 0;
 }
-button:focus-visible, a:focus-visible, span:focus-visible {
+.tint--button:focus-visible {
   outline: 2px solid var(--tint-action-primary);
   outline-offset: 2px;
 }
 @media (forced-colors: active) {
-  button:focus-visible, a:focus-visible, span:focus-visible {
+  .tint--button:focus-visible {
     outline-color: CanvasText;
   }
 }
-button.icon, a.icon, span.icon {
+.tint--button.icon {
   padding: 0px;
   display: inline-flex;
   justify-content: center;
@@ -162,80 +181,104 @@ button.icon, a.icon, span.icon {
   width: 48px;
   height: 48px;
 }
-button.small, a.small, span.small {
+.tint--button.small {
   min-height: 32px;
   padding: 2px 16px;
   border-radius: 80px;
 }
-button.small.icon, a.small.icon, span.small.icon {
+.tint--button.small.icon {
   padding: 0px;
   width: 32px;
   height: 32px;
 }
 @media (forced-colors: none), (prefers-contrast: no-preference) {
-  button:global(.ghost), a:global(.ghost), span:global(.ghost) {
+  .tint--button:global(.ghost) {
     border-color: transparent;
     outline-offset: 0;
   }
 }
 
-button:not(:disabled):hover, a:not(:disabled):hover {
+button.tint--button {
+  position: relative;
+}
+button.tint--button.loading {
+  pointer-events: none;
+}
+button.tint--button .button-content {
+  display: inherit;
+}
+button.tint--button .button-content.visually-hidden {
+  opacity: 0;
+}
+button.tint--button .loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+button.tint--button:not(:disabled):hover, a.tint--button:not(:disabled):hover {
   background-color: var(--tint-action-secondary-hover);
 }
-button:not(:disabled):active, a:not(:disabled):active {
+button.tint--button:not(:disabled):active, a.tint--button:not(:disabled):active {
   background-color: var(--tint-action-secondary-active);
 }
-button:global(.primary), a:global(.primary) {
+button.tint--button:global(.primary), a.tint--button:global(.primary) {
   background-color: var(--tint-action-primary);
   border-color: transparent;
   color: var(--tint-action-primary-text);
 }
-button:global(.primary):not(:disabled):hover, a:global(.primary):not(:disabled):hover {
+button.tint--button:global(.primary):not(:disabled):hover, a.tint--button:global(.primary):not(:disabled):hover {
   background-color: var(--tint-action-primary-hover);
 }
-button:global(.primary):not(:disabled):active, a:global(.primary):not(:disabled):active {
+button.tint--button:global(.primary):not(:disabled):active, a.tint--button:global(.primary):not(:disabled):active {
   background-color: var(--tint-action-primary-active);
 }
 
-button:disabled, a:disabled, span {
+button.tint--button:disabled, a:disabled, span.tint--button {
   opacity: 0.5;
 }
 
 @media (forced-colors: active) {
-  button, a {
+  button.tint--button, a.tint--button {
     forced-color-adjust: none;
     background-color: ButtonFace;
     border-color: ButtonText;
     color: ButtonText;
   }
-  button:not(:disabled):hover, button:not(:disabled):active, a:not(:disabled):hover, a:not(:disabled):active {
+  button.tint--button:not(:disabled):hover, button.tint--button:not(:disabled):active, a.tint--button:not(:disabled):hover, a.tint--button:not(:disabled):active {
     background-color: SelectedItemText;
     border-color: SelectedItem;
     color: SelectedItem;
   }
-  button:not(:disabled):active, a:not(:disabled):active {
+  button.tint--button:not(:disabled):active, a.tint--button:not(:disabled):active {
     border-color: ButtonText;
   }
-  button:disabled, a:disabled {
+  button.tint--button:disabled, a.tint--button:disabled {
     opacity: 1;
     background-color: ButtonFace;
     border: 2px solid GrayText;
     color: GrayText;
   }
-  button:global(.primary), a:global(.primary) {
+  button.tint--button:global(.primary), a.tint--button:global(.primary) {
     background-color: ButtonText;
     border: 2px solid ButtonFace;
     color: ButtonFace;
   }
-  button:global(.primary):not(:disabled):hover, button:global(.primary):not(:disabled):active, a:global(.primary):not(:disabled):hover, a:global(.primary):not(:disabled):active {
+  button.tint--button:global(.primary):not(:disabled):hover, button.tint--button:global(.primary):not(:disabled):active, a.tint--button:global(.primary):not(:disabled):hover, a.tint--button:global(.primary):not(:disabled):active {
     background-color: SelectedItem;
     border-color: SelectedItemText;
     color: SelectedItemText;
   }
-  button:global(.primary):not(:disabled):active, a:global(.primary):not(:disabled):active {
+  button.tint--button:global(.primary):not(:disabled):active, a.tint--button:global(.primary):not(:disabled):active {
     border-color: SelectedItem;
   }
-  button:global(.primary):disabled, a:global(.primary):disabled {
+  button.tint--button:global(.primary):disabled, a.tint--button:global(.primary):disabled {
     background-color: GrayText;
     border: 2px solid ButtonFace;
     color: ButtonFace;

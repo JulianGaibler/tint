@@ -124,7 +124,7 @@ button[role=switch]::before {
   border-radius: 50%;
   position: relative;
   left: 5px;
-  transition: left 0.1s ease-out;
+  transition: left 250ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
 }
 @media (prefers-reduced-motion: reduce) {
   button[role=switch]::before {
@@ -137,6 +137,19 @@ button[role=switch][aria-checked=true] {
 }
 button[role=switch][aria-checked=true]::before {
   left: 21px;
+}
+
+/* Common styles for ::before pseudo-elements of toggleable inputs */
+input[type=checkbox]::before,
+input[type=radio]::before {
+  display: block;
+  scale: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  input[type=checkbox]::before,
+  input[type=radio]::before {
+    transition: scale 250ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
+  }
 }
 
 input[type=checkbox] {
@@ -159,7 +172,7 @@ input[type=radio]::before {
 }
 
 input[type=radio]:checked::before, input[type=checkbox]:checked::before {
-  display: block;
+  scale: 1;
 }
 
 input:disabled, button:disabled {
