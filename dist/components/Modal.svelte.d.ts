@@ -1,5 +1,6 @@
 interface Props {
     open?: boolean;
+    notClosable?: boolean;
     onclose?: () => void;
     children: import('svelte').Snippet;
 }

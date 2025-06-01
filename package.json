@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -29,7 +29,9 @@
   "peerDependencies": {
     "match-sorter": "^8.0.0",
     "sass": "^1.87.0",
-    "svelte": "^5.16.0"
+    "svelte": "^5.16.0",
+    "focus-trap": "^7.6.5",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
@@ -76,8 +78,6 @@
   "dependencies": {
     "@storybook/addon-a11y": "^8.6.12",
     "@storybook/icons": "^1.4.0",
-    "add": "^2.0.6",
-    "focus-trap": "^7.6.4",
-    "lodash-es": "^4.17.21"
+    "add": "^2.0.6"
   }
 }
