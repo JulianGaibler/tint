@@ -16,7 +16,8 @@
   import Dialog, { type OpenDialog } from '@src/lib/components/Dialog.svelte'
   import LoadingIndicator from '@src/lib/components/LoadingIndicator.svelte'
   import ProgressIndicator from '@src/lib/components/ProgressBar.svelte'
-  let modalOpen = $state(false)
+  let modalOpen1 = $state(false)
+  let modalOpen2 = $state(false)
   let openDialog1 = $state<OpenDialog | undefined>(undefined)
   let openDialog2 = $state<OpenDialog | undefined>(undefined)
   let option = $state(1)
@@ -298,7 +299,7 @@
         <div class="rows">
           <div class="row">
             <AttributePicker
-              id="textfield"
+              id={`attribute-picker1-${i}`}
               label="Label"
               value={['apple', 'pear']}
               items={[
@@ -349,7 +350,7 @@
               ]}
             />
             <AttributePicker
-              id="textfield"
+              id={`attribute-picker2-${i}`}
               label="Label"
               bind:value={attributeValue}
               items={attributesItems}
@@ -397,7 +398,10 @@
         <h2>Dialog & Modal</h2>
         <div class="rows">
           <div class="row">
-            <Button onclick={() => (modalOpen = true)}>Open modal</Button>
+            <Button onclick={() => (modalOpen1 = true)}>Open modal</Button>
+            <Button onclick={() => (modalOpen2 = true)}
+              >Open modal (uncloseable)</Button
+            >
           </div>
           <div class="row">
             <Button onclick={() => openDialog1?.().then(console.log)}
@@ -447,7 +451,11 @@
       </div>
     </div>
   {/each}
-  <Modal bind:open={modalOpen}>Hello!</Modal>
+  <Modal bind:open={modalOpen1}>Hello!</Modal>
+  <Modal bind:open={modalOpen2} notClosable
+    ><p>Hello!</p>
+    <Button onclick={() => (modalOpen2 = false)}>Close</Button></Modal
+  >
   <Dialog
     bind:openDialog={openDialog1}
     variant="transaction"

@@ -36,8 +36,20 @@
   </div>
 {/snippet}
 
-<!-- Basic usage of the Modal component -->
+<!--
+  When `notClosable` is not set or set to `false`, the modal can be closed by user interaction,
+  The component then uses the `showModal` method to open the dialog. Using `showModal` is the preferred, web-native way to open dialogs, as it automatically handles focus management and accessibility concerns.
+-->
 <Story name="Basic" />
+
+<!--
+  When the `notClosable` prop is set, the modal is guaranteed to stay open and cannot be forced to close by user interaction.
+
+  This implementation uses the `show()` method instead of `showModal()`, which means the modal might not always appear at the very top of the render layer. Focus management within the modal is handled using the `focus-trap` library to ensure accessibility and keyboard navigation.
+
+  The reason for this is, that in Chromium-based browsers, there is a limitation where you cannot force a modal to stay open. Specifically, if the user presses the Escape key a second time, the dialog will close even if you call `preventDefault` on the event.
+-->
+<Story name="Not closable" args={{ notClosable: true }} />
 
 <style lang="sass">
   .content
