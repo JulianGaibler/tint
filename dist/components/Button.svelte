@@ -173,6 +173,9 @@
     outline-color: CanvasText;
   }
 }
+.tint--button > :global(*) {
+  pointer-events: none;
+}
 .tint--button.icon {
   padding: 0px;
   display: inline-flex;
