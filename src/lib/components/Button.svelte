@@ -163,6 +163,8 @@ a.tint--button
   border-radius: tint.$button-radius-large
   flex-shrink: 0
   @include tint.effect-focus
+  > :global(*)
+    pointer-events: none
   &.icon
     padding: 0px
     display: inline-flex
