@@ -93,7 +93,7 @@
     if (!element) return
     const textarea = element as HTMLTextAreaElement
     textarea.style.height = 'auto'
-    textarea.style.height = `${textarea.scrollHeight}px`
+    textarea.style.height = `${textarea.scrollHeight + 4}px`
   }
 
   $effect(() => {

@@ -21,13 +21,14 @@
   const ANIMATION_DURATION = 500 // Duration for amplitude and progress animations in ms
   const PADDING = 8 // Padding in px for left, right, and between squiggle and straight line
   const SQUIGGLE_CYCLES = 4 // Fixed number of wave cycles in the squiggle
-  const PHASE_SPEED = 0.24 // Animation speed for the moving squiggle
+  const PHASE_SPEED = 8 // Radians per second for the moving squiggle
   const STROKE_WIDTH = 4
 
   // Animation state
   let phase = 0
   let animationFrame: number
   let accentColor = '#000000'
+  let lastTimestamp = 0
 
   // Animated values
   let currentProgress = $state(progress)
@@ -189,6 +190,14 @@
 
   /** Main animation loop */
   function animate(timestamp: number): void {
+    // Initialize timestamp on first frame
+    if (lastTimestamp === 0) {
+      lastTimestamp = timestamp
+    }
+
+    const deltaTime = timestamp - lastTimestamp
+    lastTimestamp = timestamp
+
     // Check if we need to start a progress animation
     if (progressStartTime === null && currentProgress !== progressTargetValue) {
       progressStartTime = timestamp
@@ -213,8 +222,9 @@
     }
 
     // Update phase for squiggle animation (respect motion preferences)
+    // Convert deltaTime from milliseconds to seconds and multiply by phase speed
     if (!prefersReducedMotion) {
-      phase += PHASE_SPEED
+      phase += PHASE_SPEED * (deltaTime / 1000)
     }
 
     draw()
@@ -261,6 +271,7 @@
     checkReducedMotion()
     currentProgress = progress
     progressTargetValue = progress
+    lastTimestamp = 0 // Initialize timestamp tracking
 
     // Set initial amplitude
     amplitudeTargetValue = calculateTargetAmplitude()
@@ -321,7 +332,6 @@
 <style>.progress-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
   width: 100%;
 }
 
@@ -329,8 +339,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: currentColor;
+  background-color: color-mix(in srgb, transparent 90%, currentColor);
+  padding: 8px;
+  border-radius: 80px;
   white-space: nowrap;
   user-select: none;
+  min-width: 4.5ch;
+  text-align: center;
 }
 
 .progress-container {
