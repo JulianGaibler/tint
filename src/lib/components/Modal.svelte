@@ -51,7 +51,6 @@
 
   $effect(() => {
     if (open == isOpen) return
-    console.log('open', open, isOpen)
     untrack(() => {
       if (open && dialogElement) {
         if (notClosable) {
@@ -70,14 +69,12 @@
               })
             }
             trap.activate()
-            console.log('opened as dialog with focus trap', dialogElement)
           }
         } else {
           // Use showModal() for closable modals (has built-in focus management)
           if (!dialogElement.open) {
             dialogElement.showModal()
             isOpen = true
-            console.log('opened as modal', dialogElement)
           }
         }
       } else if (!open && dialogElement && dialogElement.open) {
