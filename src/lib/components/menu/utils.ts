@@ -10,25 +10,36 @@ import {
   type MenuBehaviorType,
 } from './MenuInternal.svelte'
 
+// ========================================
+// Menu Navigation Utilities
+// ========================================
+
 /**
- * Menu items are always fetched from the props items to prevent data
- * duplication. This helper method is used to get the nested items.
+ * Retrieves menu items from nested menu structure using a path Menu items are
+ * always fetched from the root props items to prevent data duplication. This
+ * helper navigates through nested menu structures.
  *
- * @param propItems Props.items value
- * @param menuPath Path to the menu item
- * @returns Nested menu items
+ * @param propItems Root menu items array from component props
+ * @param menuPath Array of indices representing path to nested menu (e.g., [0,
+ *   2] means first item's third submenu item)
+ * @returns The menu items at the specified path
  */
 export function getMenuItems(
   propItems: MenuItem[],
   menuPath: number[],
 ): MenuItem[] {
+  // Root level - return original items
   if (menuPath.length === 0) return propItems
+
   let items = propItems
+  // Navigate through each level of the path
   for (let i = 0; i < menuPath.length; i++) {
     const item = items[menuPath[i]]
-    // We know that these items are menus because they have submenus
+    // Validate that this item actually has subitems
     if (!(typeof item === 'object' && 'items' in item)) {
-      throw new Error('Invalid menu path')
+      throw new Error(
+        'Invalid menu path: item at path does not contain subitems',
+      )
     }
     items = item.items
   }
@@ -36,13 +47,17 @@ export function getMenuItems(
 }
 
 /**
- * Creates a new menu and menu meta object.
+ * Creates a new active menu and its metadata for rendering This function
+ * initializes both the display state and calculation metadata needed for a menu
+ * at any level (root or submenu)
  *
- * @param parentIndex Menu index from the parent menu
- * @param parentItemRect Dimensions of the parent menu item
- * @param menuPath Path to the menu item
- * @param propItems Props.items value
- * @returns ActiveMenus and ActiveMenusMeta object
+ * @param behavior Menu behavior type (MENU, SELECT, or AUTOCOMPLETE)
+ * @param parentIndex Index of parent item that triggered this menu (-1 for
+ *   root)
+ * @param parentItemRect Bounding rectangle of the parent item/anchor
+ * @param menuPath Path to this menu in the nested structure
+ * @param propItems Root menu items array
+ * @returns Tuple of [ActiveMenu, ActiveMenuMeta] for the new menu
  */
 export function createActiveMenu(
   behavior: MenuBehaviorType,
@@ -51,55 +66,68 @@ export function createActiveMenu(
   menuPath: number[],
   propItems: MenuItem[],
 ): [ActiveMenu, ActiveMenuMeta] {
+  // Initialize focus position
   let focus = -1
   if (behavior === MenuBehavior.SELECT) {
+    // For select menus, auto-focus the checked item
     focus = propItems.findIndex(
       (item) => typeof item === 'object' && 'checked' in item && item.checked,
     )
   }
-  return [
-    {
-      focus,
-      position: {
-        x: -1000,
-        y: -1000,
-        endAlign: true,
-        height: undefined,
-        minWidth: undefined,
+
+  // Create the active menu display state
+  const activeMenu: ActiveMenu = {
+    focus,
+    // Position will be calculated later when DOM ref is available
+    position: {
+      x: -1000, // Off-screen initially
+      y: -1000,
+      endAlign: true,
+      height: undefined,
+      minWidth: undefined,
+    },
+    scrollPosition: -1, // -1: top, 0: middle, 1: bottom
+    menuPath,
+  }
+
+  // Create metadata for calculations and DOM management
+  const activeMenuMeta: ActiveMenuMeta = {
+    parentIndex,
+    parentItemRect,
+    menuRect: new DOMRect(), // Will be updated when menu renders
+    menuRef: null,
+    itemRefs: {}, // DOM refs for individual menu items
+    // Pre-compute searchable items for character search functionality
+    searchItems: getMenuItems(propItems, menuPath).reduce(
+      (acc, item, index) => {
+        // Only include items with labels in search
+        if (typeof item === 'object' && 'label' in item) {
+          acc.push({ label: item.label, index })
+        }
+        return acc
       },
-      scrollPosition: -1,
-      menuPath,
-    },
-    {
-      parentIndex,
-      parentItemRect,
-      menuRect: new DOMRect(),
-      menuRef: null,
-      itemRefs: {},
-      searchItems: getMenuItems(propItems, menuPath).reduce(
-        (acc, item, index) => {
-          // check if item is object and if it has a label
-          if (typeof item === 'object' && 'label' in item) {
-            acc.push({ label: item.label, index })
-          }
-          return acc
-        },
-        [] as { label: string; index: number }[],
-      ),
-      searchTerm: '',
-      lastSearchTime: 0,
-    },
-  ]
+      [] as { label: string; index: number }[],
+    ),
+    searchTerm: '',
+    lastSearchTime: 0,
+  }
+
+  return [activeMenu, activeMenuMeta]
 }
 
+// ========================================
+// Geometric Calculations
+// ========================================
+
 /**
- * Quick check to see if s is in a triangle defined by a, b and c
+ * Determines if a point lies within a triangle using barycentric coordinates
+ * Used for safe area detection during mouse navigation to submenus
  *
- * @param a Point a of the triangle
- * @param b Point b of the triangle
- * @param c Point c of the triangle
- * @param s Point s to check
- * @returns True if s is in the triangle
+ * @param a First vertex of triangle
+ * @param b Second vertex of triangle
+ * @param c Third vertex of triangle
+ * @param s Point to test
+ * @returns True if point s is inside triangle abc
  */
 export function checkIfInTriangle(a: Vec2, b: Vec2, c: Vec2, s: Vec2) {
   const as_x = s.x - a.x
@@ -115,14 +143,16 @@ export function checkIfInTriangle(a: Vec2, b: Vec2, c: Vec2, s: Vec2) {
 }
 
 /**
- * Calculates the position of a given menu
+ * Calculates optimal positioning for a menu considering window boundaries
+ * Handles different menu types (context, select, autocomplete) and positioning
+ * logic
  *
- * @param depth Depth of the menu (0 is the first menu)
- * @param parentItemRect Dimensions of the parent menu item
- * @param menuRect Dimensions of the menu
- * @param selectBehavior If placemenus should behave like select menus
- * @param relativeDistance Distance between menu and item
- * @returns Position information for the menu
+ * @param depth Menu depth (0 for root menu, 1+ for submenus)
+ * @param parentItemRect Bounding rectangle of parent item or anchor
+ * @param menuRect Current dimensions of the menu
+ * @param behavior Menu behavior type affecting positioning strategy
+ * @param relativeDistance Optional distance for select menu positioning
+ * @returns Position object with coordinates and sizing constraints
  */
 export function calculatePosition(
   depth: number,
@@ -140,13 +170,12 @@ export function calculatePosition(
   } = {
     x: 0,
     y: 0,
-    endAlign: true,
-    height: undefined,
-    minWidth: undefined,
+    endAlign: true, // Whether submenu appears to the right (true) or left (false)
+    height: undefined, // Constrained height if needed
+    minWidth: undefined, // Minimum width constraint
   }
-  // There are different approaches to calculate the position of the menu
-  // depending on whether the menu is a select menu and if not, if the menu
-  // is a submenu.
+
+  // Set minimum width for select and autocomplete menus to match parent
   if (
     behavior === MenuBehavior.SELECT ||
     behavior === MenuBehavior.AUTOCOMPLETE
@@ -155,83 +184,104 @@ export function calculatePosition(
   }
 
   if (behavior === MenuBehavior.SELECT && relativeDistance) {
-    // -- Select Menu --
-    coords.x = parentItemRect.x - 16 - 14
-    coords.y = parentItemRect.y - relativeDistance - 16
+    // > SELECT MENU POSITIONING
+    // Position relative to selected item within the menu
+    coords.x = parentItemRect.x - 16 - 14 // Account for padding and check icon
+    coords.y = parentItemRect.y - relativeDistance - 16 // Align with selected item
+
+    // Prevent overflow to the right
     if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
       coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING
     }
   } else if (depth === 0) {
-    // -- Menu --
+    // > ROOT MENU POSITIONING
+    // Position below and aligned with anchor
     coords.x = parentItemRect.x
     coords.y = parentItemRect.y + parentItemRect.height
-    // Check for overflow to the right
+
+    // Handle horizontal overflow
     if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
-      // If we have the width of the parent item, we can align the menu to the right
       if (parentItemRect.width) {
+        // Align to right edge of parent if possible
         coords.x = parentItemRect.x + parentItemRect.width - menuRect.width
       } else {
-        // Otherwise we just align it to the right side of the window
+        // Fallback to window edge alignment
         coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING
       }
     }
-    // Check if we overflow the bottom of the window
+
+    // Handle vertical overflow (flip to above parent if needed)
     if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
-      // If we do, we align the menu from the bottom of the parent item
       coords.y = parentItemRect.y - menuRect.height
     }
   } else {
-    // -- Submenu --
+    // > SUBMENU POSITIONING
+    // Position to the right of parent item with slight offset
     coords.x = parentItemRect.x + parentItemRect.width + LEFT_MENU_OFFSET
     coords.y = parentItemRect.y - TOP_MENU_OFFSET
+
+    // Handle horizontal overflow (flip to left side)
     if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
       coords.endAlign = false
       coords.x = parentItemRect.x - menuRect.width
     }
+
+    // Ensure minimum distance from left edge
     if (coords.x < WINDOW_PADDING) {
       coords.x = WINDOW_PADDING
     }
   }
 
-  // Check if window overflows at the bottom
+  // > VERTICAL OVERFLOW HANDLING
   if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
     if (behavior === MenuBehavior.AUTOCOMPLETE) {
+      // Autocomplete menus can be constrained in height
       coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2
     } else {
+      // Regular menus are repositioned to fit
       coords.y = window.innerHeight - menuRect.height - WINDOW_PADDING
     }
-    // Check if window overflows at the top
+
+    // Handle case where menu is still too tall after repositioning
     if (coords.y < WINDOW_PADDING) {
       coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2
     }
   }
 
-  // Check if window overflows at the top
-  // This happens for select menus because they can have offsets
+  // > TOP OVERFLOW HANDLING
+  // This can happen with select menus due to relative positioning
   if (coords.y < WINDOW_PADDING) {
     coords.y = WINDOW_PADDING
-    // Check if window overflows at the bottom
+
+    // Re-check bottom overflow after top correction
     if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
       coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2
     }
   }
 
-  // add scroll offset
+  // > SCROLL OFFSET COMPENSATION
+  // Account for page scroll position
   coords.y += window.scrollY
   coords.x += window.scrollX
 
   return coords
 }
 
+// ========================================
+// Menu Hierarchy Management
+// ========================================
+
 /**
- * Creates a new submenu
+ * Creates and adds a new submenu to the active menu hierarchy Validates that
+ * the specified item can have a submenu and creates the new menu state
  *
- * @param propItems Props.items value
- * @param activeMenus ActiveMenus object
- * @param activeMenusMeta ActiveMenusMeta object
- * @param menu Menu from which to create a submenu
- * @param index Index of the item from which to create a submenu
- * @returns ActiveMenus and ActiveMenusMeta object
+ * @param behavior Menu behavior type
+ * @param propItems Root menu items array
+ * @param activeMenus Current active menus array
+ * @param activeMenusMeta Current menu metadata array
+ * @param menu Parent menu index
+ * @param index Item index within parent menu that should open submenu
+ * @returns New menu arrays or null if submenu cannot be created
  */
 export function addSubMenu(
   behavior: MenuBehaviorType,
@@ -244,21 +294,24 @@ export function addSubMenu(
   const currentMenu = activeMenus[menu]
   const currentItem = getMenuItems(propItems, currentMenu.menuPath)[index]
 
+  // Validate that this item actually has subitems
   if (!(typeof currentItem === 'object' && 'items' in currentItem)) return null
 
+  // Get parent item dimensions for positioning
   const parentItemRect =
     activeMenusMeta[menu].itemRefs[index]?.getBoundingClientRect() ||
     new DOMRect()
 
+  // Create the new submenu
   const [activeMenu, activeMenuMeta] = createActiveMenu(
     behavior,
     index,
     parentItemRect,
-    [...currentMenu.menuPath, index],
+    [...currentMenu.menuPath, index], // Extend path to include current item
     propItems,
   )
 
-  // create new array where all active menus after menu are removed and add the new one
+  // Remove any existing submenus after the target menu and add new one
   const [newActiveMenus, newActiveMenusMeta] = removeSubMenu(
     activeMenus,
     activeMenusMeta,
@@ -271,18 +324,20 @@ export function addSubMenu(
 }
 
 /**
- * Removes a menu from the active menus
+ * Removes all submenus after a specified menu index Used to clean up the menu
+ * hierarchy when navigation changes
  *
- * @param activeMenus ActiveMenus object
- * @param activeMenusMeta ActiveMenusMeta object
- * @param menu Index of the menu to remove
- * @returns ActiveMenus and ActiveMenusMeta object
+ * @param activeMenus Current active menus array
+ * @param activeMenusMeta Current menu metadata array
+ * @param menu Index of last menu to keep (all menus after this are removed)
+ * @returns Truncated menu arrays
  */
 export function removeSubMenu(
   activeMenus: ActiveMenu[],
   activeMenusMeta: ActiveMenuMeta[],
   menu: number,
 ): [ActiveMenu[], ActiveMenuMeta[]] {
+  // Slice to keep only menus up to and including the specified index
   const newActiveMenus = activeMenus.slice(0, menu + 1)
   const newActiveMenusMeta = activeMenusMeta.slice(0, menu + 1)
 
