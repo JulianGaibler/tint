@@ -67,6 +67,14 @@
     return 1 - Math.pow(1 - t, 3)
   }
 
+  /** Adds a new progress value to animate to, ensuring smooth transitions */
+  function setProgressTarget(newProgress: number): void {
+    // Always restart animation from current position to new target
+    progressTargetValue = newProgress
+    progressStartValue = currentProgress
+    progressStartTime = null // Reset to start new animation on next frame
+  }
+
   /** Updates animated progress value */
   function updateProgress(timestamp: number): void {
     if (progressStartTime === null) {
@@ -170,7 +178,7 @@
     }
 
     // Draw straight line (remaining portion)
-    if (progressPx + PADDING < width - PADDING) {
+    if (progress < 100) {
       ctx.beginPath()
       const straightStartX = Math.max(progressPx, PADDING)
       const straightEndX = width - PADDING
@@ -249,9 +257,8 @@
   // Reactive statements to handle prop changes
   $effect(() => {
     // React to progress prop changes
-    if (progressTargetValue !== progress) {
-      progressTargetValue = progress
-      // Animation will start automatically in the next frame
+    if (progress !== currentProgress || progress !== progressTargetValue) {
+      setProgressTarget(progress)
     }
   })
 

@@ -12,12 +12,14 @@ export declare const MenuBehavior: {
 export type MenuBehaviorType = (typeof MenuBehavior)[keyof typeof MenuBehavior];
 export type MenuItem<T = unknown> = {
     label: string;
+    icon?: string;
     checked?: boolean | (() => boolean);
     onClick: () => void;
     data?: T;
     disabled?: boolean;
 } | {
     label: string;
+    icon?: string;
     items: MenuItem<T>[];
     disabled?: boolean;
 } | typeof MENU_SEPARATOR;
@@ -34,6 +36,7 @@ export type ActiveMenu = {
         endAlign: boolean;
         height: number | undefined;
         minWidth: number | undefined;
+        animationOrigin?: string;
     };
     scrollPosition: number;
     menuPath: number[];
@@ -63,6 +66,9 @@ interface Props {
     anchor?: Vec2 | undefined;
     items: MenuItem[];
     behavior: MenuBehaviorType;
+    size?: 'tight' | 'large';
+    animated?: boolean;
+    hideGutter?: boolean;
     closeOnClick?: boolean;
     hide: () => void;
     onItemFocus?: (item: MenuItem) => void;

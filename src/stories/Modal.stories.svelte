@@ -24,7 +24,9 @@
     <Modal bind:open={modalOpen} {...args}>
       <div class="content">
         <h2 class="tint--type">This is a modal</h2>
-        <p>You can also press the Escape key to close it.</p>
+        {#if !args.notClosable}
+          <p>You can press the Escape key to close it.</p>
+        {/if}
         <Button
           variant="secondary"
           onclick={() => {

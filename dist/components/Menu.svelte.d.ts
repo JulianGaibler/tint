@@ -18,6 +18,26 @@ interface Props {
      */
     items?: MenuItem[] | undefined;
     /**
+     * The size of the menu. 'tight' is the default compact size, 'large'
+     * provides more spacing.
+     *
+     * @type {'tight' | 'large'}
+     */
+    size?: 'tight' | 'large';
+    /**
+     * Whether to hide the gutter (left and right margin) in menu items.
+     * Disables showing checkboxes and submenu indicators.
+     *
+     * @type {boolean}
+     */
+    hideGutter?: boolean;
+    /**
+     * Whether to animate menu appearance with fade and scale effects.
+     *
+     * @type {boolean}
+     */
+    animated?: boolean;
+    /**
      * The function to call when the menu should be opened. Ensure event has a
      * target element for the anchor.
      *

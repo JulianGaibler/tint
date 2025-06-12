@@ -58,6 +58,7 @@ export function createActiveMenu(behavior, parentIndex, parentItemRect, menuPath
             endAlign: true,
             height: undefined,
             minWidth: undefined,
+            animationOrigin: 'top-left',
         },
         scrollPosition: -1, // -1: top, 0: middle, 1: bottom
         menuPath,
@@ -124,6 +125,7 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
         endAlign: true, // Whether submenu appears to the right (true) or left (false)
         height: undefined, // Constrained height if needed
         minWidth: undefined, // Minimum width constraint
+        animationOrigin: undefined, // Animation origin for CSS transforms
     };
     // Set minimum width for select and autocomplete menus to match parent
     if (behavior === MenuBehavior.SELECT ||
@@ -135,9 +137,11 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
         // Position relative to selected item within the menu
         coords.x = parentItemRect.x - 16 - 14; // Account for padding and check icon
         coords.y = parentItemRect.y - relativeDistance - 16; // Align with selected item
+        coords.animationOrigin = 'top-left';
         // Prevent overflow to the right
         if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
             coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING;
+            coords.animationOrigin = 'top-right';
         }
     }
     else if (depth === 0) {
@@ -145,20 +149,25 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
         // Position below and aligned with anchor
         coords.x = parentItemRect.x;
         coords.y = parentItemRect.y + parentItemRect.height;
+        coords.animationOrigin = 'top-left';
         // Handle horizontal overflow
         if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
             if (parentItemRect.width) {
                 // Align to right edge of parent if possible
                 coords.x = parentItemRect.x + parentItemRect.width - menuRect.width;
+                coords.animationOrigin = 'top-right';
             }
             else {
                 // Fallback to window edge alignment
                 coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING;
+                coords.animationOrigin = 'top-right';
             }
         }
         // Handle vertical overflow (flip to above parent if needed)
         if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
             coords.y = parentItemRect.y - menuRect.height;
+            coords.animationOrigin =
+                coords.animationOrigin === 'top-right' ? 'bottom-right' : 'bottom-left';
         }
     }
     else {
@@ -166,10 +175,12 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
         // Position to the right of parent item with slight offset
         coords.x = parentItemRect.x + parentItemRect.width + LEFT_MENU_OFFSET;
         coords.y = parentItemRect.y - TOP_MENU_OFFSET;
+        coords.animationOrigin = 'top-left';
         // Handle horizontal overflow (flip to left side)
         if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
             coords.endAlign = false;
             coords.x = parentItemRect.x - menuRect.width;
+            coords.animationOrigin = 'top-right';
         }
         // Ensure minimum distance from left edge
         if (coords.x < WINDOW_PADDING) {
@@ -204,6 +215,10 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
     // Account for page scroll position
     coords.y += window.scrollY;
     coords.x += window.scrollX;
+    // Set default animation origin if not set
+    if (!coords.animationOrigin) {
+        coords.animationOrigin = 'top-left';
+    }
     return coords;
 }
 // ========================================

@@ -223,6 +223,20 @@
   }
   function closeMenu() {
     showMenu = false
+    fieldValue = ''
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      fieldValue = ''
+      showMenu = false
+    }
+  }
+
+  function onBlur() {
+    if (!showMenu) {
+      fieldValue = ''
+    }
   }
 </script>
 
@@ -272,6 +286,8 @@
       {autocomplete}
       {placeholder}
       oninput={fieldOnInput}
+      onkeydown={onKeyDown}
+      onblur={onBlur}
       bind:this={element}
       bind:value={fieldValue}
       class="input tint--type-input"
