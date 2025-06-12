@@ -27,6 +27,7 @@
   export type MenuItem<T = unknown> =
     | {
         label: string
+        icon?: string
         checked?: boolean | (() => boolean)
         onClick: () => void
         data?: T
@@ -34,6 +35,7 @@
       }
     | {
         label: string
+        icon?: string
         items: MenuItem<T>[]
         disabled?: boolean
       }
@@ -57,6 +59,7 @@
       endAlign: boolean
       height: number | undefined
       minWidth: number | undefined
+      animationOrigin?: string
     }
     scrollPosition: number
     menuPath: number[]
@@ -102,6 +105,9 @@
     anchor?: Vec2 | undefined
     items: MenuItem[]
     behavior: MenuBehaviorType
+    size?: 'tight' | 'large'
+    animated?: boolean
+    hideGutter?: boolean
     closeOnClick?: boolean
     hide: () => void
     onItemFocus?: (item: MenuItem) => void
@@ -115,6 +121,9 @@
     anchor = undefined,
     items,
     behavior,
+    size = 'tight',
+    animated = false,
+    hideGutter = false,
     closeOnClick = true,
     hide,
     onItemFocus = undefined,
@@ -1096,7 +1105,7 @@
     bind:this={setMenuRefProxy[i]}
     popover="manual"
     onmouseleave={() => handleMenuMouseLeave(i)}
-    class="context_menu tint--card"
+    class={`context_menu tint--card ${size} ${animated ? `animated ${position.animationOrigin}` : ''}`}
     class:select={behavior}
     style:left={`${position.x}px`}
     style:top={`${position.y}px`}
@@ -1128,6 +1137,7 @@
                 ? 'clicked'
                 : ''
             }`}
+            class:hide-gutter={hideGutter}
             role={info.isChecked === undefined
               ? 'menuitem'
               : 'menuitemcheckbox'}
@@ -1142,9 +1152,12 @@
             data-menu={i}
             data-item={j}
           >
-            {#if info.isChecked}{@html CheckIcon}{/if}
+            {#if info.isChecked && !hideGutter}{@html CheckIcon}{/if}
+            {#if info.item.icon}<span class="item-icon" aria-hidden="true"
+                >{@html info.item.icon}</span
+              >{/if}
             <span>{info.item.label}</span>
-            {#if info.hasSubMenu}{@html ArrowIcon}{/if}
+            {#if info.hasSubMenu && !hideGutter}{@html ArrowIcon}{/if}
           </li>
         {:else}
           <!-- <li aria-hidden=true><hr></li> -->
@@ -1154,41 +1167,6 @@
     </ul>
   </div>
 {/each}
-
-<!--
-========================================
-Component Summary
-========================================
-
-MenuInternal - A cleaned up context menu component
-
-This component has been refactored from React patterns to idiomatic Svelte 5:
-
-1. State Management:
-   - Replaced React-style state with Svelte 5 $state runes
-   - Consolidated menu state into a single `menuState` object
-   - Used $derived for computed values like `menuRole`
-
-2. Reactivity:
-   - Removed complex proxy patterns where possible
-   - Simplified ref management with cleaner proxy handlers
-   - Used Svelte's reactive patterns instead of manual state updates
-
-3. Event Handling:
-   - Migrated from `on:` directives to direct event handler props
-   - Simplified keyboard navigation logic
-   - Cleaned up mouse interaction handlers
-
-4. Code Organization:
-   - Added clear section comments for better readability
-   - Grouped related functions together
-   - Improved variable naming and function structure
-
-5. Performance:
-   - Reduced unnecessary reactivity triggers
-   - Simplified complex conditional logic
-   - Maintained all original functionality while improving readability
--->
 
 <style>.fullscreen_overlay {
   position: fixed;
@@ -1218,6 +1196,21 @@ This component has been refactored from React patterns to idiomatic Svelte 5:
 }
 .context_menu:global(.select) {
   min-width: auto;
+}
+.context_menu.animated {
+  animation: menu-appear 350ms cubic-bezier(0.42, 1.67, 0.21, 0.9) forwards;
+}
+.context_menu.animated.top-left {
+  transform-origin: top left;
+}
+.context_menu.animated.top-right {
+  transform-origin: top right;
+}
+.context_menu.animated.bottom-left {
+  transform-origin: bottom left;
+}
+.context_menu.animated.bottom-right {
+  transform-origin: bottom right;
 }
 .context_menu :global(> ul) {
   margin: 0;
@@ -1286,6 +1279,7 @@ This component has been refactored from React patterns to idiomatic Svelte 5:
   outline: none;
   user-select: none;
   border-radius: 4px;
+  white-space: nowrap;
 }
 .item[data-selected=true] {
   background: var(--tint-action-secondary-hover);
@@ -1313,12 +1307,39 @@ This component has been refactored from React patterns to idiomatic Svelte 5:
 
 .item_default {
   display: grid;
-  grid-template-columns: 14px minmax(0, 1fr) minmax(14px, auto);
+  grid-template-columns: 14px auto minmax(0, 1fr) minmax(14px, auto);
   gap: 4px;
   align-items: center;
 }
-.item_default :global(> span) {
+.item_default :global(> span:not(.item-icon)) {
+  grid-column: 3/4;
+}
+.item_default :global(.item-icon) {
   grid-column: 2/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.item_default.hide-gutter {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.item_default.hide-gutter :global(> span:not(.item-icon)) {
+  grid-column: initial;
+}
+.item_default.hide-gutter :global(.item-icon) {
+  grid-column: 1/2;
+}
+
+.context_menu.large .item {
+  padding-block: 12px;
+  padding-inline: 8px;
+  gap: 4px;
+}
+.context_menu.large .item.hide-gutter {
+  padding-block: 12px;
+  padding-inline: 16px;
+  gap: 8px;
 }
 
 @keyframes clicked_animation {
@@ -1327,5 +1348,19 @@ This component has been refactored from React patterns to idiomatic Svelte 5:
   }
   41%, 100% {
     background: var(--tint-action-secondary-hover);
+  }
+}
+@keyframes menu-appear {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  1% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }</style>

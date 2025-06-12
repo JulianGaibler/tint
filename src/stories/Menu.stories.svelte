@@ -5,6 +5,8 @@
     type MenuItem,
   } from '@lib/components/Menu.svelte'
   import Btn from '@src/lib/components/Button.svelte'
+  import StarIcon from '@lib/icons/20-crown.svg?raw'
+  import InfoIcon from '@lib/icons/20-info.svg?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Menu',
@@ -52,6 +54,72 @@
     },
   ]
 
+  const itemsWithIcons: MenuItem[] = [
+    {
+      label: 'Starred',
+      icon: StarIcon,
+      onClick: noop,
+    },
+    {
+      label: 'Information',
+      icon: InfoIcon,
+      checked: true,
+      onClick: () => noop,
+    },
+    {
+      label: 'Disabled Item',
+      icon: StarIcon,
+      disabled: true,
+      onClick: () => noop,
+    },
+    MENU_SEPARATOR,
+    {
+      label: 'More Options',
+      icon: InfoIcon,
+      items: [
+        {
+          label: 'Sub Item 1',
+          icon: StarIcon,
+          onClick: () => noop,
+        },
+        {
+          label: 'Sub Item 2',
+          icon: InfoIcon,
+          onClick: () => noop,
+        },
+      ],
+    },
+  ]
+
+  const itemsHiddenGutter: MenuItem[] = [
+    {
+      label: 'Home',
+      icon: StarIcon,
+      onClick: noop,
+    },
+    {
+      label: 'Settings',
+      icon: InfoIcon,
+      onClick: () => noop,
+    },
+    {
+      label: 'Profile',
+      onClick: () => noop,
+    },
+    MENU_SEPARATOR,
+    {
+      label: 'Help',
+      icon: InfoIcon,
+      onClick: () => noop,
+    },
+    {
+      label: 'About',
+      icon: StarIcon,
+      disabled: true,
+      onClick: () => noop,
+    },
+  ]
+
   setTemplate(child)
 </script>
 
@@ -76,6 +144,27 @@
 
 <!-- A menu that opens at the location of the mouse event. -->
 <Story name="Context" args={{ variant: 'context', items }} />
+
+<!-- A menu with animation enabled (default behavior) -->
+<Story name="Animated" args={{ variant: 'button', items, animated: true }} />
+
+<!-- A menu with large size for more spacing -->
+<Story name="Large size" args={{ variant: 'button', items, size: 'large' }} />
+
+<!-- A menu with icons in menu items -->
+<Story name="With icons" args={{ variant: 'button', items: itemsWithIcons }} />
+
+<!-- A menu with hidden gutter (no checkboxes or submenu indicators) -->
+<Story
+  name="Hidden gutter"
+  args={{
+    variant: 'button',
+    items: itemsHiddenGutter,
+    hideGutter: true,
+    size: 'large',
+    animated: true,
+  }}
+/>
 
 <style lang="sass">
   .ctx-area

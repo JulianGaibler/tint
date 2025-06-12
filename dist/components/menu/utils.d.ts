@@ -53,6 +53,7 @@ export declare function calculatePosition(depth: number, parentItemRect: DOMRect
     endAlign: boolean;
     height: number | undefined;
     minWidth: number | undefined;
+    animationOrigin?: string;
 };
 /**
  * Creates and adds a new submenu to the active menu hierarchy Validates that
