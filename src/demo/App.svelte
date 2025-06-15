@@ -12,6 +12,7 @@
   import MessageBox from '@src/lib/components/MessageBox.svelte'
   import FileUpload from '@src/lib/components/FileInput.svelte'
   import AttributePicker from '@src/lib/components/AttributePicker.svelte'
+  import Autocomplete from '@src/lib/components/Autocomplete.svelte'
   import Modal from '@src/lib/components/Modal.svelte'
   import Dialog, { type OpenDialog } from '@src/lib/components/Dialog.svelte'
   import LoadingIndicator from '@src/lib/components/LoadingIndicator.svelte'
@@ -77,6 +78,25 @@
       value: 'fox',
       label: 'Fox',
     },
+  ]
+
+  let autocompleteValue = $state<string | undefined>(undefined)
+  let autocompleteItems = [
+    { value: 'us', label: 'United States' },
+    { value: 'ca', label: 'Canada' },
+    { value: 'mx', label: 'Mexico' },
+    { value: 'uk', label: 'United Kingdom' },
+    { value: 'fr', label: 'France' },
+    { value: 'de', label: 'Germany' },
+    { value: 'it', label: 'Italy' },
+    { value: 'es', label: 'Spain' },
+    { value: 'jp', label: 'Japan' },
+    { value: 'kr', label: 'South Korea' },
+    { value: 'cn', label: 'China' },
+    { value: 'in', label: 'India' },
+    { value: 'au', label: 'Australia' },
+    { value: 'br', label: 'Brazil' },
+    { value: 'ar', label: 'Argentina' },
   ]
 
   let active = $state(false)
@@ -370,6 +390,43 @@
                 })
                 attributeValue.push(label)
               }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="category tint--card">
+        <h2>Autocomplete</h2>
+        <div class="rows">
+          <div class="row">
+            <Autocomplete
+              id={`autocomplete1-${i}`}
+              label="Country"
+              bind:value={autocompleteValue}
+              items={autocompleteItems}
+            />
+            <Autocomplete
+              id={`autocomplete2-${i}`}
+              label="Country with helper text"
+              value={undefined}
+              items={autocompleteItems}
+              helperText="Start typing to search for countries"
+            />
+            <Autocomplete
+              disabled
+              id={`autocomplete3-${i}`}
+              label="Disabled"
+              value="us"
+              items={autocompleteItems}
+            />
+          </div>
+          <div class="row">
+            <Autocomplete
+              id={`autocomplete4-${i}`}
+              label="Required field"
+              value={undefined}
+              items={autocompleteItems}
+              error="This field is required"
             />
           </div>
         </div>
