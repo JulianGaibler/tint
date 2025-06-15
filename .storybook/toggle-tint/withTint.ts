@@ -1,10 +1,10 @@
 import { PARAM_KEY } from './constants'
-import { useEffect } from '@storybook/preview-api'
+import { useEffect } from 'storybook/preview-api'
 import type {
   Renderer,
   PartialStoryFn as StoryFunction,
   StoryContext,
-} from '@storybook/types'
+} from 'storybook/internal/types'
 
 function addTinted(selector: string) {
   // add a style element to the head that contains background-color: var(--tint-bg)

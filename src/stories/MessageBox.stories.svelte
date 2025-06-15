@@ -1,20 +1,17 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import MessageBox from '@src/lib/components/MessageBox.svelte'
   import IconHome from '@lib/icons/20-home.svg?raw'
-  import { fn } from '@storybook/test'
+  import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/MessageBox',
     component: MessageBox,
+    render: child,
     args: {
       onclose: fn(),
     },
   })
-</script>
-
-<script lang="ts">
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

@@ -1,6 +1,6 @@
 import icons from './icon-import'
 import { DownloadIcon, CopyIcon } from '@storybook/icons'
-import { styled, type Theme } from '@storybook/theming'
+import { styled, type Theme } from 'storybook/theming'
 import type { FC, PropsWithChildren } from 'react'
 import React from 'react'
 

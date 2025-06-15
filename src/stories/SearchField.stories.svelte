@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import SearchField from '@lib/components/SearchField.svelte'
-  import { fn } from '@storybook/test'
+  import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/SearchField',

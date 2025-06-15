@@ -1,24 +1,21 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import Modal from '@lib/components/Modal.svelte'
   import Button from '@lib/components/Button.svelte'
-  import { fn } from '@storybook/test'
+  import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/Modal',
     component: Modal,
+    render: template,
     args: {
       onclose: fn(),
     },
   })
-</script>
-
-<script lang="ts">
   let modalOpen = $state(false)
-  setTemplate(child)
 </script>
 
-{#snippet child(args: any)}
+{#snippet template(args: any)}
   <div>
     <Button onclick={() => (modalOpen = true)}>Open modal</Button>
     <Modal bind:open={modalOpen} {...args}>

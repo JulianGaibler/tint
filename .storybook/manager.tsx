@@ -1,7 +1,7 @@
 import tintTheme from './tint-theme'
 import Selector from './toggle-tint/ToolbarButton'
 import { ADDON_ID, TOOL_ID } from './toggle-tint/constants'
-import { addons, types } from '@storybook/manager-api'
+import { addons, types } from 'storybook/manager-api'
 import React from 'react'
 
 addons.register(ADDON_ID, () => {

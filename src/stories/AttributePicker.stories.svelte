@@ -1,11 +1,12 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import AttributePicker from '@lib/components/AttributePicker.svelte'
-  import { fn } from '@storybook/test'
+  import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/AttributePicker',
     component: AttributePicker,
+    render: child,
     argTypes: {
       autocomplete: { control: 'select' },
     },
@@ -13,10 +14,6 @@
       onitemadded: fn(),
     },
   })
-</script>
-
-<script lang="ts">
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

@@ -3,8 +3,8 @@ import './global.sass'
 import tintTheme from './tint-theme'
 import { PARAM_KEY } from './toggle-tint/constants'
 import { withTintedClass } from './toggle-tint/withTint'
-import type { Preview } from '@storybook/svelte'
-import type { Addon_DecoratorFunction } from '@storybook/types'
+import type { Preview } from '@storybook/svelte-vite'
+import type { Addon_DecoratorFunction } from 'storybook/internal/types'
 
 export const decorators: Addon_DecoratorFunction[] = [withTintedClass]
 

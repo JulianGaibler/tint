@@ -1,12 +1,13 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import Button from '@lib/components/Button.svelte'
-  import { fn } from '@storybook/test'
+  import { fn } from 'storybook/test'
   import IconHome from '@lib/icons/20-home.svg?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Button',
     component: Button,
+    render: child,
     argTypes: {
       toggled: {
         control: 'boolean',
@@ -30,10 +31,6 @@
       onkeydown: fn(),
     },
   })
-</script>
-
-<script lang="ts">
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

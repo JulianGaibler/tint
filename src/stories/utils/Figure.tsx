@@ -1,4 +1,4 @@
-import { styled } from '@storybook/theming'
+import { styled } from 'storybook/theming'
 import type { FC, PropsWithChildren } from 'react'
 import React from 'react'
 

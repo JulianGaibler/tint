@@ -1,5 +1,5 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import Menu, {
     MENU_SEPARATOR,
     type MenuItem,
@@ -11,10 +11,8 @@
   const { Story } = defineMeta({
     title: 'Components/Menu',
     component: Menu,
+    render: child,
   })
-</script>
-
-<script lang="ts">
   let contextClickHandlers: ((e: Event) => void) | undefined = $state()
 
   const noop = () => {}
@@ -119,8 +117,6 @@
       onClick: () => noop,
     },
   ]
-
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

@@ -4,26 +4,22 @@ import { mergeConfig, loadConfigFromFile } from 'vite'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|ts|svelte)'],
+
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-svelte-csf',
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        backgrounds: false,
-        measure: false,
-        outline: false,
-      },
-    },
-    '@storybook/addon-interactions',
     '@storybook/addon-a11y',
+    '@storybook/addon-docs'
   ],
+
   framework: {
     name: '@storybook/svelte-vite',
     options: {},
   },
+
   docs: {},
   staticDirs: ['../static'],
+
   async viteFinal(config, { configType }) {
     const result = await loadConfigFromFile(
       new URL('../vite.config.ts', import.meta.url).pathname as any,
@@ -42,5 +38,11 @@ const config: StorybookConfig = {
       plugins: [typographyImporter()],
     })
   },
+
+  features: {
+    backgrounds: false,
+    measure: false,
+    outline: false
+  }
 }
 export default config
