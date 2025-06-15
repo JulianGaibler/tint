@@ -1,6 +1,7 @@
 <script lang="ts" module>
   export type DialogResult = boolean
   export interface DialogOptions {
+    variant?: 'transaction' | 'acknowledge'
     heading?: string
     actionLabel?: string
     children?: string | import('svelte').Snippet
@@ -38,6 +39,9 @@
     $state(undefined)
 
   // Current dialog content (can be overridden by openDialog arguments)
+  let currentVariant = $state<'transaction' | 'acknowledge' | undefined>(
+    undefined,
+  )
   let currentHeading = $state<string | undefined>(undefined)
   let currentActionLabel = $state<string | undefined>(undefined)
   let currentChildren = $state<string | import('svelte').Snippet | undefined>(
@@ -50,6 +54,7 @@
     }
 
     // Use provided options or fall back to props
+    currentVariant = options?.variant ?? variant
     currentHeading = options?.heading ?? heading
     currentActionLabel = options?.actionLabel ?? actionLabel
     currentChildren = options?.children ?? children
@@ -103,7 +108,7 @@
       {/if}
     </div>
     <div class="actions">
-      {#if variant === 'transaction'}
+      {#if currentVariant === 'transaction'}
         <Button onclick={() => resolvePromise(false)}>Cancel</Button>
         <Button onclick={() => resolvePromise(true)} variant="primary"
           >{currentActionLabel || 'Okay'}</Button

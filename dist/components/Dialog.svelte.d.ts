@@ -1,5 +1,6 @@
 export type DialogResult = boolean;
 export interface DialogOptions {
+    variant?: 'transaction' | 'acknowledge';
     heading?: string;
     actionLabel?: string;
     children?: string | import('svelte').Snippet;
