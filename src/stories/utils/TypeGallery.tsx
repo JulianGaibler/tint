@@ -1,5 +1,5 @@
 import { CopyIcon } from '@storybook/icons'
-import { styled, type Theme } from '@storybook/theming'
+import { styled, type Theme } from 'storybook/theming'
 import type { FC } from 'react'
 import React from 'react'
 import { typeDefinitons } from 'virtual:typography-importer'

@@ -1,18 +1,15 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import TextField from '@lib/components/TextField.svelte'
 
   const { Story } = defineMeta({
     title: 'Components/TextField',
     component: TextField,
+    render: child,
     argTypes: {
       autocomplete: { control: 'select' },
     },
   })
-</script>
-
-<script lang="ts">
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

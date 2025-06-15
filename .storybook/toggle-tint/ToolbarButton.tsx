@@ -1,6 +1,6 @@
 import { PARAM_KEY, ADDON_ID, TOOL_ID } from './constants'
-import { IconButton } from '@storybook/components'
-import { useGlobals, useStorybookApi } from '@storybook/manager-api'
+import { IconButton } from 'storybook/internal/components'
+import { useGlobals, useStorybookApi } from 'storybook/manager-api'
 import React, { memo, useCallback, useEffect } from 'react'
 
 const ICON_TINT_FILL = `<svg viewBox="0 0 14 14" width="14px" height="14px"><path fill="currentColor" d="M13.444 7.833C13.444 11.24 10.66 14 7.222 14 3.786 14 1 11.24 1 7.833 1 3.4 7.222 0 7.222 0s6.222 3.4 6.222 7.833Z"/></svg>`

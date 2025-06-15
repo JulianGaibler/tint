@@ -1,4 +1,4 @@
-import { styled } from '@storybook/theming'
+import { styled } from 'storybook/theming'
 import React from 'react'
 
 const H = styled.h1(({ theme }) => ({

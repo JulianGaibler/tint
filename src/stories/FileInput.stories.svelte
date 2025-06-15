@@ -1,15 +1,12 @@
 <script module lang="ts">
-  import { defineMeta, setTemplate } from '@storybook/addon-svelte-csf'
+  import { defineMeta } from '@storybook/addon-svelte-csf'
   import FileInput from '@lib/components/FileInput.svelte'
 
   const { Story } = defineMeta({
     title: 'Components/FileInput',
     component: FileInput,
+    render: child,
   })
-</script>
-
-<script lang="ts">
-  setTemplate(child)
 </script>
 
 {#snippet child(args: any)}

@@ -27,32 +27,25 @@
     "!dist/**/*.spec.*"
   ],
   "peerDependencies": {
+    "focus-trap": "^7.6.5",
+    "lodash-es": "^4.17.21",
     "match-sorter": "^8.0.0",
     "sass": "^1.87.0",
-    "svelte": "^5.16.0",
-    "focus-trap": "^7.6.5",
-    "lodash-es": "^4.17.21"
+    "svelte": "^5.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
-    "@storybook/addon-essentials": "^8.6.12",
-    "@storybook/addon-interactions": "^8.6.12",
-    "@storybook/addon-links": "^8.6.12",
-    "@storybook/addon-svelte-csf": "^5.0.0-next.21",
-    "@storybook/components": "^8.6.12",
-    "@storybook/manager-api": "^8.6.12",
-    "@storybook/svelte": "^8.6.12",
-    "@storybook/svelte-vite": "^8.6.12",
-    "@storybook/test": "^8.6.12",
-    "@storybook/theming": "^8.6.12",
-    "@storybook/types": "^8.6.12",
+    "@storybook/addon-docs": "^9.0.9",
+    "@storybook/addon-links": "^9.0.9",
+    "@storybook/addon-svelte-csf": "^5.0.3",
+    "@storybook/svelte-vite": "^9.0.9",
     "@sveltejs/package": "^2.3.11",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tsconfig/svelte": "^5.0.4",
     "@types/lodash-es": "^4.17.12",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-storybook": "^0.12.0",
+    "eslint-plugin-storybook": "^9.0.9",
     "eslint-plugin-svelte": "^3.5.1",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
@@ -61,7 +54,7 @@
     "prettier-plugin-svelte": "^3.3.3",
     "publint": "^0.3.12",
     "react-dom": "^19.1.0",
-    "storybook": "^8.6.12",
+    "storybook": "^9.0.9",
     "svelte": "^5.28.2",
     "svelte-check": "^4.1.6",
     "svelte-preprocess": "^6.0.3",
@@ -76,8 +69,11 @@
   "default": "./dist/index.js",
   "type": "module",
   "dependencies": {
-    "@storybook/addon-a11y": "^8.6.12",
+    "@storybook/addon-a11y": "^9.0.9",
     "@storybook/icons": "^1.4.0",
     "add": "^2.0.6"
+  },
+  "overrides": {
+    "storybook": "$storybook"
   }
 }
