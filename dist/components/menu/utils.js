@@ -190,8 +190,26 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
     // > VERTICAL OVERFLOW HANDLING
     if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
         if (behavior === MenuBehavior.AUTOCOMPLETE) {
-            // Autocomplete menus can be constrained in height
-            coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2;
+            // For autocomplete, check if there's more space above or below the parent
+            const spaceBelow = window.innerHeight -
+                WINDOW_PADDING -
+                (parentItemRect.y + parentItemRect.height);
+            const spaceAbove = parentItemRect.y - WINDOW_PADDING;
+            if (spaceAbove > spaceBelow && spaceAbove >= menuRect.height) {
+                // Flip to above parent if there's more space and menu fits
+                coords.y = parentItemRect.y - menuRect.height;
+                coords.animationOrigin =
+                    coords.animationOrigin === 'top-right'
+                        ? 'bottom-right'
+                        : 'bottom-left';
+            }
+            else {
+                // Stay below but constrain height to avoid overlap
+                coords.y = parentItemRect.y + parentItemRect.height;
+                coords.height = Math.min(menuRect.height, window.innerHeight - coords.y - WINDOW_PADDING);
+                coords.animationOrigin =
+                    coords.animationOrigin === 'bottom-right' ? 'top-right' : 'top-left';
+            }
         }
         else {
             // Regular menus are repositioned to fit
@@ -205,7 +223,15 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
     // > TOP OVERFLOW HANDLING
     // This can happen with select menus due to relative positioning
     if (coords.y < WINDOW_PADDING) {
-        coords.y = WINDOW_PADDING;
+        if (behavior === MenuBehavior.AUTOCOMPLETE) {
+            // For autocomplete, ensure we don't overlap parent when repositioning
+            const minY = Math.max(WINDOW_PADDING, parentItemRect.y + parentItemRect.height);
+            coords.y = minY;
+            coords.height = Math.min(menuRect.height, window.innerHeight - coords.y - WINDOW_PADDING);
+        }
+        else {
+            coords.y = WINDOW_PADDING;
+        }
         // Re-check bottom overflow after top correction
         if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
             coords.height = window.innerHeight - coords.y - WINDOW_PADDING * 2;

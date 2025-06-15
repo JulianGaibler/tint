@@ -77,6 +77,21 @@ $layer-names: tint-reset, tint-typography, tint-global
       overflow: hidden
       position: absolute
       z-index: -1
+    .tint--reorderable-indicator
+      height: 2px
+      background-color: var(--tint-action-primary)
+      pointer-events: none
+      margin-block: -1px
+      width: 4em
+      position: absolute
+      z-index: 1
+      top: 0
+      border-radius: 1px
+    .tint--reorderable-container *[draggable="true"]
+      &:hover
+        cursor: grab
+      &:active
+        cursor: grabbing
 
 @mixin full-bootstrap($path: '~tint/fonts')
   @include layers()
