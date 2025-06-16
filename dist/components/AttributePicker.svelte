@@ -2,7 +2,7 @@
   import IconWarning from '../icons/20-warning.svg?raw'
   import IconClose from '../icons/14-close.svg?raw'
   import type { FullAutoFill } from 'svelte/elements'
-  import { throttle } from 'lodash-es'
+  import { debounce } from 'lodash-es'
   import MenuInternal, {
     MENU_SEPARATOR,
     MenuBehavior,
@@ -88,15 +88,43 @@
   let fieldValue = $state('')
   let showMenu = $state(false)
   let boxElement = $state<HTMLElement | undefined>(undefined)
+  let isUserTyping = $state(false) // Track when user is actively typing
   let menuId = $derived(`${id}-menu`)
-  let throttelDynamicItems = $derived(
+  let debouncedDynamicItems = $derived(
     dynamicItems
-      ? throttle((search: string) => {
-          return dynamicItems(search)
+      ? debounce((search: string) => {
+          const result = dynamicItems(search)
+
+          if (result instanceof Promise) {
+            result
+              .then((promiseResult) => {
+                // Only update if this search is still relevant
+                untrack(() => {
+                  if (search === fieldValue) {
+                    updateMenuItems(
+                      promiseResult.items,
+                      promiseResult.allowAdd || false,
+                      true,
+                    )
+                  }
+                })
+              })
+              .catch((error) => {
+                console.error('Search failed:', error)
+              })
+          } else {
+            // Synchronous results
+            untrack(() => {
+              if (search === fieldValue) {
+                updateMenuItems(result.items, result.allowAdd || false, true)
+              }
+            })
+          }
+
+          return result
         }, 300)
       : undefined,
   )
-  let latestPromise = 0
 
   // ---- Menu items
 
@@ -130,6 +158,7 @@
         data: undefined,
         onClick: () => {
           showMenu = false
+          isUserTyping = false // User added an item, not typing anymore
           onitemadded?.(fieldValue)
           fieldValue = ''
         },
@@ -142,11 +171,17 @@
     }
   }
 
+  let lastProcessedFieldValue = $state('')
+
   $effect(() => {
-    fieldValueChanged(fieldValue)
+    // Only process field value changes if it's actually different to prevent loops
+    if (fieldValue !== lastProcessedFieldValue) {
+      lastProcessedFieldValue = fieldValue
+      fieldValueChanged(fieldValue)
+    }
   })
   function fieldValueChanged(_value: string) {
-    if (throttelDynamicItems === undefined) {
+    if (debouncedDynamicItems === undefined) {
       const filteredItems = items.filter((item) =>
         item.label.toLowerCase().includes(fieldValue.toLowerCase()),
       )
@@ -156,18 +191,12 @@
 
     if (fieldValue.length === 0) return
     untrack(() => {
-      const result = throttelDynamicItems(fieldValue)
-      if (result instanceof Promise) {
-        menuItems = []
-        const promiseTime = Date.now()
-        result.then((result) => {
-          if (promiseTime < latestPromise) return
-          latestPromise = promiseTime
-          updateMenuItems(result.items, result.allowAdd || false, true)
-        })
-        return
-      }
-      updateMenuItems(result.items, result.allowAdd || false)
+      debouncedDynamicItems(fieldValue)
+
+      // Clear menu immediately to show loading state
+      menuItems = []
+
+      // The debounced function will handle the result when it executes
     })
   }
 
@@ -198,6 +227,7 @@
   // ---- Event handlers
 
   function fieldOnInput() {
+    isUserTyping = true // Mark that user is actively typing
     if (menuItems.length > 0 && fieldValue.length > 0) {
       showMenu = true
     } else {
@@ -215,6 +245,8 @@
 
   function toggleTag(id: T) {
     if (disabled) return
+    // Don't reset typing state or clear field when toggling tags
+    // Let the user continue searching after selecting items
     if (value.includes(id)) {
       value = value.filter((item) => item !== id)
     } else {
@@ -223,11 +255,13 @@
   }
   function closeMenu() {
     showMenu = false
-    fieldValue = ''
+    // Don't automatically clear the field or reset typing state when menu closes
+    // Let the user continue typing if they want to search more
   }
 
   function onKeyDown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
+      isUserTyping = false // User pressed escape, not typing anymore
       fieldValue = ''
       showMenu = false
     }
@@ -235,9 +269,23 @@
 
   function onBlur() {
     if (!showMenu) {
+      isUserTyping = false // User stopped typing when field loses focus
       fieldValue = ''
     }
   }
+
+  // Protect fieldValue from being reset while user is typing
+  // This prevents external items updates from interfering with user input
+  $effect(() => {
+    const fieldHasFocus = element === document.activeElement
+
+    // Only interfere with field value if user isn't typing and field doesn't have focus
+    // and they're not actively searching (field empty when they started)
+    if (!isUserTyping && !fieldHasFocus) {
+      // For AttributePicker, we're now more permissive - let users keep their search terms
+      // unless they explicitly clear it via blur/escape
+    }
+  })
 </script>
 
 <div class:error class:disabled class:fillWidth>
@@ -446,7 +494,7 @@
   line-height: normal;
   color: var(--tint-text-secondary);
   padding: 0 12px;
-  padding-top: 4px;
+  padding-block-start: 4px;
 }
 
 .warning-icon {

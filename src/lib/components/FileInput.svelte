@@ -173,7 +173,7 @@
   line-height: normal
   color: var(--tint-text-secondary)
   padding: 0 tint.$size-12
-  padding-top: tint.$size-4
+  padding-block-start: tint.$size-4
 
 .warning-icon
   pointer-events: none

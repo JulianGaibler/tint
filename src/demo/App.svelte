@@ -555,7 +555,7 @@ main
 .row
   display: flex
   gap: 16px
-  margin-bottom: 16px
+  margin-block-end: 16px
 
 .ctxarea
   user-select: none

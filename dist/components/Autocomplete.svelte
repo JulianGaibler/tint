@@ -2,7 +2,7 @@
   import IconWarning from '../icons/20-warning.svg?raw'
   import IconClose from '../icons/14-close.svg?raw'
   import type { FullAutoFill } from 'svelte/elements'
-  import { throttle } from 'lodash-es'
+  import { debounce } from 'lodash-es'
   import MenuInternal, {
     MENU_SEPARATOR,
     MenuBehavior,
@@ -68,15 +68,43 @@
   let fieldValue = $state('')
   let showMenu = $state(false)
   let boxElement = $state<HTMLElement | undefined>(undefined)
+  let isUserTyping = $state(false) // Track when user is actively typing
   let menuId = $derived(`${id}-menu`)
-  let throttelDynamicItems = $derived(
+  let debouncedDynamicItems = $derived(
     dynamicItems
-      ? throttle((search: string) => {
-          return dynamicItems(search)
+      ? debounce((search: string) => {
+          const result = dynamicItems(search)
+
+          if (result instanceof Promise) {
+            result
+              .then((promiseResult) => {
+                // Only update if this search is still relevant
+                untrack(() => {
+                  if (search === fieldValue) {
+                    updateMenuItems(
+                      promiseResult.items,
+                      promiseResult.allowAdd || false,
+                      true,
+                    )
+                  }
+                })
+              })
+              .catch((error) => {
+                console.error('Search failed:', error)
+              })
+          } else {
+            // Synchronous results
+            untrack(() => {
+              if (search === fieldValue) {
+                updateMenuItems(result.items, result.allowAdd || false, true)
+              }
+            })
+          }
+
+          return result
         }, 300)
       : undefined,
   )
-  let latestPromise = 0
   let justClosed = false
 
   // Computed state
@@ -129,11 +157,18 @@
     }
   }
 
+  let lastProcessedFieldValue = $state('')
+
   $effect(() => {
-    fieldValueChanged(fieldValue)
+    // Only process field value changes if it's actually different to prevent loops
+    if (fieldValue !== lastProcessedFieldValue) {
+      lastProcessedFieldValue = fieldValue
+      fieldValueChanged(fieldValue)
+    }
   })
+
   function fieldValueChanged(_value: string) {
-    if (throttelDynamicItems === undefined) {
+    if (debouncedDynamicItems === undefined) {
       // For non-dynamic items, show entire list when empty or filter when typing
       if (fieldValue.length === 0) {
         updateMenuItems(items)
@@ -160,18 +195,12 @@
     }
 
     untrack(() => {
-      const result = throttelDynamicItems(fieldValue)
-      if (result instanceof Promise) {
-        menuItems = []
-        const promiseTime = Date.now()
-        result.then((result) => {
-          if (promiseTime < latestPromise) return
-          latestPromise = promiseTime
-          updateMenuItems(result.items, result.allowAdd || false, true)
-        })
-        return
-      }
-      updateMenuItems(result.items, result.allowAdd || false)
+      debouncedDynamicItems(fieldValue)
+
+      // Clear menu immediately to show loading state
+      menuItems = []
+
+      // The debounced function will handle the result when it executes
     })
   }
 
@@ -186,8 +215,9 @@
   // ---- Event handlers
 
   function fieldOnInput() {
+    isUserTyping = true // Mark that user is actively typing
     // Show menu based on available items and field content
-    if (throttelDynamicItems === undefined) {
+    if (debouncedDynamicItems === undefined) {
       // For non-dynamic items, show menu if there are items to show
       showMenu = menuItems.length > 0
     } else {
@@ -206,6 +236,7 @@
 
   function selectItem(itemValue: T) {
     if (disabled) return
+    isUserTyping = false // User has made a selection, not typing anymore
     value = itemValue
     const selectedItemLabel =
       items.find((item) => item.value === itemValue)?.label || ''
@@ -215,6 +246,7 @@
 
   function clearValue() {
     if (disabled) return
+    isUserTyping = false // User cleared the value, not typing anymore
     value = undefined
     fieldValue = ''
     element?.focus()
@@ -223,6 +255,7 @@
   function closeMenu() {
     showMenu = false
     justClosed = true
+    isUserTyping = false // User stopped typing when menu closes
     if (!hasValue) {
       fieldValue = ''
     } else {
@@ -234,6 +267,7 @@
   function onKeyDown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
       showMenu = false
+      isUserTyping = false // User pressed escape, not typing anymore
       if (hasValue) {
         // Restore the selected item's label on escape
         fieldValue = selectedItem?.label || ''
@@ -249,6 +283,8 @@
       return
     }
 
+    isUserTyping = false // User stopped typing when field loses focus
+
     if (hasValue) {
       // Always restore the selected item's label when blurring
       fieldValue = selectedItem?.label || ''
@@ -263,29 +299,43 @@
       justClosed = false
       return
     }
+
+    // Don't reset isUserTyping here - let the user continue typing if they want
+
     if (hasValue) {
       // Show the selected value when focused if there's a value
-      fieldValue = selectedItem?.label || ''
+      if (fieldValue === '') {
+        fieldValue = selectedItem?.label || ''
+      }
 
       // For non-dynamic items, show entire list when focused
-      if (throttelDynamicItems === undefined) {
+      if (debouncedDynamicItems === undefined) {
         updateMenuItems(items, false, true)
       }
       // For dynamic items, don't show menu initially (user needs to type)
     } else {
       // When no value is selected, show all items for non-dynamic lists
-      if (throttelDynamicItems === undefined) {
+      if (debouncedDynamicItems === undefined) {
         updateMenuItems(items, false, true)
       }
     }
   }
 
   // Update field value when value changes externally
+  // Only update if the user isn't actively typing and the field doesn't have focus
   $effect(() => {
+    const fieldHasFocus = element === document.activeElement
+
     if (hasValue && selectedItem) {
-      fieldValue = selectedItem.label
+      // Only update if the field value doesn't match and user isn't typing and field doesn't have focus
+      if (!isUserTyping && !fieldHasFocus) {
+        fieldValue = selectedItem.label
+      }
     } else if (!hasValue) {
-      fieldValue = ''
+      // Only clear if user isn't typing and field doesn't have focus
+      if (!isUserTyping && !fieldHasFocus) {
+        fieldValue = ''
+      }
     }
   })
 </script>
@@ -295,7 +345,6 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="box"
-    class:fake-focus={showMenu}
     class:has-value={hasValue}
     onclick={onBoxClick}
     bind:this={boxElement}
@@ -319,7 +368,7 @@
       onfocus={onFocus}
       bind:this={element}
       bind:value={fieldValue}
-      class:filled={fieldValue.length > 0 || hasValue}
+      class:filled={fieldValue.length > 0 || hasValue || showMenu}
       class="input tint--type-input"
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
@@ -475,7 +524,7 @@
   line-height: normal;
   color: var(--tint-text-secondary);
   padding: 0 12px;
-  padding-top: 4px;
+  padding-block-start: 4px;
 }
 
 .warning-icon {

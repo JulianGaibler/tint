@@ -68,7 +68,6 @@ interface Props {
     behavior: MenuBehaviorType;
     size?: 'tight' | 'large';
     animated?: boolean;
-    hideGutter?: boolean;
     closeOnClick?: boolean;
     hide: () => void;
     onItemFocus?: (item: MenuItem) => void;

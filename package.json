@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -66,6 +66,7 @@
   },
   "svelte": "./dist/components/index.js",
   "actions": "./dist/actions/index.js",
+  "stores": "./dist/stores/index.js",
   "fonts": "./dist/fonts/index.js",
   "default": "./dist/index.js",
   "type": "module",
