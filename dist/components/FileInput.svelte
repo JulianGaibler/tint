@@ -194,7 +194,7 @@
   line-height: normal;
   color: var(--tint-text-secondary);
   padding: 0 12px;
-  padding-top: 4px;
+  padding-block-start: 4px;
 }
 
 .warning-icon {

@@ -150,13 +150,12 @@
 <!-- A menu with icons in menu items -->
 <Story name="With icons" args={{ variant: 'button', items: itemsWithIcons }} />
 
-<!-- A menu with hidden gutter (no checkboxes or submenu indicators) -->
+<!-- A menu with items that have no checkboxes or submenu indicators (auto-hidden gutters) -->
 <Story
-  name="Hidden gutter"
+  name="Auto-hidden gutters"
   args={{
     variant: 'button',
     items: itemsHiddenGutter,
-    hideGutter: true,
     size: 'large',
     animated: true,
   }}

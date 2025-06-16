@@ -6,7 +6,7 @@
   const { Story } = defineMeta({
     title: 'Components/Toggleable',
     component: Toggleable,
-    render: child,
+    render: template,
     argTypes: {
       type: {
         control: 'inline-radio',
@@ -34,11 +34,8 @@
   })
 </script>
 
-{#snippet child(args: any)}
-  <div>
-    <label for={args.id}>Label</label>
-    <Toggleable {...args} />
-  </div>
+{#snippet template(args: any)}
+  <Toggleable {...args} />
 {/snippet}
 
 <!-- A standard checkbox that can be toggled on and off. -->
@@ -57,8 +54,8 @@
     // Should now be checked
     await expect(checkbox).toBeChecked()
 
-    // Verify the onchange callback was called with true
-    await expect(args.onchange).toHaveBeenCalledWith(true)
+    // Verify the onchange callback was called with { checked: true }
+    await expect(args.onchange).toHaveBeenCalledWith({ checked: true })
 
     // Click again to uncheck
     await userEvent.click(checkbox)
@@ -66,8 +63,8 @@
     // Should be unchecked again
     await expect(checkbox).not.toBeChecked()
 
-    // Verify the onchange callback was called with false
-    await expect(args.onchange).toHaveBeenCalledWith(false)
+    // Verify the onchange callback was called with { checked: false }
+    await expect(args.onchange).toHaveBeenCalledWith({ checked: false })
   }}
 />
 
@@ -91,8 +88,8 @@
     // Should now be checked
     await expect(radio).toBeChecked()
 
-    // Verify the onchange callback was called with true
-    await expect(args.onchange).toHaveBeenCalledWith(true)
+    // Verify the onchange callback was called with { checked: true }
+    await expect(args.onchange).toHaveBeenCalledWith({ checked: true })
   }}
 />
 
@@ -117,8 +114,8 @@
     // Should now be checked (aria-checked="true")
     await expect(switchElement).toHaveAttribute('aria-checked', 'true')
 
-    // Verify the onchange callback was called with true
-    await expect(args.onchange).toHaveBeenCalledWith(true)
+    // Verify the onchange callback was called with { checked: true }
+    await expect(args.onchange).toHaveBeenCalledWith({ checked: true })
 
     // Click again to toggle back
     await userEvent.click(switchElement)
@@ -126,16 +123,7 @@
     // Should be unchecked again
     await expect(switchElement).toHaveAttribute('aria-checked', 'false')
 
-    // Verify the onchange callback was called with false
-    await expect(args.onchange).toHaveBeenCalledWith(false)
+    // Verify the onchange callback was called with { checked: false }
+    await expect(args.onchange).toHaveBeenCalledWith({ checked: false })
   }}
 />
-
-<style lang="sass">
-div
-  display: flex
-  align-items: center
-  margin-bottom: 1rem
-  label
-    margin-right: 1rem
-</style>

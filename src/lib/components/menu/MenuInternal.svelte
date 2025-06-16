@@ -107,7 +107,6 @@
     behavior: MenuBehaviorType
     size?: 'tight' | 'large'
     animated?: boolean
-    hideGutter?: boolean
     closeOnClick?: boolean
     hide: () => void
     onItemFocus?: (item: MenuItem) => void
@@ -123,7 +122,6 @@
     behavior,
     size = 'tight',
     animated = false,
-    hideGutter = false,
     closeOnClick = true,
     hide,
     onItemFocus = undefined,
@@ -1079,6 +1077,41 @@
       }
     })
   }
+
+  /**
+   * Determines gutter visibility for a menu based on its items
+   *
+   * @param propItems The root menu items array
+   * @param menuPath Path to the current menu (for nested menus)
+   * @returns Object indicating which gutters should be shown
+   */
+  function getGutterVisibility(propItems: MenuItem[], menuPath: number[]) {
+    const menuItems = getMenuItems(propItems, menuPath)
+
+    let showLeftGutter = false
+    let showRightGutter = false
+
+    for (const item of menuItems) {
+      if (typeof item === 'object' && 'label' in item) {
+        // Show left gutter if any item has a checked state (true, false, or function)
+        if ('checked' in item && item.checked !== undefined) {
+          showLeftGutter = true
+        }
+
+        // Show right gutter if any item has submenu items
+        if ('items' in item) {
+          showRightGutter = true
+        }
+
+        // Early exit if both gutters are needed
+        if (showLeftGutter && showRightGutter) {
+          break
+        }
+      }
+    }
+
+    return { showLeftGutter, showRightGutter }
+  }
 </script>
 
 <svelte:window
@@ -1130,6 +1163,10 @@
     >
       <!-- eslint-disable-next-line svelte/require-each-key -->
       {#each getMenuItemMeta(items, menuPath, i) as info, j}
+        {@const { showLeftGutter, showRightGutter } = getGutterVisibility(
+          items,
+          menuPath,
+        )}
         {#if typeof info.item === 'object' && 'label' in info.item}
           <li
             class={`item item_default ${
@@ -1137,7 +1174,9 @@
                 ? 'clicked'
                 : ''
             }`}
-            class:hide-gutter={hideGutter}
+            class:hide-left-gutter={!showLeftGutter}
+            class:hide-right-gutter={!showRightGutter}
+            class:hide-all-gutters={!showLeftGutter && !showRightGutter}
             role={info.isChecked === undefined
               ? 'menuitem'
               : 'menuitemcheckbox'}
@@ -1152,12 +1191,12 @@
             data-menu={i}
             data-item={j}
           >
-            {#if info.isChecked && !hideGutter}{@html CheckIcon}{/if}
+            {#if info.isChecked === true && showLeftGutter}{@html CheckIcon}{/if}
             {#if info.item.icon}<span class="item-icon" aria-hidden="true"
                 >{@html info.item.icon}</span
               >{/if}
             <span>{info.item.label}</span>
-            {#if info.hasSubMenu && !hideGutter}{@html ArrowIcon}{/if}
+            {#if info.hasSubMenu && showRightGutter}{@html ArrowIcon}{/if}
           </li>
         {:else}
           <!-- <li aria-hidden=true><hr></li> -->
@@ -1253,7 +1292,7 @@
 
 .item
   padding: 6px
-  padding-right: tint.$size-8
+  padding-inline-end: tint.$size-8
   outline: none
   user-select: none
   border-radius: tint.$size-4
@@ -1286,10 +1325,26 @@
     align-items: center
     justify-content: center
     font-size: 14px
-  &.hide-gutter
+
+  // Hide left gutter only
+  &.hide-left-gutter
+    grid-template-columns: auto minmax(0, 1fr) minmax(14px, auto)
+    :global(.item-icon)
+      grid-column: 1 / 2
+    :global(> span:not(.item-icon))
+      grid-column: 2 / 3
+
+  // Hide right gutter only
+  &.hide-right-gutter
+    grid-template-columns: 14px auto minmax(0, 1fr)
+    :global(> span:not(.item-icon))
+      grid-column: 3 / 4
+
+  // Hide both gutters
+  &.hide-all-gutters
     grid-template-columns: auto minmax(0, 1fr)
     :global(> span:not(.item-icon))
-      grid-column: initial
+      grid-column: 2 / 3
     :global(.item-icon)
       grid-column: 1 / 2
 
@@ -1297,7 +1352,7 @@
   padding-block: tint.$size-12
   padding-inline: tint.$size-8
   gap: tint.$size-4
-  &.hide-gutter
+  &.hide-all-gutters
     padding-block: tint.$size-12
     padding-inline: tint.$size-16
     gap: tint.$size-8

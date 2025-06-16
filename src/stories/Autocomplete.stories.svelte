@@ -94,7 +94,7 @@
     label: 'Search users',
     value: undefined,
     items: [
-      // All possible users must be present in items array
+      // The selected item must be present in the items array
       { value: 'john_doe', label: 'John Doe' },
       { value: 'jane_smith', label: 'Jane Smith' },
       { value: 'bob_johnson', label: 'Bob Johnson' },

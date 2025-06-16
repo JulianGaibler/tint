@@ -1,23 +1,33 @@
-<script lang="ts">
+<script lang="ts" generics="T = unknown">
+  import type { GroupStore } from '../stores/index.js'
+
   interface Props {
-    // Id of the toggleable element @type {string}
+    // Id of the toggleable element
     id: string
-    // Type of the toggleable element @type {'checkbox' | 'radio' | 'switch'}
+    // Type of the toggleable element
     type?: 'checkbox' | 'radio' | 'switch'
-    // Whether the toggleable element is checked (can use bind:checked) @type {boolean}
-    checked: boolean
-    // Whether the toggleable element is disabled @type {boolean}
+    // Whether the toggleable element is checked (can use bind:checked)
+    checked?: boolean
+    // Whether the toggleable element is disabled
     disabled?: boolean
-    // aria-label of the toggleable element @type {string | undefined}
+    // Value for radio/checkbox buttons - the value this element represents
+    value?: T
+    // Group store for radio/checkbox groups
+    groupStore?: GroupStore<T>
+    // aria-label of the toggleable element
     ariaLabel?: string | undefined
-    // aria-describedby of the toggleable element @type {string | undefined}
+    // aria-labelledby of the toggleable element
     ariaLabelledby?: string | undefined
-    // aria-describedby of the toggleable element @type {string | undefined}
+    // aria-describedby of the toggleable element
     ariaDescribedby?: string | undefined
-    // HTML element of the toggleable element @type {HTMLInputElement | HTMLButtonElement | undefined}
+    // HTML element of the toggleable element
     element?: HTMLInputElement | HTMLButtonElement | undefined
-    // Event handler for when the value changes @type {(checked: boolean) => void | undefined}
-    onchange?: (checked: boolean) => void
+    // Event handler for when the value changes
+    onchange?: (event: {
+      checked: boolean
+      value?: T
+      groupValue?: GroupStore<T>
+    }) => void
   }
 
   let {
@@ -25,6 +35,8 @@
     type = 'checkbox',
     checked = $bindable(),
     disabled = false,
+    value = null as T,
+    groupStore = undefined,
     ariaLabel = undefined,
     ariaLabelledby = undefined,
     ariaDescribedby = undefined,
@@ -32,9 +44,52 @@
     onchange = undefined,
   }: Props = $props()
 
-  function toggle() {
-    checked = !checked
-    onchange?.(checked)
+  // Determine if this element is selected based on group store or checked prop
+  const isSelected = $derived(() => {
+    if (groupStore && value !== null && value !== undefined) {
+      // Use the reactive store value
+      if (groupStore.type === 'radio') {
+        return $groupStore === value
+      } else {
+        return Array.isArray($groupStore) && $groupStore.includes(value)
+      }
+    }
+    return checked || false
+  })
+
+  function handleChange(event: Event) {
+    const target = event.target as HTMLInputElement
+
+    if (groupStore && value !== null && value !== undefined) {
+      // Use group store for radio/checkbox groups
+      if (type === 'radio') {
+        groupStore.select(value)
+        onchange?.({ checked: true, value, groupValue: groupStore })
+      } else if (type === 'checkbox') {
+        groupStore.toggle(value)
+        const newChecked = groupStore.isSelected(value)
+        onchange?.({ checked: newChecked, value, groupValue: groupStore })
+      }
+    } else {
+      // Individual checkbox or switch behavior
+      checked = target.checked
+      onchange?.({ checked: target.checked })
+    }
+  }
+
+  function handleSwitchClick() {
+    if (disabled) return
+
+    if (groupStore && value !== null && value !== undefined) {
+      // Switch with group store (treat like checkbox)
+      groupStore.toggle(value)
+      const newChecked = groupStore.isSelected(value)
+      onchange?.({ checked: newChecked, value, groupValue: groupStore })
+    } else {
+      // Individual switch behavior
+      checked = !checked
+      onchange?.({ checked })
+    }
   }
 </script>
 
@@ -42,25 +97,38 @@
   <button
     {disabled}
     {id}
-    aria-checked={checked}
+    aria-checked={isSelected()}
     aria-describedby={ariaDescribedby}
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
     bind:this={element}
-    onclick={toggle}
+    onclick={handleSwitchClick}
     role="switch"
   ></button>
-{:else}
+{:else if type === 'radio'}
   <input
-    {checked}
     {disabled}
     {id}
-    {type}
+    type="radio"
     aria-describedby={ariaDescribedby}
     aria-label={ariaLabel}
     aria-labelledby={ariaLabelledby}
+    checked={isSelected()}
+    {value}
     bind:this={element}
-    onclick={toggle}
+    onchange={handleChange}
+  />
+{:else}
+  <input
+    {disabled}
+    {id}
+    type="checkbox"
+    aria-describedby={ariaDescribedby}
+    aria-label={ariaLabel}
+    aria-labelledby={ariaLabelledby}
+    checked={isSelected()}
+    bind:this={element}
+    onchange={handleChange}
   />
 {/if}
 

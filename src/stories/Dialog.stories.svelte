@@ -23,7 +23,7 @@
     actionLabel: 'Delete',
   }}
 >
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <Button onclick={() => openTransactionalDialog?.()}>
       Open transactional dialog
     </Button>
@@ -43,7 +43,7 @@
     actionLabel: 'Okay',
   }}
 >
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <Button onclick={() => openAcknowledgmentDialog?.()}>
       Open acknowledgment dialog
     </Button>

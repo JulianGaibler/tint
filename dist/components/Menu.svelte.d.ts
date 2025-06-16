@@ -25,13 +25,6 @@ interface Props {
      */
     size?: 'tight' | 'large';
     /**
-     * Whether to hide the gutter (left and right margin) in menu items.
-     * Disables showing checkboxes and submenu indicators.
-     *
-     * @type {boolean}
-     */
-    hideGutter?: boolean;
-    /**
      * Whether to animate menu appearance with fade and scale effects.
      *
      * @type {boolean}
