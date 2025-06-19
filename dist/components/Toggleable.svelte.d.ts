@@ -16,6 +16,7 @@ declare class __sveltets_Render<T = unknown> {
             value?: T | undefined;
             groupValue?: GroupStore<T> | undefined;
         }) => void) | undefined;
+        class?: string;
     };
     events(): {};
     slots(): {};

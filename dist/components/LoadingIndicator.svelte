@@ -5,9 +5,16 @@
     size?: 16 | 24 | 32 | 48 | 64
     outline?: boolean
     label?: string
+    // A space separated list of CSS classes.
+    class?: string
   }
 
-  let { size = 32, outline = false, label = 'Loading' }: Props = $props()
+  let {
+    size = 32,
+    outline = false,
+    label = 'Loading',
+    class: className = '',
+  }: Props = $props()
 
   let srLabelElement = $state<HTMLSpanElement | null>(null)
 
@@ -21,7 +28,7 @@
 </script>
 
 <div
-  class={`loading-indicator size-${size}`}
+  class={`loading-indicator size-${size} ${className}`}
   class:outline
   role="status"
   aria-live="polite"

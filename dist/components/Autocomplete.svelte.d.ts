@@ -29,6 +29,7 @@ declare class __sveltets_Render<T> {
         fillWidth?: boolean;
         ariaDescribedby?: string | undefined;
         element?: HTMLInputElement | undefined;
+        class?: string;
     };
     events(): {};
     slots(): {};

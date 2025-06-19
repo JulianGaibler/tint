@@ -6,10 +6,17 @@
     progress?: number
     active?: boolean
     showProgress?: boolean
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   // Props with defaults
-  let { progress = 25, active = true, showProgress = false }: Props = $props()
+  let {
+    progress = 25,
+    active = true,
+    showProgress = false,
+    class: className = '',
+  }: Props = $props()
 
   let roundedProgress = $derived(Math.round(progress))
 
@@ -309,7 +316,7 @@
 
 <!-- Progress indicator container with proper accessibility -->
 <div
-  class="progress-wrapper"
+  class="progress-wrapper {className}"
   role="progressbar"
   aria-valuenow={roundedProgress}
   aria-valuemin={0}

@@ -23,6 +23,8 @@
     ariaDescribedby?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
     element?: HTMLInputElement | undefined
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -36,6 +38,7 @@
     fillWidth = true,
     ariaDescribedby = undefined,
     element = $bindable(undefined),
+    class: className = '',
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -82,7 +85,7 @@
 />
 
 <div class:error class:disabled class:fillWidth>
-  <div class="box">
+  <div class="box {className}">
     <input
       {disabled}
       {id}

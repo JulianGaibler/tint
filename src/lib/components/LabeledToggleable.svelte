@@ -36,6 +36,8 @@
     descriptionSlot?: Snippet
     // Additional content slot
     children?: Snippet
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -53,19 +55,17 @@
     labelSlot,
     descriptionSlot,
     children,
+    class: className = '',
   }: Props = $props()
 
   // Generate IDs for accessibility
-  const labelId = `${id}-label`
-  const descriptionId =
-    description || descriptionSlot ? `${id}-description` : undefined
-
-  // Determine aria-labelledby and aria-describedby
-  const ariaLabelledby = labelId
-  const ariaDescribedby = descriptionId
+  const labelId = $derived(`${id}-label`)
+  const descriptionId = $derived(
+    description || descriptionSlot ? `${id}-description` : undefined,
+  )
 </script>
 
-<div class="labeled-toggleable">
+<div class="labeled-toggleable {className}">
   <Toggleable
     {id}
     {type}
@@ -73,8 +73,8 @@
     {disabled}
     {value}
     {groupStore}
-    {ariaLabelledby}
-    {ariaDescribedby}
+    ariaLabelledby={labelId}
+    ariaDescribedby={descriptionId}
     bind:element
     {onchange}
   />

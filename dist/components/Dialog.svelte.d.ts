@@ -12,6 +12,7 @@ interface Props {
     actionLabel?: string;
     openDialog?: OpenDialog;
     children?: import('svelte').Snippet;
+    class?: string;
 }
 declare const Dialog: import("svelte").Component<Props, {}, "openDialog">;
 type Dialog = ReturnType<typeof Dialog>;

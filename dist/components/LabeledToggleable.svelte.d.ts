@@ -20,6 +20,7 @@ declare class __sveltets_Render<T> {
         labelSlot?: Snippet;
         descriptionSlot?: Snippet;
         children?: Snippet;
+        class?: string;
     };
     events(): {};
     slots(): {};

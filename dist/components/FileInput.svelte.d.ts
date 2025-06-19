@@ -9,6 +9,7 @@ interface Props {
     fillWidth?: boolean;
     ariaDescribedby?: string | undefined;
     element?: HTMLInputElement | undefined;
+    class?: string;
 }
 declare const FileInput: import("svelte").Component<Props, {}, "element" | "value">;
 type FileInput = ReturnType<typeof FileInput>;

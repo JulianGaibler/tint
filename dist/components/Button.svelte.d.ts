@@ -16,8 +16,7 @@ interface Props extends HTMLButtonAttributes {
     element?: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined;
     children?: import('svelte').Snippet;
     onclick?: (e: MouseEvent) => void;
-    onkeypress?: (e: KeyboardEvent) => void;
-    onkeydown?: (e: KeyboardEvent) => void;
+    class?: string;
 }
 declare const Button: import("svelte").Component<Props, {}, "element">;
 type Button = ReturnType<typeof Button>;

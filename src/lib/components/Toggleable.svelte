@@ -28,6 +28,8 @@
       value?: T
       groupValue?: GroupStore<T>
     }) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -42,6 +44,7 @@
     ariaDescribedby = undefined,
     element = $bindable(undefined),
     onchange = undefined,
+    class: className = '',
   }: Props = $props()
 
   // Determine if this element is selected based on group store or checked prop
@@ -104,6 +107,7 @@
     bind:this={element}
     onclick={handleSwitchClick}
     role="switch"
+    class={className}
   ></button>
 {:else if type === 'radio'}
   <input
@@ -117,6 +121,7 @@
     {value}
     bind:this={element}
     onchange={handleChange}
+    class={className}
   />
 {:else}
   <input
@@ -129,6 +134,7 @@
     checked={isSelected()}
     bind:this={element}
     onchange={handleChange}
+    class={className}
   />
 {/if}
 

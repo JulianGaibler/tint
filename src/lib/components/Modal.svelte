@@ -11,6 +11,8 @@
     onclose?: () => void
     // Content of the modal @type {Snippet | undefined}
     children: import('svelte').Snippet
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -18,6 +20,7 @@
     notClosable = false,
     onclose,
     children,
+    class: className = '',
   }: Props = $props()
 
   let dialogElement: HTMLDialogElement | undefined = $state(undefined)
@@ -106,7 +109,7 @@
   bind:this={dialogElement}
   oncancel={onCancelEvent}
   onclose={onCloseEvent}
-  class="tint--card tint--plain"
+  class="tint--card tint--plain {className}"
   class:manual-modal={notClosable}
 >
   {@render children()}
