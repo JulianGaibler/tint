@@ -47,8 +47,6 @@
      * @type {ContextClickHandler | undefined}
      */
     contextClick?: ContextClickHandler | undefined
-    // A space separated list of CSS classes.
-    class?: string
   }
 
   let {
@@ -57,7 +55,6 @@
     size = undefined,
     animated = undefined,
     contextClick = $bindable(undefined),
-    class: className = '',
   }: Props = $props()
 
   contextClick = openMenu
@@ -96,6 +93,5 @@
     {size}
     {animated}
     hide={closeMenu}
-    class={className}
   />
 {/if}
