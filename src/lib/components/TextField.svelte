@@ -38,6 +38,8 @@
     onfocus?: (e: Event) => void
     // Function to call when the text field is blurred @type {function}
     onblur?: (e: Event) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -58,6 +60,7 @@
     oninput = undefined,
     onfocus = undefined,
     onblur = undefined,
+    class: className = '',
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -120,6 +123,7 @@
   class:disabled
   class:fillWidth
   class:textarea={variant === 'textarea'}
+  class={className}
 >
   <div class="box">
     {#if variant === 'textarea'}

@@ -13,6 +13,8 @@
     children?: import('svelte').Snippet
     // Event handler for when closing the message box @type {(e: MouseEvent) => void | undefined}
     onclose?: (e: MouseEvent) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -21,10 +23,11 @@
     element = $bindable(undefined),
     onclose = undefined,
     children,
+    class: className = '',
   }: Props = $props()
 </script>
 
-<div class="box" bind:this={element}>
+<div class="box {className}" bind:this={element}>
   {#if icon}
     <div class="icon" aria-hidden="true">{@html icon}</div>
   {/if}

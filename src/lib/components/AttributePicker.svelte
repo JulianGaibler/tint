@@ -66,6 +66,8 @@
     ariaDescribedby?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
     element?: HTMLInputElement | undefined
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -83,6 +85,7 @@
     fillWidth = true,
     ariaDescribedby = undefined,
     element = $bindable(undefined),
+    class: className = '',
   }: Props = $props()
 
   let fieldValue = $state('')
@@ -292,7 +295,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
-    class="box"
+    class="box {className}"
     class:fake-focus={showMenu}
     onclick={onBoxClick}
     bind:this={boxElement}

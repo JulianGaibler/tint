@@ -17,6 +17,8 @@
     elementButton?: HTMLButtonElement | undefined
     // Event handler for when the search button is clicked @type {(value: string) => void}
     onsearch?: (term: string) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -27,10 +29,11 @@
     elementInput = $bindable(undefined),
     elementButton = $bindable(undefined),
     onsearch = undefined,
+    class: className = '',
   }: Props = $props()
 </script>
 
-<div class="box" class:disabled>
+<div class="box {className}" class:disabled>
   <input
     {disabled}
     {id}

@@ -39,10 +39,8 @@
     children?: import('svelte').Snippet
     // Click event handler @type {(e: MouseEvent) => void | undefined}
     onclick?: (e: MouseEvent) => void
-    // Keypress event handler @type {(e: KeyboardEvent) => void | undefined}
-    onkeypress?: (e: KeyboardEvent) => void
-    // Keydown event handler @type {(e: KeyboardEvent) => void | undefined}
-    onkeydown?: (e: KeyboardEvent) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -65,6 +63,7 @@
     onclick = undefined,
     onkeypress = undefined,
     onkeydown = undefined,
+    class: className = '',
     ...elementProps
   }: Props = $props()
 
@@ -127,7 +126,7 @@
     class:icon
     class:small
     class:loading
-    class={`tint--button tint--type-action ${_variant}`}
+    class={`tint--button tint--type-action ${_variant} ${className}`}
     {onclick}
     {onkeypress}
     {onkeydown}

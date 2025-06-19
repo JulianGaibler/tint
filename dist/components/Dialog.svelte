@@ -24,6 +24,8 @@
     openDialog?: OpenDialog
     // Content of the dialog between the heading and the action buttons @type {Snippet | undefined}
     children?: import('svelte').Snippet
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -32,6 +34,7 @@
     actionLabel,
     openDialog = $bindable(undefined),
     children,
+    class: className = '',
   }: Props = $props()
 
   let open = $state(false)
@@ -94,7 +97,7 @@
 </script>
 
 <Modal bind:open {onclose}>
-  <div class="dialog tint--type-body-sans">
+  <div class="dialog tint--type-body-sans {className}">
     <div class="content">
       {#if currentHeading}
         <h2 class="tint--type-title-sans-3">{currentHeading}</h2>

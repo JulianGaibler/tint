@@ -37,6 +37,7 @@ interface Props {
      * @type {ContextClickHandler | undefined}
      */
     contextClick?: ContextClickHandler | undefined;
+    class?: string;
 }
 declare const Menu: import("svelte").Component<Props, {}, "contextClick">;
 type Menu = ReturnType<typeof Menu>;

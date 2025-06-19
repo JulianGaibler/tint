@@ -32,6 +32,8 @@
     element?: HTMLSelectElement | undefined
     // Event handler for when the value changes @type {(e: Event) => void|undefined}
     onchange?: (e: Event) => void
+    // A space separated list of CSS classes.
+    class?: string
   }
 
   let {
@@ -46,6 +48,7 @@
     ariaDescribedby = undefined,
     element = $bindable(undefined),
     onchange = undefined,
+    class: className = '',
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -60,7 +63,7 @@
 </script>
 
 <div class:error class:disabled class:fillWidth>
-  <div class="box">
+  <div class="box {className}">
     <select
       {disabled}
       {id}
