@@ -96,7 +96,7 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--button tint--type-action ${_variant}`}
+    class={`tint--button tint--type-action ${_variant} ${className}`}
     >{@render children?.()}</span
   >
 {:else if href}
@@ -109,7 +109,7 @@
     bind:this={element}
     class:icon
     class:small
-    class={`tint--button tint--type-action ${_variant}`}
+    class={`tint--button tint--type-action ${_variant} ${className}`}
     rel={external ? 'noopener' : undefined}
     target={external ? '_blank' : undefined}>{@render children?.()}</a
   >
