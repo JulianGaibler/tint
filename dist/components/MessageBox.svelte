@@ -5,8 +5,6 @@
   interface Props {
     // Icon of the message box @type {string | undefined}
     icon?: string | undefined
-    // Dismissable @type {boolean}
-    dismissable?: boolean
     // HTML element of the container @type {HTMLDivElement | undefined}
     element?: HTMLDivElement | undefined
     // Content of the message box @type {Snippet | undefined}
@@ -19,7 +17,6 @@
 
   let {
     icon = undefined,
-    dismissable = true,
     element = $bindable(undefined),
     onclose = undefined,
     children,
@@ -32,7 +29,7 @@
     <div class="icon" aria-hidden="true">{@html icon}</div>
   {/if}
   <div class="content">{@render children?.()}</div>
-  {#if dismissable}
+  {#if onclose}
     <Button small icon ariaLabel="close" variant="ghost" onclick={onclose}>
       {@html IconClose}
     </Button>

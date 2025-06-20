@@ -1,6 +1,5 @@
 interface Props {
     icon?: string | undefined;
-    dismissable?: boolean;
     element?: HTMLDivElement | undefined;
     children?: import('svelte').Snippet;
     onclose?: (e: MouseEvent) => void;

@@ -40,6 +40,8 @@
     onblur?: (e: Event) => void
     // A space separated list of CSS classes.
     class?: string
+    // Name of the text field, used for form submission @type {string}
+    name?: string
   }
 
   let {
@@ -61,6 +63,7 @@
     onfocus = undefined,
     onblur = undefined,
     class: className = '',
+    name = undefined,
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -131,6 +134,7 @@
         {disabled}
         {id}
         {autocomplete}
+        {name}
         {rows}
         style:max-height={maxHeight ? `${maxHeight}px` : undefined}
         aria-describedby={ariaDescribedby || helperText
@@ -150,6 +154,7 @@
       <input
         {disabled}
         {id}
+        {name}
         aria-describedby={ariaDescribedby || helperText
           ? 'textfield-helpertext'
           : undefined}

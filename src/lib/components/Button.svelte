@@ -149,7 +149,7 @@ a.tint--button
   display: inline-flex
   align-items: center
   justify-content: center
-  color: inherit
+  color: var(--tint-action-secondary-text)
   text-decoration: none
 .tint--button
   vertical-align: top
