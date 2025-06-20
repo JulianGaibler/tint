@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -62,7 +62,9 @@
     "tslib": "^2.8.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.0",
-    "vite": "^6.3.3"
+    "vite": "^6.3.3",
+    "@storybook/addon-a11y": "^9.0.9",
+    "@storybook/icons": "^1.4.0"
   },
   "svelte": "./dist/components/index.js",
   "actions": "./dist/actions/index.js",
@@ -70,11 +72,6 @@
   "fonts": "./dist/fonts/index.js",
   "default": "./dist/index.js",
   "type": "module",
-  "dependencies": {
-    "@storybook/addon-a11y": "^9.0.9",
-    "@storybook/icons": "^1.4.0",
-    "add": "^2.0.6"
-  },
   "overrides": {
     "storybook": "$storybook"
   }

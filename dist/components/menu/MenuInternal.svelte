@@ -1232,6 +1232,7 @@
   padding: 4px;
   overflow: hidden;
   inset: unset;
+  color: var(--tint-text);
 }
 .context_menu:global(.select) {
   min-width: auto;

@@ -1229,6 +1229,7 @@
   padding: tint.$size-4
   overflow: hidden
   inset: unset
+  color: var(--tint-text)
   &:global(.select)
     min-width: auto
   &.animated

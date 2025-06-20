@@ -18,6 +18,7 @@ interface Props {
     onfocus?: (e: Event) => void;
     onblur?: (e: Event) => void;
     class?: string;
+    name?: string;
 }
 declare const TextField: import("svelte").Component<Props, {}, "element" | "value">;
 type TextField = ReturnType<typeof TextField>;
