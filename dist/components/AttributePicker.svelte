@@ -300,9 +300,10 @@
     onclick={onBoxClick}
     bind:this={boxElement}
   >
-    <div class="tags" role="listbox">
+    <div class="tags" role="listbox" aria-label={label}>
       {#each value as tagId (tagId)}
-        {@const label = items.find((item) => item.value === tagId)?.label}
+        {@const label =
+          items.find((item) => item.value === tagId)?.label || 'Unknown'}
         {@const labelId = `${id}-tag-${tagId}`}
         <div
           class="tag tint--type-input"
