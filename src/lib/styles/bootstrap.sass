@@ -4,17 +4,19 @@
 @use 'sass:color'
 @use 'sass:map'
 
+// Helper function to generate CSS variables from a map
+@mixin generate-css-vars($map)
+  @each $key, $value in $map
+    --tint-#{$key}: #{$value}
+
 // Function to generate tint color variables
 @mixin generate-color-variables($colors)
   :root
-    @each $key, $value in map.get($colors, general)
-      --tint-#{$key}: #{$value}
+    @include generate-css-vars(map.get($colors, general))
   :root, .tint--plain
-    @each $key, $value in map.get($colors, plain)
-      --tint-#{$key}: #{$value}
+    @include generate-css-vars(map.get($colors, plain))
   .tint--tinted
-    @each $key, $value in map.get($colors, tint)
-      --tint-#{$key}: #{$value}
+    @include generate-css-vars(map.get($colors, tint))
 
 // generate-font-faces
 @mixin generate-font-faces($path: '~tint/fonts')
