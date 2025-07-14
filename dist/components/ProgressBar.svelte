@@ -255,7 +255,12 @@
 
   /** Determines target amplitude based on component state */
   function calculateTargetAmplitude(): number {
-    const shouldHaveAmplitude = active && progress > 0 && progress < 100
+    const shouldHaveAmplitude =
+      active &&
+      !(progress === 0 && currentProgress < 0.5) &&
+      !(progress === 100 && currentProgress > 99.5) &&
+      currentProgress > 0 &&
+      currentProgress < 100
     return shouldHaveAmplitude
       ? (containerElement?.clientHeight || 12) / 4 - STROKE_WIDTH / 2
       : 0
