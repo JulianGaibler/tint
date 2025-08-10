@@ -50,7 +50,7 @@
     placeholder={label}
   />
   <Button
-    ariaLabel="Search"
+    aria-label="Search"
     bind:element={elementButton}
     disabled={disabled || !value || value.length === 0}
     icon
@@ -79,6 +79,7 @@
   visibility: hidden;
 }
 .box > .input {
+  color: var(--tint-text);
   position: absolute;
   inset: 0;
   box-sizing: border-box;

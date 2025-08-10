@@ -30,7 +30,7 @@
   {/if}
   <div class="content">{@render children?.()}</div>
   {#if onclose}
-    <Button small icon ariaLabel="close" variant="ghost" onclick={onclose}>
+    <Button small icon aria-label="close" variant="ghost" onclick={onclose}>
       {@html IconClose}
     </Button>
   {/if}

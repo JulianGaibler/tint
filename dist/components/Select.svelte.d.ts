@@ -1,6 +1,6 @@
+import type { HTMLSelectAttributes } from 'svelte/elements';
 declare class __sveltets_Render<T> {
-    props(): {
-        id: string;
+    props(): HTMLSelectAttributes & {
         value: T | undefined;
         items: {
             value: T;
@@ -10,9 +10,7 @@ declare class __sveltets_Render<T> {
         label: string;
         helperText?: string | undefined;
         error?: string | undefined;
-        disabled?: boolean;
         fillWidth?: boolean;
-        ariaDescribedby?: string | undefined;
         element?: HTMLSelectElement | undefined;
         onchange?: ((e: Event) => void) | undefined;
         class?: string;

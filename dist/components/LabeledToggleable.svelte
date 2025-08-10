@@ -73,8 +73,8 @@
     {disabled}
     {value}
     {groupStore}
-    ariaLabelledby={labelId}
-    ariaDescribedby={descriptionId}
+    aria-labelledby={labelId}
+    aria-describedby={descriptionId}
     bind:element
     {onchange}
   />

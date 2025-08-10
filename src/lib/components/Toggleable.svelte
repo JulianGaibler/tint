@@ -14,12 +14,6 @@
     value?: T
     // Group store for radio/checkbox groups
     groupStore?: GroupStore<T>
-    // aria-label of the toggleable element
-    ariaLabel?: string | undefined
-    // aria-labelledby of the toggleable element
-    ariaLabelledby?: string | undefined
-    // aria-describedby of the toggleable element
-    ariaDescribedby?: string | undefined
     // HTML element of the toggleable element
     element?: HTMLInputElement | HTMLButtonElement | undefined
     // Event handler for when the value changes
@@ -28,6 +22,14 @@
       value?: T
       groupValue?: GroupStore<T>
     }) => void
+    // Event handler for click (button/switch only)
+    onclick?: (e: MouseEvent) => void
+    // aria-label of the toggleable element
+    'aria-label'?: string | undefined
+    // aria-labelledby of the toggleable element
+    'aria-labelledby'?: string | undefined
+    // aria-describedby of the toggleable element
+    'aria-describedby'?: string | undefined
     // A space separated list of CSS classes.
     class?: string
   }
@@ -39,12 +41,14 @@
     disabled = false,
     value = null as T,
     groupStore = undefined,
-    ariaLabel = undefined,
-    ariaLabelledby = undefined,
-    ariaDescribedby = undefined,
     element = $bindable(undefined),
     onchange = undefined,
+    onclick = undefined,
+    'aria-label': ariaLabel = undefined,
+    'aria-labelledby': ariaLabelledby = undefined,
+    'aria-describedby': ariaDescribedby = undefined,
     class: className = '',
+    ...elementProps
   }: Props = $props()
 
   // Determine if this element is selected based on group store or checked prop
@@ -80,8 +84,13 @@
     }
   }
 
-  function handleSwitchClick() {
+  function handleSwitchClick(event?: MouseEvent) {
     if (disabled) return
+
+    // Call the custom onclick if provided
+    if (onclick && event) {
+      onclick(event)
+    }
 
     if (groupStore && value !== null && value !== undefined) {
       // Switch with group store (treat like checkbox)
@@ -108,6 +117,7 @@
     onclick={handleSwitchClick}
     role="switch"
     class={className}
+    {...elementProps}
   ></button>
 {:else if type === 'radio'}
   <input
@@ -122,6 +132,7 @@
     bind:this={element}
     onchange={handleChange}
     class={className}
+    {...elementProps}
   />
 {:else}
   <input
@@ -135,6 +146,7 @@
     bind:this={element}
     onchange={handleChange}
     class={className}
+    {...elementProps}
   />
 {/if}
 

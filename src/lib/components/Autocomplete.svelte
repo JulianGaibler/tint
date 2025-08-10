@@ -44,7 +44,7 @@
     // Fills the width of the parent container @type {boolean}
     fillWidth?: boolean
     // Id of the element that describes the text field @type {string|undefined}
-    ariaDescribedby?: string | undefined
+    'aria-describedby'?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
     element?: HTMLInputElement | undefined
     // A space separated list of CSS classes.
@@ -63,7 +63,7 @@
     error = undefined,
     disabled = false,
     fillWidth = true,
-    ariaDescribedby = undefined,
+    'aria-describedby': ariaDescribedby = undefined,
     element = $bindable(undefined),
     class: className = '',
   }: Props = $props()

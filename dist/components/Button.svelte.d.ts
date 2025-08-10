@@ -11,8 +11,10 @@ interface Props extends HTMLButtonAttributes {
     loading?: boolean;
     submit?: boolean;
     title?: string | undefined;
-    ariaLabel?: string | undefined;
+    'aria-label'?: string | undefined;
     tabindex?: number | undefined;
+    role?: string | undefined;
+    'aria-checked'?: boolean | undefined;
     element?: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined;
     children?: import('svelte').Snippet;
     onclick?: (e: MouseEvent) => void;

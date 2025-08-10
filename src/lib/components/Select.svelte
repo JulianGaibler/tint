@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { HTMLSelectAttributes } from 'svelte/elements'
   import IconWarning from '@lib/icons/20-warning.svg?raw'
   import IconDropdown from '@lib/icons/14-dropdown.svg?raw'
 
@@ -9,9 +10,7 @@
     disabled?: boolean
   }
 
-  interface Props {
-    // Id of the select @type {string}
-    id: string
+  interface Props extends HTMLSelectAttributes {
     // Value of the current selected item (can use bind:value) @type {string|undefined}
     value: T | undefined
     // The items of the select @type {SelectItem[]}
@@ -22,12 +21,8 @@
     helperText?: string | undefined
     // Marks the select as invalid and adds the error text and icon @type {string|undefined}
     error?: string | undefined
-    // Disables the select @type {boolean}
-    disabled?: boolean
     // Fills the width of the parent container @type {boolean}
     fillWidth?: boolean
-    // Id of the element that describes the select @type {string|undefined}
-    ariaDescribedby?: string | undefined
     // HTML element of the select @type {HTMLSelectElement | undefined}
     element?: HTMLSelectElement | undefined
     // Event handler for when the value changes @type {(e: Event) => void|undefined}
@@ -37,23 +32,24 @@
   }
 
   let {
-    id,
     value = $bindable(),
     items,
     label,
     helperText = undefined,
     error = undefined,
-    disabled = false,
     fillWidth = true,
-    ariaDescribedby = undefined,
     element = $bindable(undefined),
     onchange = undefined,
+    disabled = false,
+    id = undefined,
     class: className = '',
+    'aria-describedby': ariaDescribedby = undefined,
+    ...elementProps
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
     throw new Error(
-      '[tint] You can not use both helperText and ariaDescribedby',
+      '[tint] You can not use both helperText and aria-describedby',
     )
   }
 
@@ -65,8 +61,6 @@
 <div class:error class:disabled class:fillWidth>
   <div class="box {className}">
     <select
-      {disabled}
-      {id}
       aria-describedby={ariaDescribedby || helperText
         ? 'textfield-helpertext'
         : undefined}
@@ -75,8 +69,11 @@
       bind:this={element}
       bind:value
       {onchange}
+      {disabled}
+      {id}
       class:filled={!noValue(value)}
       class="input tint--type-input"
+      {...elementProps}
     >
       {#if noValue(value)}
         <option value="" disabled selected hidden></option>

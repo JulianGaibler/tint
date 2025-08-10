@@ -7,15 +7,16 @@ declare class __sveltets_Render<T = unknown> {
         disabled?: boolean;
         value?: T | undefined;
         groupStore?: GroupStore<T> | undefined;
-        ariaLabel?: string | undefined;
-        ariaLabelledby?: string | undefined;
-        ariaDescribedby?: string | undefined;
         element?: HTMLInputElement | HTMLButtonElement | undefined;
         onchange?: ((event: {
             checked: boolean;
             value?: T | undefined;
             groupValue?: GroupStore<T> | undefined;
         }) => void) | undefined;
+        onclick?: ((e: MouseEvent) => void) | undefined;
+        'aria-label'?: string | undefined;
+        'aria-labelledby'?: string | undefined;
+        'aria-describedby'?: string | undefined;
         class?: string;
     };
     events(): {};

@@ -25,10 +25,14 @@
     submit?: boolean
     // aria-label of the button @type {string | undefined}
     title?: string | undefined
-    // formmethod of the button @type {string | undefined}
-    ariaLabel?: string | undefined
+    // ARIA label of the button @type {string | undefined}
+    'aria-label'?: string | undefined
     // tabindex of the button @type {number | undefined}
     tabindex?: number | undefined
+    // ARIA role override @type {string | undefined}
+    role?: string | undefined
+    // ARIA checked state for radio buttons @type {boolean | undefined}
+    'aria-checked'?: boolean | undefined
     // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
     element?:
       | HTMLButtonElement
@@ -56,8 +60,10 @@
     submit = false,
     formmethod = undefined,
     title = undefined,
-    ariaLabel = undefined,
+    'aria-label': ariaLabel = undefined,
     tabindex = undefined,
+    role: roleOverride = undefined,
+    'aria-checked': ariaChecked = undefined,
     element = $bindable(undefined),
     children,
     onclick = undefined,
@@ -77,7 +83,9 @@
     throw new Error('[tint] Links cannot be toggled')
   }
 
-  let role = $derived(toggled !== undefined ? 'switch' : undefined)
+  let role = $derived(
+    roleOverride || (toggled !== undefined ? 'switch' : undefined),
+  )
   let ariaPressed = $derived(toggled !== undefined ? toggled : undefined)
   let _variant = $derived(
     toggled === undefined ? variant : toggled ? 'primary' : variant,
@@ -122,6 +130,7 @@
     {formmethod}
     aria-label={ariaLabel}
     aria-pressed={ariaPressed}
+    aria-checked={ariaChecked}
     bind:this={element}
     class:icon
     class:small
