@@ -7,7 +7,7 @@ interface Props {
     error?: string | undefined;
     disabled?: boolean;
     fillWidth?: boolean;
-    ariaDescribedby?: string | undefined;
+    'aria-describedby'?: string | undefined;
     element?: HTMLInputElement | undefined;
     class?: string;
 }

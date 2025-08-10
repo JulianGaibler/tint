@@ -69,7 +69,7 @@
     small: false,
     disabled: false,
     icon: true,
-    ariaLabel: 'Home',
+    'aria-label': 'Home',
   }}
 />
 

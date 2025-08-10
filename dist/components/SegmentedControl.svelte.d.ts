@@ -1,34 +1,23 @@
-import type { FullAutoFill } from 'svelte/elements';
 declare class __sveltets_Render<T> {
     props(): {
         id: string;
         value: T | undefined;
         items: {
             value: T;
-            label: string;
+            label?: string;
+            icon?: string;
+            'aria-label'?: string;
+            title?: string;
+            disabled?: boolean;
+            class?: string;
         }[];
-        dynamicItems?: ((search: string) => {
-            items: {
-                value: T;
-                label: string;
-            }[];
-            allowAdd?: boolean;
-        } | Promise<{
-            items: {
-                value: T;
-                label: string;
-            }[];
-            allowAdd?: boolean;
-        }>) | undefined;
-        onitemadded?: ((label: string) => void) | undefined;
-        label: string;
-        autocomplete?: FullAutoFill | undefined;
-        helperText?: string | undefined;
-        error?: string | undefined;
+        label?: string | undefined;
+        'aria-labelledby'?: string | undefined;
         disabled?: boolean;
-        fillWidth?: boolean;
+        small?: boolean;
         'aria-describedby'?: string | undefined;
-        element?: HTMLInputElement | undefined;
+        element?: HTMLFieldSetElement | undefined;
+        onchange?: ((value: T) => void) | undefined;
         class?: string;
     };
     events(): {};
@@ -43,6 +32,6 @@ interface $$IsomorphicComponent {
     <T>(internal: unknown, props: ReturnType<__sveltets_Render<T>['props']> & {}): ReturnType<__sveltets_Render<T>['exports']>;
     z_$$bindings?: ReturnType<__sveltets_Render<any>['bindings']>;
 }
-declare const Autocomplete: $$IsomorphicComponent;
-type Autocomplete<T> = InstanceType<typeof Autocomplete<T>>;
-export default Autocomplete;
+declare const SegmentedControl: $$IsomorphicComponent;
+type SegmentedControl<T> = InstanceType<typeof SegmentedControl<T>>;
+export default SegmentedControl;

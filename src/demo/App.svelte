@@ -144,47 +144,48 @@
             <Button disabled small variant="ghost">Hello!</Button>
           </div>
           <div class="row">
-            <Button icon ariaLabel="home" variant="primary"
+            <Button icon aria-label="home" variant="primary"
               >{@html IconHome}</Button
             >
-            <Button icon ariaLabel="home">{@html IconHome}</Button>
-            <Button icon ariaLabel="home" variant="ghost"
+            <Button icon aria-label="home">{@html IconHome}</Button>
+            <Button icon aria-label="home" variant="ghost"
               >{@html IconHome}</Button
             >
-            <Button disabled icon ariaLabel="home" variant="primary"
+            <Button disabled icon aria-label="home" variant="primary"
               >{@html IconHome}</Button
             >
-            <Button disabled icon ariaLabel="home">{@html IconHome}</Button>
-            <Button disabled icon ariaLabel="home" variant="ghost"
+            <Button disabled icon aria-label="home">{@html IconHome}</Button>
+            <Button disabled icon aria-label="home" variant="ghost"
               >{@html IconHome}</Button
             >
           </div>
           <div class="row">
             <Button loading variant="primary">Hello!</Button>
             <Button loading>Hello!</Button>
-            <Button icon loading ariaLabel="home">{@html IconHome}</Button>
+            <Button icon loading aria-label="home">{@html IconHome}</Button>
           </div>
           <div class="row">
             <Button loading small variant="primary">Hi!</Button>
             <Button loading small>Hi!</Button>
-            <Button icon loading small ariaLabel="home">{@html IconHome}</Button
+            <Button icon loading small aria-label="home"
+              >{@html IconHome}</Button
             >
           </div>
           <div class="row">
-            <Button icon ariaLabel="home" small>{@html IconHome}</Button>
-            <Button icon ariaLabel="home" small variant="primary"
+            <Button icon aria-label="home" small>{@html IconHome}</Button>
+            <Button icon aria-label="home" small variant="primary"
               >{@html IconHome}</Button
             >
-            <Button icon ariaLabel="home" small variant="ghost"
+            <Button icon aria-label="home" small variant="ghost"
               >{@html IconHome}</Button
             >
-            <Button disabled icon ariaLabel="home" small
+            <Button disabled icon aria-label="home" small
               >{@html IconHome}</Button
             >
-            <Button disabled icon ariaLabel="home" small variant="primary"
+            <Button disabled icon aria-label="home" small variant="primary"
               >{@html IconHome}</Button
             >
-            <Button disabled icon ariaLabel="home" small variant="ghost"
+            <Button disabled icon aria-label="home" small variant="ghost"
               >{@html IconHome}</Button
             >
           </div>

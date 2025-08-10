@@ -18,13 +18,13 @@
       checked: {
         control: 'boolean',
       },
-      ariaLabel: {
+      'aria-label': {
         control: 'text',
       },
-      ariaDescribedby: {
+      'aria-describedby': {
         control: 'text',
       },
-      ariaLabelledby: {
+      'aria-labelledby': {
         control: 'text',
       },
     },
@@ -100,7 +100,7 @@
     checked: false,
     id: 'switch-input',
     type: 'switch',
-    ariaLabelledby: 'switch-label',
+    'aria-labelledby': 'switch-label',
   }}
   play={async ({ args, canvas }: any) => {
     const switchElement = canvas.getByRole('switch')

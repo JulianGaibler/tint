@@ -1,21 +1,15 @@
 <script lang="ts">
+  import type { HTMLInputAttributes } from 'svelte/elements'
   import IconWarning from '@lib/icons/20-warning.svg?raw'
   import { onMount } from 'svelte'
-  import type { FullAutoFill } from 'svelte/elements'
 
-  interface Props {
-    // Id of the text field @type {string}
-    id: string
+  interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
     // Value of the text field (can use bind:value) @type {string}
     value: string
     // The label of the text field @type {string}
     label: string
-    // The autocomplete of the text field @type {string|undefined}
-    autocomplete?: FullAutoFill | undefined
     // The variant of the text field @type {'input' | 'textarea' | undefined}
     variant?: 'input' | 'textarea'
-    // The type of the text field @type {string|undefined}
-    type?: string | undefined
     // The number of rows of the text field @type {number|undefined}
     rows?: number
     // The maximum height of the text field @type {number|undefined}
@@ -24,12 +18,8 @@
     helperText?: string | undefined
     // Marks the text field as invalid and adds the error text and icon @type {string|undefined}
     error?: string | undefined
-    // Disables the text field @type {boolean}
-    disabled?: boolean
     // Fills the width of the parent container @type {boolean}
     fillWidth?: boolean
-    // Id of the element that describes the text field @type {string|undefined}
-    ariaDescribedby?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
     element?: HTMLInputElement | HTMLTextAreaElement | undefined
     // Function to call when the value of the text field changes @type {function}
@@ -38,32 +28,33 @@
     onfocus?: (e: Event) => void
     // Function to call when the text field is blurred @type {function}
     onblur?: (e: Event) => void
+    // Input type for input variant
+    type?: string
     // A space separated list of CSS classes.
     class?: string
-    // Name of the text field, used for form submission @type {string}
-    name?: string
   }
 
   let {
-    id,
     value = $bindable(),
     label,
-    autocomplete = undefined,
     variant = 'input',
-    type = undefined,
     rows = 3,
     maxHeight = undefined,
     helperText = undefined,
     error = undefined,
-    disabled = false,
     fillWidth = true,
-    ariaDescribedby = undefined,
     element = $bindable(undefined),
     oninput = undefined,
     onfocus = undefined,
     onblur = undefined,
-    class: className = '',
+    disabled = false,
+    id = undefined,
     name = undefined,
+    autocomplete = undefined,
+    type = undefined,
+    'aria-describedby': ariaDescribedby = undefined,
+    class: className = '',
+    ...elementProps
   }: Props = $props()
 
   if (helperText && ariaDescribedby) {
@@ -73,7 +64,7 @@
   }
 
   function setType(
-    type: string | undefined,
+    type: string | null | undefined,
     element: HTMLInputElement | HTMLTextAreaElement | undefined,
   ) {
     // throw if textarea and type is not undefined
@@ -133,7 +124,6 @@
       <textarea
         {disabled}
         {id}
-        {autocomplete}
         {name}
         {rows}
         style:max-height={maxHeight ? `${maxHeight}px` : undefined}
@@ -149,12 +139,47 @@
         bind:value
         class:filled={value?.length > 0}
         class="input tint--type-input"
+        {...Object.fromEntries(
+          Object.entries(elementProps).filter(
+            ([key]) =>
+              ![
+                'type',
+                'accept',
+                'alt',
+                'capture',
+                'checked',
+                'dirname',
+                'formaction',
+                'formenctype',
+                'formmethod',
+                'formnovalidate',
+                'formtarget',
+                'height',
+                'list',
+                'max',
+                'maxlength',
+                'min',
+                'minlength',
+                'multiple',
+                'pattern',
+                'placeholder',
+                'readonly',
+                'required',
+                'size',
+                'src',
+                'step',
+                'value',
+                'width',
+              ].includes(key),
+          ),
+        )}
       ></textarea>
     {:else}
       <input
         {disabled}
         {id}
         {name}
+        {type}
         aria-describedby={ariaDescribedby || helperText
           ? 'textfield-helpertext'
           : undefined}
@@ -168,6 +193,7 @@
         bind:value
         class:filled={value?.length > 0}
         class="input tint--type-input"
+        {...elementProps}
       />
     {/if}
     <label class="tint--type-input-small" for={id}>{label}</label>
