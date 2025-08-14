@@ -65,6 +65,14 @@
     ondragstarted: fn().mockName('ondragstarted'),
     ondragended: fn().mockName('ondragended'),
   }
+
+  const reorderableWithKeyboardOptions: ReorderableOptions = {
+    itemSelector: 'li',
+    enableKeyboardReorder: true,
+    onreorder: handleReorder,
+    ondragstarted: fn().mockName('ondragstarted'),
+    ondragended: fn().mockName('ondragended'),
+  }
 </script>
 
 <!-- A list where items can be reorderable by dragging and dropping -->
@@ -109,6 +117,32 @@
             >{@html IconDragHandle}</span
           >
           <button class="item-content tint--type-input">
+            {item}
+          </button>
+        </li>
+      {/each}
+    </ul>
+
+    <div class="controls">
+      <Button onclick={addItem}>Add Item</Button>
+      <Button variant="secondary" onclick={resetItems}>Reset Order</Button>
+    </div>
+  </div>
+</Story>
+
+<!-- A list with keyboard support for reordering -->
+<Story name="With Keyboard Support">
+  <div>
+    <h3 class="tint--type">Reorderable List with Keyboard Support</h3>
+    <p>Focus an item and use Ctrl+Shift+Arrow Up/Down to reorder:</p>
+
+    <ul
+      class="reorderable-list tint--card"
+      use:reorderable={reorderableWithKeyboardOptions}
+    >
+      {#each items as item (item)}
+        <li class="list-item">
+          <button class="item-content tint--type-input" tabindex="0">
             {item}
           </button>
         </li>

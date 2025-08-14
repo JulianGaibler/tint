@@ -20,6 +20,8 @@ export interface ReorderableOptions {
     ondragstarted?: (detail: DragEventDetail) => void;
     /** Called when an item finishes being dragged */
     ondragended?: (detail: DragEventDetail) => void;
+    /** Enable keyboard reordering with Ctrl+Shift+Arrow keys. Defaults to true */
+    enableKeyboardReorder?: boolean;
 }
 export interface ReorderEventDetail {
     /** The element that was dragged */
@@ -40,6 +42,18 @@ export interface DragEventDetail {
     /** The element being dragged */
     draggedElement: Element;
 }
+/**
+ * Checks if the given keyboard event is a reorder keyboard event
+ * (ctrl+shift+up/down).
+ *
+ * Can be used instead of the automatic reorder keyboard event handling by the
+ * reorderable action.
+ *
+ * @param event - The keyboard event to check
+ * @returns 0 if the event is not a reorder keyboard event, -1 if the event is a
+ *   reorder up event, 1 if the event is a reorder down event
+ */
+export declare function isReorderKeyboardEvent(event: KeyboardEvent): 0 | -1 | 1;
 /**
  * Svelte action to make items inside an element reorderable via drag and drop.
  *
