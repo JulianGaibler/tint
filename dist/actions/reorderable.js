@@ -17,15 +17,26 @@ class ReorderableHandler {
         this.indicator = null;
         this.onMutation = (mutationList) => {
             let needsUpdate = false;
+            let indicatorRemoved = false;
             for (const mutation of mutationList) {
                 if (mutation.addedNodes.length || mutation.removedNodes.length) {
                     needsUpdate = true;
+                }
+                // Check if our indicator was removed
+                for (const removedNode of Array.from(mutation.removedNodes)) {
+                    if (removedNode === this.indicator) {
+                        indicatorRemoved = true;
+                    }
                 }
                 for (const addedNode of Array.from(mutation.addedNodes)) {
                     if (addedNode.nodeType === Node.ELEMENT_NODE) {
                         this.addDraggableAttribute(addedNode);
                     }
                 }
+            }
+            // Restore indicator if it was removed
+            if (indicatorRemoved || (this.indicator && !this.indicator.parentNode)) {
+                this.potentiallyCreateIndicator();
             }
             if (needsUpdate) {
                 this.getItems();
@@ -34,18 +45,19 @@ class ReorderableHandler {
         this.onDragStart = (event) => {
             var _a, _b;
             const target = event.target;
+            // Find the draggable element that initiated this drag
+            // This could be the target itself or a parent element up to the list item
+            let draggableElement = target;
             let draggedElement = null;
-            if (this.options.handleSelector) {
-                // If handleSelector is provided, check if the target is a handle
-                const handle = target.closest(this.options.handleSelector);
-                if (handle) {
-                    // Find the item that contains this handle
-                    draggedElement = handle.closest(this.options.itemSelector);
+            // Walk up the parent chain to find a draggable element within our container
+            while (draggableElement && draggableElement !== this.element) {
+                if (draggableElement instanceof HTMLElement &&
+                    draggableElement.draggable) {
+                    // Found a draggable element, now find the list item that contains it
+                    draggedElement = draggableElement.closest(this.options.itemSelector);
+                    break;
                 }
-            }
-            else {
-                // If no handleSelector, find the draggable item
-                draggedElement = target.closest(this.options.itemSelector);
+                draggableElement = draggableElement.parentElement;
             }
             if (!draggedElement) {
                 return;
@@ -68,6 +80,8 @@ class ReorderableHandler {
         };
         this.onDragOver = (event) => {
             this.dropTargetInfo = this.getDropTargetInfo(event);
+            // Ensure indicator exists
+            this.potentiallyCreateIndicator();
             if (!this.dropTargetInfo || !this.indicator) {
                 if (this.indicator) {
                     this.indicator.hidden = true;
@@ -154,8 +168,29 @@ class ReorderableHandler {
             }
             this.draggedElement = null;
         };
+        this.onKeyDown = (event) => {
+            var _a, _b;
+            const reorderInfo = this.evaluateKeyDownEvent(event);
+            if (!reorderInfo) {
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            // Store the focused element to restore focus after reordering
+            const focusedElement = event.target;
+            // Call the reorder handler
+            (_b = (_a = this.options).onreorder) === null || _b === void 0 ? void 0 : _b.call(_a, reorderInfo);
+            // Restore focus to the moved element after a microtask to allow DOM updates
+            requestAnimationFrame(() => {
+                if (focusedElement &&
+                    typeof focusedElement.focus === 'function') {
+                    ;
+                    focusedElement.focus();
+                }
+            });
+        };
         this.element = element;
-        this.options = Object.assign({ itemSelector: 'li' }, options);
+        this.options = Object.assign({ itemSelector: 'li', enableKeyboardReorder: true }, options);
         this.setup();
     }
     setup() {
@@ -166,12 +201,7 @@ class ReorderableHandler {
             this.element.classList.add('tint--handle');
         }
         // Create visual drop indicator
-        this.indicator = document.createElement('div');
-        this.indicator.className = 'tint--reorderable-indicator';
-        this.indicator.hidden = true;
-        this.indicator.setAttribute('aria-hidden', 'true');
-        this.element.style.position = 'relative';
-        this.element.appendChild(this.indicator);
+        this.potentiallyCreateIndicator();
         // Get initial items and make them draggable
         this.getItems();
         this.addDraggableAttribute();
@@ -181,12 +211,31 @@ class ReorderableHandler {
         this.element.addEventListener('dragleave', this.onDragLeave);
         this.element.addEventListener('dragend', this.onDragEnd);
         this.element.addEventListener('drop', this.onDrop);
+        // Add keyboard support if enabled
+        if (this.options.enableKeyboardReorder) {
+            this.element.addEventListener('keydown', this.onKeyDown);
+        }
         // Watch for DOM changes
         this.mutationObserver = new MutationObserver(this.onMutation);
         this.mutationObserver.observe(this.element, {
             childList: true,
             subtree: true,
         });
+    }
+    potentiallyCreateIndicator() {
+        // Remove existing indicator if it exists but is detached
+        if (this.indicator && !this.indicator.parentNode) {
+            this.indicator = null;
+        }
+        // Only create if we don't have one or it's not in the DOM
+        if (!this.indicator || !this.indicator.parentNode) {
+            this.indicator = document.createElement('div');
+            this.indicator.className = 'tint--reorderable-indicator';
+            this.indicator.hidden = true;
+            this.indicator.setAttribute('aria-hidden', 'true');
+            this.element.style.position = 'relative';
+            this.element.appendChild(this.indicator);
+        }
     }
     getItems() {
         this.items = Array.from(this.element.querySelectorAll(this.options.itemSelector));
@@ -202,7 +251,8 @@ class ReorderableHandler {
         for (const item of items) {
             if (item instanceof HTMLElement) {
                 if (this.options.handleSelector) {
-                    // When handleSelector is provided, only the handles are draggable
+                    // When handleSelector is provided, make the item not draggable
+                    // and only make the handles draggable
                     item.draggable = false;
                     const handles = item.querySelectorAll(this.options.handleSelector);
                     handles.forEach((handle) => {
@@ -228,6 +278,40 @@ class ReorderableHandler {
     }
     getBounds(element) {
         return element.getBoundingClientRect();
+    }
+    evaluateKeyDownEvent(event) {
+        const direction = isReorderKeyboardEvent(event);
+        if (direction === 0) {
+            return null;
+        }
+        const fromEl = this.getTargetItemFromKeyboardEvent(event);
+        if (!fromEl) {
+            return null;
+        }
+        const fromIndex = this.getItemIndex(fromEl);
+        if (fromIndex === -1) {
+            return null;
+        }
+        // If index is 0 and direction is -1, or index is last and direction is 1, do nothing
+        if ((fromIndex === 0 && direction === -1) ||
+            (fromIndex === this.items.length - 1 && direction === 1)) {
+            return null;
+        }
+        const targetElement = this.items[fromIndex + direction];
+        if (!targetElement) {
+            return null;
+        }
+        return {
+            draggedElement: fromEl,
+            targetElement,
+            position: Math.min(direction, 0),
+            draggedIndex: fromIndex,
+            targetIndex: fromIndex + direction,
+        };
+    }
+    getTargetItemFromKeyboardEvent(event) {
+        const target = event.target;
+        return target.closest(this.options.itemSelector);
     }
     getDropTargetInfo(event) {
         const targetItem = this.getTargetItemFromEvent(event);
@@ -258,7 +342,9 @@ class ReorderableHandler {
     update(newOptions) {
         const hadHandles = !!this.options.handleSelector;
         const hasHandles = !!newOptions.handleSelector;
-        this.options = Object.assign({ itemSelector: 'li' }, newOptions);
+        const hadKeyboard = !!this.options.enableKeyboardReorder;
+        const hasKeyboard = !!newOptions.enableKeyboardReorder;
+        this.options = Object.assign({ itemSelector: 'li', enableKeyboardReorder: true }, newOptions);
         // Update CSS class based on handleSelector
         if (hadHandles !== hasHandles) {
             if (hasHandles) {
@@ -266,6 +352,15 @@ class ReorderableHandler {
             }
             else {
                 this.element.classList.remove('tint--handle');
+            }
+        }
+        // Update keyboard event listener
+        if (hadKeyboard !== hasKeyboard) {
+            if (hasKeyboard) {
+                this.element.addEventListener('keydown', this.onKeyDown);
+            }
+            else {
+                this.element.removeEventListener('keydown', this.onKeyDown);
             }
         }
         this.getItems();
@@ -281,6 +376,9 @@ class ReorderableHandler {
         this.element.removeEventListener('dragleave', this.onDragLeave);
         this.element.removeEventListener('dragend', this.onDragEnd);
         this.element.removeEventListener('drop', this.onDrop);
+        if (this.options.enableKeyboardReorder) {
+            this.element.removeEventListener('keydown', this.onKeyDown);
+        }
         // Disconnect mutation observer
         if (this.mutationObserver) {
             this.mutationObserver.disconnect();
@@ -304,6 +402,26 @@ class ReorderableHandler {
             }
         });
     }
+}
+/**
+ * Checks if the given keyboard event is a reorder keyboard event
+ * (ctrl+shift+up/down).
+ *
+ * Can be used instead of the automatic reorder keyboard event handling by the
+ * reorderable action.
+ *
+ * @param event - The keyboard event to check
+ * @returns 0 if the event is not a reorder keyboard event, -1 if the event is a
+ *   reorder up event, 1 if the event is a reorder down event
+ */
+export function isReorderKeyboardEvent(event) {
+    if (event.code !== 'ArrowUp' && event.code !== 'ArrowDown') {
+        return 0;
+    }
+    if (!event.ctrlKey || !event.shiftKey || event.altKey || event.metaKey) {
+        return 0;
+    }
+    return event.code === 'ArrowUp' ? -1 : 1;
 }
 /**
  * Svelte action to make items inside an element reorderable via drag and drop.
