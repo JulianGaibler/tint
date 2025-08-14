@@ -10,6 +10,11 @@
 export interface ReorderableOptions {
   /** Selector for elements that should be reorderable. Defaults to "li" */
   itemSelector?: string
+  /**
+   * Optional selector for drag handles within each item. If not provided, the
+   * entire item is draggable
+   */
+  handleSelector?: string
   /** Called when an item is dropped in a new position */
   onreorder?: (detail: ReorderEventDetail) => void
   /** Called when an item starts being dragged */
@@ -71,6 +76,11 @@ class ReorderableHandler {
     // Add container class to the element
     this.element.classList.add('tint--reorderable-container')
 
+    // Add handle class if handleSelector is provided
+    if (this.options.handleSelector) {
+      this.element.classList.add('tint--handle')
+    }
+
     // Create visual drop indicator
     this.indicator = document.createElement('div')
     this.indicator.className = 'tint--reorderable-indicator'
@@ -114,7 +124,19 @@ class ReorderableHandler {
 
     for (const item of items) {
       if (item instanceof HTMLElement) {
-        item.draggable = true
+        if (this.options.handleSelector) {
+          // When handleSelector is provided, only the handles are draggable
+          item.draggable = false
+          const handles = item.querySelectorAll(this.options.handleSelector)
+          handles.forEach((handle) => {
+            if (handle instanceof HTMLElement) {
+              handle.draggable = true
+            }
+          })
+        } else {
+          // When no handleSelector, the entire item is draggable
+          item.draggable = true
+        }
       }
     }
   }
@@ -154,7 +176,20 @@ class ReorderableHandler {
 
   private onDragStart = (event: DragEvent) => {
     const target = event.target as Element
-    const draggedElement = target.closest(this.options.itemSelector!)
+    let draggedElement: Element | null = null
+
+    if (this.options.handleSelector) {
+      // If handleSelector is provided, check if the target is a handle
+      const handle = target.closest(this.options.handleSelector)
+      if (handle) {
+        // Find the item that contains this handle
+        draggedElement = handle.closest(this.options.itemSelector!)
+      }
+    } else {
+      // If no handleSelector, find the draggable item
+      draggedElement = target.closest(this.options.itemSelector!)
+    }
+
     if (!draggedElement) {
       return
     }
@@ -321,14 +356,28 @@ class ReorderableHandler {
   }
 
   update(newOptions: ReorderableOptions) {
+    const hadHandles = !!this.options.handleSelector
+    const hasHandles = !!newOptions.handleSelector
+
     this.options = { itemSelector: 'li', ...newOptions }
+
+    // Update CSS class based on handleSelector
+    if (hadHandles !== hasHandles) {
+      if (hasHandles) {
+        this.element.classList.add('tint--handle')
+      } else {
+        this.element.classList.remove('tint--handle')
+      }
+    }
+
     this.getItems()
     this.addDraggableAttribute()
   }
 
   destroy() {
-    // Remove container class from the element
+    // Remove container classes from the element
     this.element.classList.remove('tint--reorderable-container')
+    this.element.classList.remove('tint--handle')
 
     // Clean up event listeners
     this.element.removeEventListener('dragstart', this.onDragStart)
@@ -351,6 +400,14 @@ class ReorderableHandler {
     this.items.forEach((item) => {
       if (item instanceof HTMLElement) {
         item.draggable = false
+        if (this.options.handleSelector) {
+          const handles = item.querySelectorAll(this.options.handleSelector)
+          handles.forEach((handle) => {
+            if (handle instanceof HTMLElement) {
+              handle.draggable = false
+            }
+          })
+        }
       }
     })
   }
