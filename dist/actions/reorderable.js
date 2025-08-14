@@ -34,7 +34,19 @@ class ReorderableHandler {
         this.onDragStart = (event) => {
             var _a, _b;
             const target = event.target;
-            const draggedElement = target.closest(this.options.itemSelector);
+            let draggedElement = null;
+            if (this.options.handleSelector) {
+                // If handleSelector is provided, check if the target is a handle
+                const handle = target.closest(this.options.handleSelector);
+                if (handle) {
+                    // Find the item that contains this handle
+                    draggedElement = handle.closest(this.options.itemSelector);
+                }
+            }
+            else {
+                // If no handleSelector, find the draggable item
+                draggedElement = target.closest(this.options.itemSelector);
+            }
             if (!draggedElement) {
                 return;
             }
@@ -149,6 +161,10 @@ class ReorderableHandler {
     setup() {
         // Add container class to the element
         this.element.classList.add('tint--reorderable-container');
+        // Add handle class if handleSelector is provided
+        if (this.options.handleSelector) {
+            this.element.classList.add('tint--handle');
+        }
         // Create visual drop indicator
         this.indicator = document.createElement('div');
         this.indicator.className = 'tint--reorderable-indicator';
@@ -185,7 +201,20 @@ class ReorderableHandler {
             : this.items;
         for (const item of items) {
             if (item instanceof HTMLElement) {
-                item.draggable = true;
+                if (this.options.handleSelector) {
+                    // When handleSelector is provided, only the handles are draggable
+                    item.draggable = false;
+                    const handles = item.querySelectorAll(this.options.handleSelector);
+                    handles.forEach((handle) => {
+                        if (handle instanceof HTMLElement) {
+                            handle.draggable = true;
+                        }
+                    });
+                }
+                else {
+                    // When no handleSelector, the entire item is draggable
+                    item.draggable = true;
+                }
             }
         }
     }
@@ -227,13 +256,25 @@ class ReorderableHandler {
         return target.closest(this.options.itemSelector);
     }
     update(newOptions) {
+        const hadHandles = !!this.options.handleSelector;
+        const hasHandles = !!newOptions.handleSelector;
         this.options = Object.assign({ itemSelector: 'li' }, newOptions);
+        // Update CSS class based on handleSelector
+        if (hadHandles !== hasHandles) {
+            if (hasHandles) {
+                this.element.classList.add('tint--handle');
+            }
+            else {
+                this.element.classList.remove('tint--handle');
+            }
+        }
         this.getItems();
         this.addDraggableAttribute();
     }
     destroy() {
-        // Remove container class from the element
+        // Remove container classes from the element
         this.element.classList.remove('tint--reorderable-container');
+        this.element.classList.remove('tint--handle');
         // Clean up event listeners
         this.element.removeEventListener('dragstart', this.onDragStart);
         this.element.removeEventListener('dragover', this.onDragOver);
@@ -252,6 +293,14 @@ class ReorderableHandler {
         this.items.forEach((item) => {
             if (item instanceof HTMLElement) {
                 item.draggable = false;
+                if (this.options.handleSelector) {
+                    const handles = item.querySelectorAll(this.options.handleSelector);
+                    handles.forEach((handle) => {
+                        if (handle instanceof HTMLElement) {
+                            handle.draggable = false;
+                        }
+                    });
+                }
             }
         });
     }

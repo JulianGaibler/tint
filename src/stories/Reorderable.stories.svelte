@@ -56,6 +56,14 @@
     ondragstarted: fn().mockName('ondragstarted'),
     ondragended: fn().mockName('ondragended'),
   }
+
+  const reorderableWithHandlesOptions: ReorderableOptions = {
+    itemSelector: 'li',
+    handleSelector: '.drag-handle',
+    onreorder: handleReorder,
+    ondragstarted: fn().mockName('ondragstarted'),
+    ondragended: fn().mockName('ondragended'),
+  }
 </script>
 
 <!-- A list where items can be reorderable by dragging and dropping -->
@@ -84,6 +92,33 @@
   </div>
 </Story>
 
+<!-- A list with drag handles where only the handles are draggable -->
+<Story name="With Drag Handles">
+  <div>
+    <h3 class="tint--type">Reorderable List with Drag Handles</h3>
+    <p>Only the ⋮⋮ handle is draggable:</p>
+
+    <ul
+      class="reorderable-list tint--card"
+      use:reorderable={reorderableWithHandlesOptions}
+    >
+      {#each items as item (item)}
+        <li class="list-item">
+          <span class="drag-handle" aria-label="Drag to reorder">⋮⋮</span>
+          <button class="item-content tint--type-input">
+            {item}
+          </button>
+        </li>
+      {/each}
+    </ul>
+
+    <div class="controls">
+      <Button onclick={addItem}>Add Item</Button>
+      <Button variant="secondary" onclick={resetItems}>Reset Order</Button>
+    </div>
+  </div>
+</Story>
+
 <style lang="sass">
   .reorderable-list
     list-style: none
@@ -93,12 +128,23 @@
   .list-item:not(:last-of-type)
     border-bottom: 1px solid var(--tint-card-border)
 
+  .list-item
+    display: flex
+    align-items: center
+
   .item-content
-    width: 100%
+    flex: 1
     padding: 12px 16px
     background: transparent
     border: none
     text-align: left
+
+  .drag-handle
+    padding: 12px 8px
+    color: var(--tint-text-secondary)
+    font-weight: bold
+    user-select: none
+    line-height: 1
 
   .controls
     display: flex

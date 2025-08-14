@@ -9,6 +9,11 @@
 export interface ReorderableOptions {
     /** Selector for elements that should be reorderable. Defaults to "li" */
     itemSelector?: string;
+    /**
+     * Optional selector for drag handles within each item. If not provided, the
+     * entire item is draggable
+     */
+    handleSelector?: string;
     /** Called when an item is dropped in a new position */
     onreorder?: (detail: ReorderEventDetail) => void;
     /** Called when an item starts being dragged */
