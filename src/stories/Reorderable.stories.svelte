@@ -1,5 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
+  import IconDragHandle from '@lib/icons/14-drag-handle.svg?raw'
   import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
@@ -104,7 +105,9 @@
     >
       {#each items as item (item)}
         <li class="list-item">
-          <span class="drag-handle" aria-label="Drag to reorder">⋮⋮</span>
+          <span class="drag-handle" aria-label="Drag to reorder"
+            >{@html IconDragHandle}</span
+          >
           <button class="item-content tint--type-input">
             {item}
           </button>
@@ -141,6 +144,7 @@
 
   .drag-handle
     padding: 12px 8px
+    padding-inline-end: 0
     color: var(--tint-text-secondary)
     font-weight: bold
     user-select: none
