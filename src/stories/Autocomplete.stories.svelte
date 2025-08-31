@@ -9,6 +9,7 @@
     render: child,
     argTypes: {
       autocomplete: { control: 'select' },
+      allowFreeText: { control: 'boolean' },
     },
     args: {
       onitemadded: fn(),
@@ -83,6 +84,62 @@
       { value: 'option3', label: 'Option 3' },
     ],
     disabled: true,
+  }}
+/>
+
+<!--
+Autocomplete with free text input enabled.
+
+In free text mode, the component behaves differently:
+- Users can type any arbitrary text, not just select from predefined options
+- The `value` prop will be set to the text content (label) rather than the item's value
+- Items serve as suggestions that can be selected, but are not required
+- Text persists on blur - it won't reset to empty or a previous selection
+- The clear button appears whenever there's text content
+-->
+<Story
+  name="Free Text"
+  args={{
+    id: 'autocomplete-free-text',
+    label: 'Enter any country',
+    value: undefined,
+    allowFreeText: true,
+    items: [
+      { value: 'us', label: 'United States' },
+      { value: 'ca', label: 'Canada' },
+      { value: 'mx', label: 'Mexico' },
+      { value: 'uk', label: 'United Kingdom' },
+      { value: 'fr', label: 'France' },
+      { value: 'de', label: 'Germany' },
+      { value: 'it', label: 'Italy' },
+      { value: 'es', label: 'Spain' },
+      { value: 'jp', label: 'Japan' },
+      { value: 'au', label: 'Australia' },
+    ],
+  }}
+/>
+
+<!-- Free text autocomplete with a preselected value. -->
+<Story
+  name="Free Text with value"
+  args={{
+    id: 'autocomplete-free-text-value',
+    label: 'Favorite fruit',
+    value: 'Custom Berry',
+    allowFreeText: true,
+    items: [
+      { value: 'apple', label: 'Apple' },
+      { value: 'banana', label: 'Banana' },
+      { value: 'orange', label: 'Orange' },
+      { value: 'grape', label: 'Grape' },
+      { value: 'kiwi', label: 'Kiwi' },
+      { value: 'mango', label: 'Mango' },
+      { value: 'peach', label: 'Peach' },
+      { value: 'pear', label: 'Pear' },
+      { value: 'pineapple', label: 'Pineapple' },
+      { value: 'strawberry', label: 'Strawberry' },
+      { value: 'watermelon', label: 'Watermelon' },
+    ],
   }}
 />
 
