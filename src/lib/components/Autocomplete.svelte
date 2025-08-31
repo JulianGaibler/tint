@@ -43,6 +43,8 @@
     disabled?: boolean
     // Fills the width of the parent container @type {boolean}
     fillWidth?: boolean
+    // Allows free text input that doesn't need to match available items. When enabled, the value will always be set to the text content (label) rather than the item's value property. @type {boolean}
+    allowFreeText?: boolean
     // Id of the element that describes the text field @type {string|undefined}
     'aria-describedby'?: string | undefined
     // HTML element of the text field @type {HTMLInputElement | undefined}
@@ -63,6 +65,7 @@
     error = undefined,
     disabled = false,
     fillWidth = true,
+    allowFreeText = false,
     'aria-describedby': ariaDescribedby = undefined,
     element = $bindable(undefined),
     class: className = '',
@@ -192,7 +195,7 @@
 
     // Check if field value matches the selected item label
     const selectedLabel = selectedItem?.label || ''
-    if (fieldValue === selectedLabel && hasValue) {
+    if (fieldValue === selectedLabel && hasValue && !allowFreeText) {
       menuItems = []
       return
     }
@@ -219,6 +222,12 @@
 
   function fieldOnInput() {
     isUserTyping = true // Mark that user is actively typing
+
+    // In free text mode, update the value immediately
+    if (allowFreeText) {
+      value = fieldValue as T
+    }
+
     // Show menu based on available items and field content
     if (debouncedDynamicItems === undefined) {
       // For non-dynamic items, show menu if there are items to show
@@ -240,10 +249,20 @@
   function selectItem(itemValue: T) {
     if (disabled) return
     isUserTyping = false // User has made a selection, not typing anymore
-    value = itemValue
+
     const selectedItemLabel =
       items.find((item) => item.value === itemValue)?.label || ''
-    fieldValue = selectedItemLabel
+
+    if (allowFreeText) {
+      // In free text mode, use the label as the value
+      value = selectedItemLabel as T
+      fieldValue = selectedItemLabel
+    } else {
+      // Standard mode, use the item's value
+      value = itemValue
+      fieldValue = selectedItemLabel
+    }
+
     showMenu = false
   }
 
@@ -259,11 +278,17 @@
     showMenu = false
     justClosed = true
     isUserTyping = false // User stopped typing when menu closes
-    if (!hasValue) {
-      fieldValue = ''
+
+    if (allowFreeText) {
+      // In free text mode, keep whatever the user typed
+      value = fieldValue as T
     } else {
-      // When menu closes and there's a value, restore the selected item's label
-      fieldValue = selectedItem?.label || ''
+      if (!hasValue) {
+        fieldValue = ''
+      } else {
+        // When menu closes and there's a value, restore the selected item's label
+        fieldValue = selectedItem?.label || ''
+      }
     }
   }
 
@@ -271,11 +296,17 @@
     if (e.key === 'Escape') {
       showMenu = false
       isUserTyping = false // User pressed escape, not typing anymore
-      if (hasValue) {
-        // Restore the selected item's label on escape
-        fieldValue = selectedItem?.label || ''
+
+      if (allowFreeText) {
+        // In free text mode, keep current field value
+        value = fieldValue as T
       } else {
-        fieldValue = ''
+        if (hasValue) {
+          // Restore the selected item's label on escape
+          fieldValue = selectedItem?.label || ''
+        } else {
+          fieldValue = ''
+        }
       }
     }
   }
@@ -288,12 +319,17 @@
 
     isUserTyping = false // User stopped typing when field loses focus
 
-    if (hasValue) {
-      // Always restore the selected item's label when blurring
-      fieldValue = selectedItem?.label || ''
+    if (allowFreeText) {
+      // In free text mode, accept whatever the user typed
+      value = fieldValue as T
     } else {
-      // If no value is selected, clear the field
-      fieldValue = ''
+      if (hasValue) {
+        // Always restore the selected item's label when blurring
+        fieldValue = selectedItem?.label || ''
+      } else {
+        // If no value is selected, clear the field
+        fieldValue = ''
+      }
     }
   }
 
@@ -305,8 +341,8 @@
 
     // Don't reset isUserTyping here - let the user continue typing if they want
 
-    if (hasValue) {
-      // Show the selected value when focused if there's a value
+    if (hasValue && !allowFreeText) {
+      // Show the selected value when focused if there's a value (non-free text mode)
       if (fieldValue === '') {
         fieldValue = selectedItem?.label || ''
       }
@@ -316,9 +352,14 @@
         updateMenuItems(items, false, true)
       }
       // For dynamic items, don't show menu initially (user needs to type)
-    } else {
-      // When no value is selected, show all items for non-dynamic lists
+    } else if (!hasValue && !allowFreeText) {
+      // When no value is selected, show all items for non-dynamic lists (non-free text mode)
       if (debouncedDynamicItems === undefined) {
+        updateMenuItems(items, false, true)
+      }
+    } else if (allowFreeText) {
+      // In free text mode, show suggestions if available
+      if (debouncedDynamicItems === undefined && fieldValue.length === 0) {
         updateMenuItems(items, false, true)
       }
     }
@@ -329,15 +370,23 @@
   $effect(() => {
     const fieldHasFocus = element === document.activeElement
 
-    if (hasValue && selectedItem) {
-      // Only update if the field value doesn't match and user isn't typing and field doesn't have focus
+    if (allowFreeText) {
+      // In free text mode, sync field value with the value prop when not typing
       if (!isUserTyping && !fieldHasFocus) {
-        fieldValue = selectedItem.label
+        fieldValue = (value as string) || ''
       }
-    } else if (!hasValue) {
-      // Only clear if user isn't typing and field doesn't have focus
-      if (!isUserTyping && !fieldHasFocus) {
-        fieldValue = ''
+    } else {
+      // Original behavior for non-free text mode
+      if (hasValue && selectedItem) {
+        // Only update if the field value doesn't match and user isn't typing and field doesn't have focus
+        if (!isUserTyping && !fieldHasFocus) {
+          fieldValue = selectedItem.label
+        }
+      } else if (!hasValue) {
+        // Only clear if user isn't typing and field doesn't have focus
+        if (!isUserTyping && !fieldHasFocus) {
+          fieldValue = ''
+        }
       }
     }
   })
@@ -348,7 +397,7 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="box {className}"
-    class:has-value={hasValue}
+    class:has-value={hasValue || (allowFreeText && fieldValue.length > 0)}
     onclick={onBoxClick}
     bind:this={boxElement}
   >
@@ -375,7 +424,7 @@
       class="input tint--type-input"
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
-    {#if hasValue}
+    {#if hasValue || (allowFreeText && fieldValue.length > 0)}
       <button
         type="button"
         class="clear-button"
