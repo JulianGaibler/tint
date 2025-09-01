@@ -80,7 +80,7 @@
   />
 
   <div class="label-content">
-    <label for={id} id={labelId} class="label">
+    <label for={id} id={labelId} class="label tint--type-ui">
       {#if labelSlot}
         <span>{@render labelSlot()}</span>
       {:else if label}
@@ -92,7 +92,7 @@
     </label>
 
     {#if description || descriptionSlot}
-      <div id={descriptionId} class="description">
+      <div id={descriptionId} class="description tint--type-ui-small">
         {#if descriptionSlot}
           {@render descriptionSlot()}
         {:else if description}

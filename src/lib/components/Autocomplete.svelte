@@ -424,7 +424,7 @@
       class="input tint--type-input"
     />
     <label class="tint--type-input-small" for={id}>{label}</label>
-    {#if hasValue || (allowFreeText && fieldValue.length > 0)}
+    {#if allowFreeText ? fieldValue.length > 0 : hasValue}
       <button
         type="button"
         class="clear-button"
