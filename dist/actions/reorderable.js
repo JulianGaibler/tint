@@ -96,14 +96,22 @@ class ReorderableHandler {
                 this.indicator.hidden = true;
                 return;
             }
-            const containerRect = this.getBounds(this.element);
-            const itemRect = this.getBounds(item);
+            // Calculate the correct position by considering:
+            // 1. The container's own scroll position
+            // 2. The position of the item relative to the container
+            const containerScrollTop = this.element.scrollTop || 0;
+            // Calculate the item's position within the scrollable container
+            // This accounts for both the element's position and the container's scroll
+            const itemTopRelativeToContainer = item.getBoundingClientRect().top -
+                this.element.getBoundingClientRect().top +
+                containerScrollTop;
+            const itemBottomRelativeToContainer = itemTopRelativeToContainer + item.getBoundingClientRect().height;
             this.indicator.hidden = false;
             if (position < 0) {
-                this.indicator.style.top = `${itemRect.top - containerRect.top}px`;
+                this.indicator.style.top = `${itemTopRelativeToContainer}px`;
             }
             else {
-                this.indicator.style.top = `${itemRect.bottom - containerRect.top}px`;
+                this.indicator.style.top = `${itemBottomRelativeToContainer}px`;
             }
         };
         this.onDragLeave = (event) => {
@@ -200,6 +208,16 @@ class ReorderableHandler {
         if (this.options.handleSelector) {
             this.element.classList.add('tint--handle');
         }
+        // If the container has overflow, ensure it has position relative
+        const computedStyle = window.getComputedStyle(this.element);
+        if (computedStyle.overflow === 'auto' ||
+            computedStyle.overflow === 'scroll' ||
+            computedStyle.overflowY === 'auto' ||
+            computedStyle.overflowY === 'scroll') {
+            if (computedStyle.position === 'static') {
+                this.element.style.position = 'relative';
+            }
+        }
         // Create visual drop indicator
         this.potentiallyCreateIndicator();
         // Get initial items and make them draggable
@@ -233,7 +251,18 @@ class ReorderableHandler {
             this.indicator.className = 'tint--reorderable-indicator';
             this.indicator.hidden = true;
             this.indicator.setAttribute('aria-hidden', 'true');
-            this.element.style.position = 'relative';
+            // Ensure the container has position relative or absolute for proper positioning
+            const computedStyle = window.getComputedStyle(this.element);
+            if (computedStyle.position === 'static') {
+                this.element.style.position = 'relative';
+            }
+            // Make sure the overflow container can have positioned elements within
+            if (computedStyle.overflow === 'auto' ||
+                computedStyle.overflow === 'scroll' ||
+                computedStyle.overflowY === 'auto' ||
+                computedStyle.overflowY === 'scroll') {
+                this.element.style.position = 'relative';
+            }
             this.element.appendChild(this.indicator);
         }
     }
@@ -275,9 +304,6 @@ class ReorderableHandler {
         }
         elements.push(...Array.from(root.querySelectorAll(selector)));
         return elements;
-    }
-    getBounds(element) {
-        return element.getBoundingClientRect();
     }
     evaluateKeyDownEvent(event) {
         const direction = isReorderKeyboardEvent(event);
