@@ -57,6 +57,17 @@
       title: 'Search',
     },
   ]
+
+  // Sample items with tooltips
+  const itemsWithTooltips = [
+    { value: 'option1', label: 'Home', tooltip: 'Navigate to the home page' },
+    { value: 'option2', label: 'Profile', tooltip: 'View your user profile' },
+    {
+      value: 'option3',
+      label: 'Settings',
+      tooltip: 'Adjust application settings',
+    },
+  ]
 </script>
 
 {#snippet child(args: any)}
@@ -111,6 +122,19 @@
     items: textItems,
     value: 'option1',
     disabled: true,
+    small: false,
+  }}
+/>
+
+<!-- Segmented control with tooltips -->
+<Story
+  name="With Tooltips"
+  args={{
+    id: 'tooltip-segmented',
+    label: 'Options with tooltips',
+    items: itemsWithTooltips,
+    value: 'option1',
+    disabled: false,
     small: false,
   }}
 />

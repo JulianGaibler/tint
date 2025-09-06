@@ -17,6 +17,7 @@
   import Dialog, { type OpenDialog } from '@src/lib/components/Dialog.svelte'
   import LoadingIndicator from '@src/lib/components/LoadingIndicator.svelte'
   import ProgressIndicator from '@src/lib/components/ProgressBar.svelte'
+  import { tooltip } from '@src/lib/actions'
   let modalOpen1 = $state(false)
   let modalOpen2 = $state(false)
   let openDialog1 = $state<OpenDialog | undefined>(undefined)
@@ -504,6 +505,16 @@
           <div class="row">
             <LoadingIndicator />
             <ProgressIndicator {active} showProgress />
+          </div>
+        </div>
+      </div>
+      <div class="category tint--card">
+        <h2>Tooltips</h2>
+        <div class="rows">
+          <div class="row">
+            <button use:tooltip={{ text: 'Hello tooltip!' }}
+              >Hover for tooltip!</button
+            >
           </div>
         </div>
       </div>

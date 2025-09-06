@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import LoadingIndicator from '@lib/components/LoadingIndicator.svelte'
+  import { tooltip } from '@lib/actions'
 
   interface Props extends HTMLButtonAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
@@ -11,6 +12,8 @@
     icon?: boolean
     // If true or false, the button will be a toggle button @type {boolean | undefined}
     toggled?: boolean | undefined
+    // Text to show in a tooltip when hovering over the button @type {string | undefined}
+    tooltip?: string | undefined
     // Button can act as a link if href is provided @type {string | undefined}
     href?: string | undefined
     // If href is provided, this will open the link in a new tab
@@ -69,6 +72,7 @@
     onclick = undefined,
     onkeypress = undefined,
     onkeydown = undefined,
+    tooltip: tooltipText = undefined,
     class: className = '',
     ...elementProps
   }: Props = $props()
@@ -102,6 +106,7 @@
     aria-disabled="true"
     aria-label={ariaLabel}
     bind:this={element}
+    use:tooltip={tooltipText}
     class:icon
     class:small
     class={`tint--button tint--type-action ${_variant} ${className}`}
@@ -115,6 +120,7 @@
     {title}
     aria-label={ariaLabel}
     bind:this={element}
+    use:tooltip={tooltipText}
     class:icon
     class:small
     class={`tint--button tint--type-action ${_variant} ${className}`}
@@ -139,6 +145,7 @@
     {onclick}
     {onkeypress}
     {onkeydown}
+    use:tooltip={tooltipText}
     type={submit ? 'submit' : 'button'}
     {...elementProps}
   >

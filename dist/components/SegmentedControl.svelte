@@ -10,6 +10,7 @@
     title?: string
     disabled?: boolean
     class?: string
+    tooltip?: string
   }
 
   interface Props {
@@ -176,6 +177,7 @@
         onclick={() => handleSegmentClick(item.value, index)}
         onkeydown={(e) => handleKeyDown(e, index)}
         bind:element={buttonElements[index]}
+        tooltip={item.tooltip}
         class={`segment ${item.class || ''}`}
       >
         {#if item.icon}

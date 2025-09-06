@@ -4,6 +4,7 @@ interface Props extends HTMLButtonAttributes {
     small?: boolean;
     icon?: boolean;
     toggled?: boolean | undefined;
+    tooltip?: string | undefined;
     href?: string | undefined;
     external?: boolean;
     download?: string | undefined;
