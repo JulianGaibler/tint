@@ -94,6 +94,47 @@ $layer-names: tint-reset, tint-typography, tint-global
         cursor: grab
       &:active
         cursor: grabbing
+    .tint-tooltip-wrapper
+      position: absolute
+      z-index: 9999
+      opacity: 0
+      transform: translateY(-4px)
+      transition: opacity 0.1s, transform 0.1s
+      pointer-events: none
+      max-width: 250px
+      overflow: visible
+      border: none
+      background: none
+      &.tint-tooltip--top .tint-tooltip-arrow
+        top: auto
+        bottom: -5px
+        border-top: 6px solid var(--tint-text)
+        border-bottom: none
+      &.tint-tooltip--bottom .tint-tooltip-arrow
+        top: -5px
+        bottom: auto
+        border-top: none
+        border-bottom: 6px solid var(--tint-text)
+    .tint-tooltip-arrow
+      position: absolute
+      width: 0
+      height: 0
+      border-left: 6px solid transparent
+      border-right: 6px solid transparent
+      pointer-events: none
+    .tint-tooltip-bubble
+      background-color: var(--tint-text)
+      color: var(--tint-bg)
+      padding: utils.$size-4
+      border-radius: utils.$size-8
+      word-wrap: break-word
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .15)
+      text-align: center
+    .tint-tooltip-text
+      margin: 0
+      text-rendering: optimizeLegibility
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
 
 @mixin full-bootstrap($path: '~tint/fonts')
   @include layers()

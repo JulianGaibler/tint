@@ -10,6 +10,7 @@ declare class __sveltets_Render<T> {
             title?: string;
             disabled?: boolean;
             class?: string;
+            tooltip?: string;
         }[];
         label?: string | undefined;
         'aria-labelledby'?: string | undefined;

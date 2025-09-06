@@ -81,3 +81,12 @@
 
 <!-- Button in a loading state, where it is disabled and shows a loading indicator -->
 <Story name="Loading" args={{ variant: 'secondary', loading: true }} />
+
+<!-- Button with tooltip that shows on hover/focus -->
+<Story
+  name="With Tooltip"
+  args={{
+    variant: 'secondary',
+    tooltip: 'This is a helpful tooltip explaining this button',
+  }}
+/>
