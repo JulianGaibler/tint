@@ -234,6 +234,7 @@ export function tooltip(
   let eventHandlers: {
     handleMouseEnter: () => void
     handleMouseLeave: () => void
+    handleFocus: () => void
     handleMouseEnterTooltip: () => void
     handleMouseLeaveTooltip: () => void
     handleTogglePopover: (event: Event) => void
@@ -283,6 +284,30 @@ export function tooltip(
         }
       },
 
+      handleFocus() {
+        // Only show tooltip on focus if the element has focus-visible
+        if (element.matches(':focus-visible')) {
+          clearTimeouts(state)
+
+          if (
+            globalTooltipState.isAnyTooltipVisible &&
+            globalTooltipState.activeTooltip !== state
+          ) {
+            if (globalTooltipState.activeTooltip) {
+              clearTimeouts(globalTooltipState.activeTooltip)
+              hideTooltip(globalTooltipState.activeTooltip)
+            }
+            // Show immediately
+            showTooltip(state, element, opts!.text, opts!.offset)
+          } else {
+            // Normal delay
+            state.timeoutId = setTimeout(() => {
+              showTooltip(state, element, opts!.text, opts!.offset)
+            }, TOOLTIP_SHOW_DELAY)
+          }
+        }
+      },
+
       handleMouseLeave() {
         clearTimeouts(state)
 
@@ -326,7 +351,7 @@ export function tooltip(
     // Add event listeners
     element.addEventListener('mouseenter', eventHandlers.handleMouseEnter)
     element.addEventListener('mouseleave', eventHandlers.handleMouseLeave)
-    element.addEventListener('focus', eventHandlers.handleMouseEnter)
+    element.addEventListener('focus', eventHandlers.handleFocus)
     element.addEventListener('blur', eventHandlers.handleMouseLeave)
 
     // Add listeners to tooltip to handle hover over tooltip itself
@@ -362,7 +387,7 @@ export function tooltip(
     if (eventHandlers) {
       element.removeEventListener('mouseenter', eventHandlers.handleMouseEnter)
       element.removeEventListener('mouseleave', eventHandlers.handleMouseLeave)
-      element.removeEventListener('focus', eventHandlers.handleMouseEnter)
+      element.removeEventListener('focus', eventHandlers.handleFocus)
       element.removeEventListener('blur', eventHandlers.handleMouseLeave)
 
       if (state.element) {
