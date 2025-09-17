@@ -205,6 +205,27 @@ export function tooltip(element, options) {
                     }, TOOLTIP_SHOW_DELAY);
                 }
             },
+            handleFocus() {
+                // Only show tooltip on focus if the element has focus-visible
+                if (element.matches(':focus-visible')) {
+                    clearTimeouts(state);
+                    if (globalTooltipState.isAnyTooltipVisible &&
+                        globalTooltipState.activeTooltip !== state) {
+                        if (globalTooltipState.activeTooltip) {
+                            clearTimeouts(globalTooltipState.activeTooltip);
+                            hideTooltip(globalTooltipState.activeTooltip);
+                        }
+                        // Show immediately
+                        showTooltip(state, element, opts.text, opts.offset);
+                    }
+                    else {
+                        // Normal delay
+                        state.timeoutId = setTimeout(() => {
+                            showTooltip(state, element, opts.text, opts.offset);
+                        }, TOOLTIP_SHOW_DELAY);
+                    }
+                }
+            },
             handleMouseLeave() {
                 clearTimeouts(state);
                 if (state.isVisible) {
@@ -242,7 +263,7 @@ export function tooltip(element, options) {
         // Add event listeners
         element.addEventListener('mouseenter', eventHandlers.handleMouseEnter);
         element.addEventListener('mouseleave', eventHandlers.handleMouseLeave);
-        element.addEventListener('focus', eventHandlers.handleMouseEnter);
+        element.addEventListener('focus', eventHandlers.handleFocus);
         element.addEventListener('blur', eventHandlers.handleMouseLeave);
         // Add listeners to tooltip to handle hover over tooltip itself
         state.element.addEventListener('mouseenter', eventHandlers.handleMouseEnterTooltip);
@@ -266,7 +287,7 @@ export function tooltip(element, options) {
         if (eventHandlers) {
             element.removeEventListener('mouseenter', eventHandlers.handleMouseEnter);
             element.removeEventListener('mouseleave', eventHandlers.handleMouseLeave);
-            element.removeEventListener('focus', eventHandlers.handleMouseEnter);
+            element.removeEventListener('focus', eventHandlers.handleFocus);
             element.removeEventListener('blur', eventHandlers.handleMouseLeave);
             if (state.element) {
                 state.element.removeEventListener('mouseenter', eventHandlers.handleMouseEnterTooltip);
