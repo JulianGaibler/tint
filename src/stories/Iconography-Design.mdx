@@ -12,13 +12,13 @@ You can browse the icons in the
 
 ## Design
 
-The icons are designed on a 20x20 grid, altough the visual weight of the icons
+The icons are designed on a 20x20 grid, although the visual weight of the icons
 should be contained in the center 16x16 area.
 
 The stroke width of the icons is 2px and individual circles, for instance for
 three dots, are 3px in diameter.
 
-Icon badged are 7x7 and aligned to the bottom right corner of the 16x16 area,
+Icon badges are 7x7 and aligned to the bottom right corner of the 16x16 area,
 with a 1px border radius and a 1px empty gap to the icon.
 
 <Figure src={image} alt="The icon grid">
@@ -27,7 +27,7 @@ with a 1px border radius and a 1px empty gap to the icon.
 
 ## Exporting icons
 
-This is the process to export an icon to be used in tint. The process is aimed
+This is the process to export an icon to be used in Tint. The process is aimed
 at Adobe Illustrator, but can be adapted to other tools. Figma is not
 recommended as it does not export compound paths as one path.
 
@@ -40,8 +40,8 @@ recommended as it does not export compound paths as one path.
    `Object > Compound Path > Make`)
 7. Save as SVG (AI: `File > Export > Export for Screens` select SVG format)
 8. Run svgo on the SVG file
-9. Remove unnecessary attributes from the SVG file (`id`, `data-name`,
-   class`, `defs`)
+9. Remove unnecessary attributes from the SVG file (`id`, `data-name`, `class`,
+   `defs`)
 10. Add `viewBox="0 0 XX XX"` and `width="XX"` and `height="XX"` to the SVG
     element (if not already present, XX is the size of the icon)
 11. Add `fill="currentColor"` to the path element
@@ -50,7 +50,7 @@ Illustrator SVG export settings:
 
 - Styling: Internal CSS (easiest to remove)
 - Font: (irrelevant)
-- Images (irrelevant)
+- Images: (irrelevant)
 - Object IDs: Minimal (easiest to remove)
 - Decimal: 2
 - Minify: unchecked

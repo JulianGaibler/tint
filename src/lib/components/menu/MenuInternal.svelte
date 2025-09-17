@@ -307,6 +307,111 @@
   // Component Lifecycle
   // --------
 
+  // Watch for changes to the items prop and recalculate positions
+  $effect(() => {
+    // Reference items to track changes
+    const itemsRef = items
+
+    // Only recalculate if we have active menus already
+    if (menuState.activeMenus.length > 0) {
+      // First tick: Wait for DOM to update with new items
+      tick()
+        .then(() => {
+          // Get initial dimensions after content update
+          menuState.activeMenus.forEach((_activeMenu, i) => {
+            const meta = menuState.activeMenusMeta[i]
+            if (meta.menuRef) {
+              meta.menuRect = meta.menuRef.getBoundingClientRect()
+            }
+          })
+
+          // Recalculate positions with new dimensions
+          menuState.activeMenus.forEach((activeMenu, i) => {
+            const meta = menuState.activeMenusMeta[i]
+
+            if (behavior === MenuBehavior.SELECT) {
+              // For SELECT menus, find the checked item for relative positioning
+              const menuItems = getMenuItems(itemsRef, activeMenu.menuPath)
+              const focusIndex = menuItems.findIndex(
+                (item) =>
+                  typeof item === 'object' && 'checked' in item && item.checked,
+              )
+              const itemRef = meta.itemRefs[focusIndex]
+
+              activeMenu.position = calculatePosition(
+                i,
+                meta.parentItemRect,
+                meta.menuRect,
+                behavior,
+                itemRef
+                  ? itemRef.getBoundingClientRect().y - meta.menuRect.y
+                  : undefined,
+              )
+            } else {
+              // Standard positioning for other menu types
+              activeMenu.position = calculatePosition(
+                i,
+                meta.parentItemRect,
+                meta.menuRect,
+                behavior,
+              )
+            }
+          })
+
+          // Update the UI with new positions
+          commitActiveMenus()
+
+          // Second tick: After render with new positions, measure again and adjust if needed
+          return tick()
+        })
+        .then(() => {
+          // After positions are applied, measure final dimensions and reposition if needed
+          let needsAdjustment = false
+
+          menuState.activeMenus.forEach((_activeMenu, i) => {
+            const meta = menuState.activeMenusMeta[i]
+            if (meta.menuRef) {
+              // Get current dimensions after positioning
+              const currentRect = meta.menuRef.getBoundingClientRect()
+
+              // Check if dimensions changed significantly after positioning
+              if (
+                Math.abs(currentRect.height - meta.menuRect.height) > 5 ||
+                Math.abs(currentRect.width - meta.menuRect.width) > 5
+              ) {
+                // Update with accurate dimensions
+                meta.menuRect = currentRect
+                needsAdjustment = true
+              }
+            }
+          })
+
+          // If dimensions changed significantly, recalculate one more time
+          if (needsAdjustment) {
+            menuState.activeMenus.forEach((activeMenu, i) => {
+              const meta = menuState.activeMenusMeta[i]
+
+              activeMenu.position = calculatePosition(
+                i,
+                meta.parentItemRect,
+                meta.menuRect,
+                behavior,
+                behavior === MenuBehavior.SELECT &&
+                  meta.itemRefs[activeMenu.focus]
+                  ? meta.itemRefs[activeMenu.focus]
+                    ? meta.itemRefs[activeMenu.focus]!.getBoundingClientRect()
+                        .y - meta.menuRect.y
+                    : undefined
+                  : undefined,
+              )
+            })
+
+            commitActiveMenus()
+          }
+        })
+    }
+  })
+
   onMount(() => {
     // Allow parent to trigger position recalculation
     recalculatePosition = handleAnchorMove
