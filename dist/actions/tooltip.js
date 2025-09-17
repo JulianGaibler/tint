@@ -154,28 +154,6 @@ function shouldInitialize(options) {
         return options.trim() !== '';
     return options.text.trim() !== '';
 }
-function normalizeOptions(options) {
-    if (!options)
-        return null;
-    if (typeof options === 'string') {
-        return options.trim() !== '' ? { text: options } : null;
-    }
-    return options.text.trim() !== ''
-        ? { text: options.text, offset: options.offset }
-        : null;
-}
-// Helper function to schedule tooltip display with consistent delay and conditions
-function scheduleTooltipDisplay(state, element, opts, delay = TOOLTIP_SHOW_DELAY) {
-    const isHovered = element.matches(':hover');
-    const isFocused = element === document.activeElement;
-    if ((isHovered || isFocused) && !state.timeoutId) {
-        state.timeoutId = setTimeout(() => {
-            if (element.matches(':hover') || element === document.activeElement) {
-                showTooltip(state, element, opts.text, opts.offset);
-            }
-        }, delay);
-    }
-}
 export function tooltip(element, options) {
     // Check if popover API is supported
     if (!Object.prototype.hasOwnProperty.call(HTMLElement.prototype, 'popover')) {
@@ -194,10 +172,10 @@ export function tooltip(element, options) {
     function initializeTooltip(newOptions) {
         if (state.isInitialized)
             return;
-        const normalizedOptions = normalizeOptions(newOptions);
-        if (!normalizedOptions)
-            return;
-        opts = normalizedOptions;
+        opts =
+            typeof newOptions === 'string'
+                ? { text: newOptions }
+                : { text: newOptions.text, offset: newOptions.offset };
         // Generate unique ID for accessibility
         tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         // Set up accessibility attributes
@@ -212,8 +190,7 @@ export function tooltip(element, options) {
                 clearTimeouts(state);
                 // If another tooltip is visible, hide it immediately and show this one
                 if (globalTooltipState.isAnyTooltipVisible &&
-                    globalTooltipState.activeTooltip !== state &&
-                    opts) {
+                    globalTooltipState.activeTooltip !== state) {
                     if (globalTooltipState.activeTooltip) {
                         clearTimeouts(globalTooltipState.activeTooltip);
                         hideTooltip(globalTooltipState.activeTooltip);
@@ -221,9 +198,11 @@ export function tooltip(element, options) {
                     // Show immediately
                     showTooltip(state, element, opts.text, opts.offset);
                 }
-                else if (opts) {
-                    // Normal delay - use our helper function
-                    scheduleTooltipDisplay(state, element, opts);
+                else {
+                    // Normal delay
+                    state.timeoutId = setTimeout(() => {
+                        showTooltip(state, element, opts.text, opts.offset);
+                    }, TOOLTIP_SHOW_DELAY);
                 }
             },
             handleMouseLeave() {
@@ -242,37 +221,6 @@ export function tooltip(element, options) {
                 state.hideTimeoutId = setTimeout(() => {
                     hideTooltip(state);
                 }, TOOLTIP_HIDE_DELAY);
-            },
-            handleMouseDown(_event) {
-                clearTimeouts(state);
-                if (state.isVisible) {
-                    hideTooltip(state);
-                }
-                // Restart the timeout if the mouse is still hovering or element is focused
-                if (opts) {
-                    scheduleTooltipDisplay(state, element, opts);
-                }
-            },
-            handleMouseUp() {
-                // If the tooltip was hidden and conditions are still met, restart the show timeout
-                if (opts && !state.isVisible) {
-                    scheduleTooltipDisplay(state, element, opts);
-                }
-            },
-            handleKeyDown(_event) {
-                // Always hide tooltip on any keydown
-                clearTimeouts(state);
-                if (state.isVisible) {
-                    hideTooltip(state);
-                }
-                if (opts) {
-                    scheduleTooltipDisplay(state, element, opts);
-                }
-            },
-            handleKeyUp(_event) {
-                if (opts && !state.isVisible && !state.timeoutId) {
-                    scheduleTooltipDisplay(state, element, opts);
-                }
             },
             handleTogglePopover(event) {
                 const toggleEvent = event;
@@ -296,11 +244,6 @@ export function tooltip(element, options) {
         element.addEventListener('mouseleave', eventHandlers.handleMouseLeave);
         element.addEventListener('focus', eventHandlers.handleMouseEnter);
         element.addEventListener('blur', eventHandlers.handleMouseLeave);
-        element.addEventListener('mouseup', eventHandlers.handleMouseUp);
-        element.addEventListener('keyup', eventHandlers.handleKeyUp);
-        // Add global document mousedown and keydown events to close tooltip on any click or key press
-        document.addEventListener('mousedown', eventHandlers.handleMouseDown);
-        document.addEventListener('keydown', eventHandlers.handleKeyDown);
         // Add listeners to tooltip to handle hover over tooltip itself
         state.element.addEventListener('mouseenter', eventHandlers.handleMouseEnterTooltip);
         state.element.addEventListener('mouseleave', eventHandlers.handleMouseLeaveTooltip);
@@ -325,11 +268,6 @@ export function tooltip(element, options) {
             element.removeEventListener('mouseleave', eventHandlers.handleMouseLeave);
             element.removeEventListener('focus', eventHandlers.handleMouseEnter);
             element.removeEventListener('blur', eventHandlers.handleMouseLeave);
-            element.removeEventListener('mouseup', eventHandlers.handleMouseUp);
-            element.removeEventListener('keyup', eventHandlers.handleKeyUp);
-            // Remove global document mousedown and keydown events
-            document.removeEventListener('mousedown', eventHandlers.handleMouseDown);
-            document.removeEventListener('keydown', eventHandlers.handleKeyDown);
             if (state.element) {
                 state.element.removeEventListener('mouseenter', eventHandlers.handleMouseEnterTooltip);
                 state.element.removeEventListener('mouseleave', eventHandlers.handleMouseLeaveTooltip);
@@ -379,10 +317,17 @@ export function tooltip(element, options) {
             }
             else if (shouldInit && state.isInitialized && opts) {
                 // Update existing tooltip
-                const newOpts = normalizeOptions(newOptions);
-                if (newOpts) {
-                    Object.assign(opts, newOpts);
+                let newOpts;
+                if (typeof newOptions === 'string') {
+                    newOpts = { text: newOptions };
                 }
+                else if (newOptions && typeof newOptions.text === 'string') {
+                    newOpts = { text: newOptions.text, offset: newOptions.offset };
+                }
+                else {
+                    newOpts = { text: '' };
+                }
+                Object.assign(opts, newOpts);
                 // Update tooltip text if it's currently visible
                 if (state.isVisible && state.element) {
                     const textElement = state.element.querySelector('.tint-tooltip-text');
