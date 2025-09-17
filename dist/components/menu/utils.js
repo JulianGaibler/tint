@@ -195,9 +195,20 @@ export function calculatePosition(depth, parentItemRect, menuRect, behavior, rel
                 WINDOW_PADDING -
                 (parentItemRect.y + parentItemRect.height);
             const spaceAbove = parentItemRect.y - WINDOW_PADDING;
-            if (spaceAbove > spaceBelow && spaceAbove >= menuRect.height) {
-                // Flip to above parent if there's more space and menu fits
+            // Always try to position above if there's enough space
+            // Otherwise position below but constrain height if needed
+            if (spaceAbove >= menuRect.height) {
+                // Position above parent
                 coords.y = parentItemRect.y - menuRect.height;
+                coords.animationOrigin =
+                    coords.animationOrigin === 'top-right'
+                        ? 'bottom-right'
+                        : 'bottom-left';
+            }
+            else if (spaceAbove > spaceBelow) {
+                // Not enough space above, but more than below - use constrained height above
+                coords.y = WINDOW_PADDING;
+                coords.height = parentItemRect.y - WINDOW_PADDING;
                 coords.animationOrigin =
                     coords.animationOrigin === 'top-right'
                         ? 'bottom-right'
