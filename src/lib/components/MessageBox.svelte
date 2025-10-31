@@ -39,10 +39,10 @@
 <style lang="sass">
 .box
   display: flex
-  gap: tint.$size-8
+  gap: tint.$size-4
   border: 2px solid var(--tint-text-secondary)
   border-radius: tint.$size-8
-  padding: tint.$size-12
+  padding: tint.$size-8
 
 .icon
   color: var(--tint-text-secondary)
@@ -56,6 +56,7 @@
 
 .content
   flex: 1
+  margin-block: tint.$size-4 + 1px
   color: var(--tint-text-primary)
 
 @media (forced-colors: active)
