@@ -38,10 +38,10 @@
 
 <style>.box {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   border: 2px solid var(--tint-text-secondary);
   border-radius: 8px;
-  padding: 12px;
+  padding: 8px;
 }
 
 .icon {
@@ -57,6 +57,7 @@
 
 .content {
   flex: 1;
+  margin-block: 5px;
   color: var(--tint-text-primary);
 }
 
