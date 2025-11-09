@@ -1,36 +1,37 @@
-<script lang="ts" generics="T">
-  import Toggleable from './Toggleable.svelte'
+<script lang="ts">
+  import Slider from './Slider.svelte'
   import Label from './Label.svelte'
   import type { Snippet } from 'svelte'
-  import type { GroupStore } from '../stores/index.js'
 
   interface Props {
-    // Id of the toggleable element
+    // Id of the slider element
     id: string
-    // Type of the toggleable element
-    type?: 'checkbox' | 'radio' | 'switch'
-    // Whether the toggleable element is checked (can use bind:checked)
-    checked?: boolean
-    // Whether the toggleable element is disabled
+    // Current value of the slider (can use bind:value)
+    value?: number
+    // Minimum value
+    min?: number
+    // Maximum value
+    max?: number
+    // Step increment
+    step?: number
+    // Whether the slider is disabled
     disabled?: boolean
-    // Value of the toggleable element (for use with group store)
-    value?: T
-    // Group store for radio/checkbox groups
-    groupStore?: GroupStore<T>
+    // Whether to show stepper points
+    showSteps?: boolean
+    // Size variant: true for small (16px height, 12px thumb), false for large (32px height, 28px thumb)
+    small?: boolean
     // Label text (used if no label slot provided)
     label?: string | undefined
     // Optional icon HTML for the label (used only with text label)
     icon?: string | undefined
     // Description text (used if no description slot provided)
     description?: string | undefined
-    // HTML element of the toggleable element
-    element?: HTMLInputElement | HTMLButtonElement | undefined
+    // HTML element of the slider
+    element?: HTMLInputElement | undefined
     // Event handler for when the value changes
-    onchange?: (event: {
-      checked: boolean
-      value?: T
-      groupValue?: GroupStore<T>
-    }) => void
+    onchange?: (event: { value: number }) => void
+    // Event handler for input (continuous updates while dragging)
+    oninput?: (event: { value: number }) => void
     // Label slot
     labelSlot?: Snippet
     // Description slot
@@ -43,16 +44,19 @@
 
   let {
     id,
-    type = 'checkbox',
-    checked = $bindable(),
+    value = $bindable(0),
+    min = 0,
+    max = 100,
+    step = 1,
     disabled = false,
-    value = undefined,
-    groupStore = undefined,
+    showSteps = false,
+    small = true,
     label = undefined,
     icon = undefined,
     description = undefined,
     element = $bindable(undefined),
     onchange = undefined,
+    oninput = undefined,
     labelSlot,
     descriptionSlot,
     children,
@@ -66,20 +70,7 @@
   )
 </script>
 
-<div class="labeled-toggleable {className}">
-  <Toggleable
-    {id}
-    {type}
-    bind:checked
-    {disabled}
-    {value}
-    {groupStore}
-    aria-labelledby={labelId}
-    aria-describedby={descriptionId}
-    bind:element
-    {onchange}
-  />
-
+<div class="labeled-slider {className}">
   <Label
     for={id}
     id={labelId}
@@ -95,15 +86,25 @@
       {@render children()}
     {/if}
   </Label>
+
+  <Slider
+    {id}
+    bind:value
+    {min}
+    {max}
+    {step}
+    {disabled}
+    {showSteps}
+    {small}
+    aria-labelledby={labelId}
+    aria-describedby={descriptionId}
+    bind:element
+    {onchange}
+    {oninput}
+  />
 </div>
 
-<style>.labeled-toggleable {
+<style>.labeled-slider {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  align-items: start;
-}
-
-:global(.labeled-toggleable .toggleable) {
-  margin-block-start: 0.125em;
+  gap: 8px;
 }</style>
