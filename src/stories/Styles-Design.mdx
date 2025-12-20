@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Styles/Design" />
+
+# Design
+
+Tint's color system is built around a dual-palette concept that allows you to
+create visual variety within your projects while maintaining consistency.
+
+## The Dual Palette System
+
+Tint provides two color palettes that work together:
+
+- **Plain palette** (`.tint--plain`) - The default, neutral color scheme
+- **Tinted palette** (`.tint--tinted`) - A more colorful, accentuated version
+
+By applying `.tint--plain` or `.tint--tinted` to any HTML element, you can
+instantly switch between these two color modes. This makes it easy to create
+visual hierarchy, highlight special sections, or add thematic variety to your
+interface.
+
+```html
+<!-- Default/Plain palette -->
+<div class="tint--plain">
+  <button>Regular Button</button>
+</div>
+
+<!-- Tinted palette -->
+<div class="tint--tinted">
+  <button>Tinted Button</button>
+</div>
+```
+
+### When to Use Each Palette
+
+Ideally one palette should dominate your design, with the other used for
+blocking or emphasis.
+
+While _plain_ is the default palette, it is not strictly necessary to use it
+more than _tinted_. You can also apply `.tint--tinted` to your entire
+application and use `.tint--plain` for specific sections that need to be more
+neutral.
+
+## Dark Mode
+
+For projects that support dark mode, you can define a separate set of color
+palettes using `@media (prefers-color-scheme: dark)`:
+
+```scss
+@use 'tint/styles/bootstrap' as bootstrap;
+@use './colors';
+
+// Light mode
+@include bootstrap.generate-color-variables(colors.$colors);
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  @include bootstrap.generate-color-variables(colors.$colors-dark);
+}
+```

@@ -36,6 +36,147 @@ $layer-names: tint-reset, tint-typography, tint-global
 @mixin type-classes()
   @include typography.generate-tint-classes()
 
+// Prose styles for standardized content
+@mixin prose-styles()
+  .tint--type
+    // Headings
+    h1
+      @include typography.type-class(title-serif-1)
+      margin-top: utils.$size-32
+      margin-bottom: utils.$size-16
+      &:first-child
+        margin-top: 0
+    h2
+      @include typography.type-class(title-serif-2)
+      margin-top: utils.$size-32
+      margin-bottom: utils.$size-16
+      &:first-child
+        margin-top: 0
+    h3
+      @include typography.type-class(title-serif-3)
+      margin-top: utils.$size-24
+      margin-bottom: utils.$size-12
+      &:first-child
+        margin-top: 0
+    h4, h5, h6
+      @include typography.type-class(title-sans-3)
+      margin-top: utils.$size-24
+      margin-bottom: utils.$size-12
+      &:first-child
+        margin-top: 0
+
+    // Paragraphs
+    p
+      @include typography.type-class(body-serif)
+      margin-bottom: utils.$size-16
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+
+    // Links
+    a
+      color: var(--tint-text-link)
+      text-decoration: underline
+      &:hover
+        text-decoration: none
+
+    // Lists
+    ul, ol
+      @include typography.type-class(body-serif)
+      margin-bottom: utils.$size-16
+      padding-left: utils.$size-24
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+    li
+      margin-bottom: utils.$size-8
+      &:last-child
+        margin-bottom: 0
+
+    // Code
+    code
+      @include typography.type-class(body-sans-small)
+      background: var(--tint-input-bg)
+      color: var(--tint-text-accent)
+      padding: utils.$size-2 utils.$size-4
+      border-radius: utils.$size-4
+      border: 1px solid var(--tint-card-border)
+    pre
+      @include typography.type-class(body-sans-small)
+      background: var(--tint-input-bg)
+      color: var(--tint-text)
+      padding: utils.$size-16
+      border-radius: utils.$size-8
+      border: 1px solid var(--tint-card-border)
+      overflow-x: auto
+      margin-bottom: utils.$size-16
+      line-height: 1.6
+      &:last-child
+        margin-bottom: 0
+      code
+        background: transparent
+        color: inherit
+        padding: 0
+        border: none
+        border-radius: 0
+
+    // Emphasis
+    strong
+      font-weight: 700
+    em
+      font-style: italic
+
+    // Blockquote
+    blockquote
+      @include typography.type-class(body-serif)
+      color: var(--tint-text-secondary)
+      border-left: utils.$size-4 solid var(--tint-card-border)
+      padding-left: utils.$size-16
+      margin-left: 0
+      margin-bottom: utils.$size-16
+      font-style: italic
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+      p
+        margin-bottom: utils.$size-12
+        &:last-child
+          margin-bottom: 0
+
+    // Keyboard
+    kbd
+      @include typography.type-class(ui-small)
+      background: var(--tint-input-bg)
+      color: var(--tint-text)
+      padding: utils.$size-2 utils.$size-8
+      border-radius: utils.$size-4
+      border: 1px solid var(--tint-card-border)
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+      font-family: monospace
+
+    // Definition lists
+    dl
+      margin-bottom: utils.$size-16
+      &:last-child
+        margin-bottom: 0
+    dt
+      @include typography.type-class(body-serif-bold)
+      margin-top: utils.$size-12
+      &:first-child
+        margin-top: 0
+    dd
+      @include typography.type-class(body-serif)
+      margin-left: utils.$size-24
+      margin-bottom: utils.$size-8
+      line-height: 1.7
+
+    // Horizontal rule
+    hr
+      border: none
+      border-top: 1px solid var(--tint-card-border)
+      margin-top: utils.$size-24
+      margin-bottom: utils.$size-24
+
 // Define the tint base styles
 @mixin base()
   @layer tint-reset
@@ -135,6 +276,7 @@ $layer-names: tint-reset, tint-typography, tint-global
       text-rendering: optimizeLegibility
       -webkit-font-smoothing: antialiased
       -moz-osx-font-smoothing: grayscale
+    @include prose-styles()
 
 @mixin full-bootstrap($path: '~tint/fonts')
   @include layers()

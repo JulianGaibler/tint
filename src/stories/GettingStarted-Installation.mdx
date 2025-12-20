@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Getting Started/Installation" />
+
+# Installation
+
+Tint is a design system for Svelte and Astro projects, providing components,
+fonts, icons, and styles.
+
+## Install the Package
+
+Install Tint from GitHub using npm:
+
+```bash
+npm install github:JulianGaibler/tint
+```
+
+Or with pnpm:
+
+```bash
+pnpm add github:JulianGaibler/tint
+```
+
+## Requirements
+
+Tint requires the following to work properly:
+
+- **Svelte 5+** - Tint components are built with Svelte 5 using runes syntax
+- **SASS compiler** - Styles are provided as SASS source files (not pre-compiled
+  CSS)
+- **Modern bundler** - Vite, Webpack, or similar to handle asset imports
+  (developed and tested with Vite)
+
+## Configuration for Astro Projects
+
+### TypeScript Path Mappings (tsconfig.json)
+
+Add path mappings to help TypeScript resolve Tint imports:
+
+```json
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "tint/*": ["node_modules/tint/dist/*"]
+    }
+  }
+}
+```
+
+### Vite Configuration (astro.config.mjs)
+
+Configure Vite to properly handle Tint in SSR builds:
+
+```javascript
+import svelte from '@astrojs/svelte'
+import { defineConfig } from 'astro/config'
+
+export default defineConfig({
+  vite: {
+    ssr: {
+      // Important: If not set, this can lead to style import errors in Astro
+      noExternal: ['tint*'],
+    },
+    resolve: {
+      alias: {
+        // Allow using ~tint/fonts in SASS imports
+        '~tint': '/node_modules/tint/dist',
+        '@src': '/src',
+      },
+    },
+  },
+  integrations: [svelte()],
+})
+```
+
+**Why this configuration?**
+
+- **`noExternal: ['tint*']`**: Ensures Tint is bundled during SSR, preventing
+  module resolution errors
+- **`'~tint'` alias**: Allows using `~tint/fonts` in SASS `@font-face`
+  declarations (used by the bootstrap mixin)
+- **`@src` alias**: Convenient shorthand for project imports (optional but
+  recommended)
