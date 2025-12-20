@@ -1,6 +1,6 @@
 import type { HTMLSelectAttributes } from 'svelte/elements';
-declare class __sveltets_Render<T> {
-    props(): HTMLSelectAttributes & {
+declare function $$render<T>(): {
+    props: HTMLSelectAttributes & {
         value: T | undefined;
         items: {
             value: T;
@@ -12,11 +12,18 @@ declare class __sveltets_Render<T> {
         error?: string | undefined;
         fillWidth?: boolean;
         element?: HTMLSelectElement | undefined;
-        onchange?: ((e: Event) => void) | undefined;
+        onchange?: (e: Event) => void;
         class?: string;
     };
-    events(): {};
-    slots(): {};
+    exports: {};
+    bindings: "element" | "value";
+    slots: {};
+    events: {};
+};
+declare class __sveltets_Render<T> {
+    props(): ReturnType<typeof $$render<T>>['props'];
+    events(): ReturnType<typeof $$render<T>>['events'];
+    slots(): ReturnType<typeof $$render<T>>['slots'];
     bindings(): "element" | "value";
     exports(): {};
 }

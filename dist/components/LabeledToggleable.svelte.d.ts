@@ -1,29 +1,36 @@
 import type { Snippet } from 'svelte';
 import type { GroupStore } from '../stores/index.js';
-declare class __sveltets_Render<T> {
-    props(): {
+declare function $$render<T>(): {
+    props: {
         id: string;
         type?: "checkbox" | "radio" | "switch";
         checked?: boolean;
         disabled?: boolean;
-        value?: T | undefined;
-        groupStore?: GroupStore<T> | undefined;
+        value?: T;
+        groupStore?: GroupStore<T>;
         label?: string | undefined;
         icon?: string | undefined;
         description?: string | undefined;
         element?: HTMLInputElement | HTMLButtonElement | undefined;
-        onchange?: ((event: {
+        onchange?: (event: {
             checked: boolean;
-            value?: T | undefined;
-            groupValue?: GroupStore<T> | undefined;
-        }) => void) | undefined;
+            value?: T;
+            groupValue?: GroupStore<T>;
+        }) => void;
         labelSlot?: Snippet;
         descriptionSlot?: Snippet;
         children?: Snippet;
         class?: string;
     };
-    events(): {};
-    slots(): {};
+    exports: {};
+    bindings: "element" | "checked";
+    slots: {};
+    events: {};
+};
+declare class __sveltets_Render<T> {
+    props(): ReturnType<typeof $$render<T>>['props'];
+    events(): ReturnType<typeof $$render<T>>['events'];
+    slots(): ReturnType<typeof $$render<T>>['slots'];
     bindings(): "element" | "checked";
     exports(): {};
 }
