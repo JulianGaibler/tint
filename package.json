@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.2.29",
+  "version": "0.3.0",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -16,9 +16,29 @@
   },
   "exports": {
     ".": {
-      "svelte": "./dist/components/index.js",
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
+    "./actions": {
+      "types": "./dist/actions/index.d.ts",
+      "default": "./dist/actions/index.js"
+    },
+    "./stores": {
+      "types": "./dist/stores/index.d.ts",
+      "default": "./dist/stores/index.js"
+    },
+    "./fonts": {
+      "types": "./dist/fonts/index.d.ts",
+      "default": "./dist/fonts/index.js"
+    },
+    "./styles/*": "./dist/styles/*",
+    "./icons/*": "./dist/icons/*",
     "./*": "./dist/*"
   },
   "files": [
@@ -66,11 +86,6 @@
     "@storybook/addon-a11y": "^9.0.9",
     "@storybook/icons": "^1.4.0"
   },
-  "svelte": "./dist/components/index.js",
-  "actions": "./dist/actions/index.js",
-  "stores": "./dist/stores/index.js",
-  "fonts": "./dist/fonts/index.js",
-  "default": "./dist/index.js",
   "type": "module",
   "overrides": {
     "storybook": "$storybook"

@@ -17,11 +17,56 @@ copy-pasting the same basic components, while having a hard time maintaining
 multiple projects at once. I decided to create a design foundation that I can
 use for all my projects, and maintain in a single place.
 
-Tint provides SASS/SCSS variables and mixins for colors, typography, and
-spacing, in addition to icons and a set of Svelte components. The special thing
-about Tint is that it provides tooling to have two separate color palettes: one
-regular one and one "tinted" one.
+## What's in Tint?
+
+Tint is organized into several modules that work together:
+
+### Components
+
+Tint provides a collection of Svelte components. These include form controls
+(Button, TextField, Select, Slider), layout components (Modal, Menu,
+SegmentedControl), and utility components (Autocomplete, LoadingIndicator,
+ProgressBar).
+
+All components are fully typed with TypeScript and designed to work with Tint's
+typography and color system.
+
+### Typography
+
+Tint uses two typefaces:
+[Merriweather](https://github.com/SorkinType/Merriweather) (serif) and
+[HK Grotesk](https://hanken.co/products/hk-grotesk) (sans-serif). The typography
+system includes type styles for display text, titles, body copy, UI elements,
+inputs, and actions.
+
+Fonts are included in WOFF2 format and can be selectively preloaded for optimal
+performance using the `getFontPreloads()` helper.
+
+### Styles
+
+Tint uses SASS for styling, providing mixins for colors, typography, spacing,
+and utilities. The special thing about Tint is that it provides tooling to have
+two separate color palettes: one regular ("plain") and one "tinted" palette.
 
 When using the Sass bootstrap function `generate-color-variables`, Tint users
 can switch between the two color palettes by adding `.tint--plain` or
-`.tint--tinted` to any HTML element.
+`.tint--tinted` to any HTML element. This makes it easy to create visual variety
+or thematic sections within your project.
+
+The styles also include a `.tint--type` prose class for styling long-form
+content with standardized typography for headings, paragraphs, lists, code
+blocks, and more.
+
+### Icons
+
+Tint includes a library of SVG icons in two sizes (14px and 20px). Icons can be
+imported directly as modules and used in your Svelte or Astro components.
+
+### Actions & Stores
+
+In addition to the main modules, Tint provides helpful utilities:
+
+- **Actions**: Svelte actions for common behaviors like tooltips and reorderable
+  lists
+- **Stores**: Svelte stores for managing grouped form controls (radio groups,
+  checkbox groups)

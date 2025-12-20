@@ -1,0 +1,276 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Getting Started/Styles" />
+
+# Styles
+
+Tint uses SASS for styling. The styles are provided as source files (not
+pre-compiled CSS), giving you full control over how they're included in your
+project.
+
+## Quick Start
+
+Import and include the full bootstrap in your global stylesheet:
+
+```scss
+@use 'tint/styles/bootstrap' as bootstrap;
+@use './colors';
+
+// Generate color CSS variables
+@include bootstrap.generate-color-variables(colors.$colors);
+
+// Include all Tint styles (layers, base, typography, font-faces)
+@include bootstrap.full-bootstrap();
+```
+
+The `full-bootstrap()` mixin sets up:
+
+- CSS layers for proper cascade order
+- Base reset and global styles
+- Typography classes
+- Font-face declarations (no need to call `generate-font-faces()` separately)
+- All utility styles
+
+## Dark Mode Support
+
+You can add dark mode support using media queries:
+
+```scss
+@use 'tint/styles/bootstrap' as bootstrap;
+@use './colors';
+
+// Light mode colors
+@include bootstrap.generate-color-variables(colors.$colors);
+
+// Dark mode colors
+@media (prefers-color-scheme: dark) {
+  @include bootstrap.generate-color-variables(colors.$colors-dark);
+}
+
+@include bootstrap.full-bootstrap();
+```
+
+Define dark colors in your `colors.scss`:
+
+```scss
+$colors-dark: (
+  plain: (
+    bg: #0f0f0f,
+    text: #ffe6e2,
+    // ... other dark mode colors
+  ),
+  tint: (
+    bg: #271614,
+    text: #ec8172,
+    // ... other dark mode tinted colors
+  ),
+  general: (
+    card-border: rgba(255, 255, 255, 0.1),
+    card-shadow: '0 5px 40px #0000008a',
+  ),
+);
+```
+
+## Complete Astro Project Setup
+
+Here's a real-world example of setting up Tint in an Astro project:
+
+### 1. Create `src/styles/colors.scss`
+
+```scss
+$colors: (
+  plain: (
+    /* light colors */
+  ),
+  tint: (
+    /* light tinted colors */
+  ),
+  general: (
+    /* general colors */
+  ),
+);
+
+$colors-dark: (
+  plain: (
+    /* dark colors */
+  ),
+  tint: (
+    /* dark tinted colors */
+  ),
+  general: (
+    /* dark general colors */
+  ),
+);
+```
+
+### 2. Create `src/styles/utils.sass`
+
+```sass
+@forward "tint/styles/utils"
+@use 'tint/styles/utils' as tint
+
+// Add your custom variables
+$const-max-width: 680px
+```
+
+This file forwards all Tint utilities and allows you to add project-specific
+variables.
+
+### 3. Create `src/styles/global.sass`
+
+```sass
+@use 'tint/styles/bootstrap' as bootstrap
+@use './colors'
+
+// Generate color variables
+@include bootstrap.generate-color-variables(colors.$colors)
+
+// Dark mode support
+@media (prefers-color-scheme: dark)
+  @include bootstrap.generate-color-variables(colors.$colors-dark)
+
+// Include all Tint styles
+@include bootstrap.full-bootstrap()
+
+// Your global styles
+html
+  height: 100%
+body
+  min-height: 100%
+  display: flex
+  flex-direction: column
+```
+
+### 4. Import in your layout
+
+```astro
+---
+// src/layouts/Layout.astro
+---
+<html>
+  <head>
+    <!-- ... -->
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global lang="sass">
+  @use "../styles/global"
+</style>
+```
+
+## Auto-Import Utils (Optional)
+
+To use Tint utilities in all your component styles without importing them every
+time, configure Vite's SASS preprocessor:
+
+### astro.config.mjs
+
+```javascript
+export default defineConfig({
+  vite: {
+    css: {
+      preprocessorOptions: {
+        sass: {
+          additionalData: (content) => {
+            const prepend = `@use "src/styles/utils.sass" as tint\n`
+            const match = content.match(/^\s*/)
+            const spaces = match ? match[0] : ''
+            return `${spaces}${prepend}\n${content}`
+          },
+        },
+      },
+    },
+  },
+})
+```
+
+### svelte.config.js
+
+This is not strictly necessary for Astro, but editors like VSCode may need it
+for proper SASS intellisense.
+
+```javascript
+import { vitePreprocess } from '@astrojs/svelte'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const utilsSassAbsolute = path.join(__dirname, 'src/styles/utils.sass')
+
+export default {
+  preprocess: vitePreprocess({
+    style: {
+      css: {
+        preprocessorOptions: {
+          sass: {
+            additionalData: (content) => {
+              const prepend = `@use "${utilsSassAbsolute}" as tint\n`
+              const match = content.match(/^\s*/)
+              const spaces = match ? match[0] : ''
+              return `${spaces}${prepend}\n${content}`
+            },
+          },
+        },
+      },
+    },
+  }),
+}
+```
+
+Now you can use Tint utilities in any component without importing:
+
+```tsx
+<style lang="sass">
+  .my-component padding: tint.$size-16 border-radius: tint.$size-8
+</style>
+```
+
+## Color Palettes
+
+Switch between plain and tinted color palettes using CSS classes:
+
+```html
+<!-- Default/Plain palette -->
+<div class="tint--plain">Content using plain colors</div>
+
+<!-- Tinted palette -->
+<div class="tint--tinted">Content using tinted colors</div>
+```
+
+## Available Style Imports
+
+```scss
+// Main bootstrap with all mixins
+@use 'tint/styles/bootstrap' as bootstrap;
+
+// Utility mixins and variables
+@use 'tint/styles/utils' as utils;
+```
+
+## Available Mixins
+
+### From `tint/styles/bootstrap`:
+
+- `layers()` - Define CSS cascade layers
+- `base()` - Base reset and global styles
+- `full-bootstrap($path)` - All of the above plus typography and font-faces
+- `generate-color-variables($colors)` - Generate CSS custom properties for
+  colors
+
+### From `tint/styles/utils`:
+
+- `effect-focus()` - Add focus outline styles
+- `effect-focus-base()` - Base focus styles without pseudo-selector
+
+Available size variables: `$size-2`, `$size-4`, `$size-8`, `$size-12`,
+`$size-16`, `$size-24`, `$size-32`, `$size-40`, `$size-48`, `$size-64`,
+`$size-80`
+
+## Typography and Fonts
+
+For typography classes, font-face setup, and font preloading, see the
+[Fonts](/?path=/docs/getting-started-fonts--docs) page.

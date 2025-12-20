@@ -26,6 +26,11 @@ const preview: Preview = {
       components: { h1: Heading1 },
       theme: tintTheme,
     },
+    options: {
+      storySort: {
+        order: ['Getting Started', ['Installation', 'Styles', 'Fonts', 'Components']],
+      },
+    },
   },
 
   tags: ['autodocs', 'autodocs'],

@@ -1,0 +1,187 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Getting Started/Components" />
+
+# Components
+
+Tint provides a collection of Svelte components. All components are fully typed
+and include TypeScript definitions.
+
+Browse the **Components** section in the sidebar to see all available components
+with live examples and full API documentation.
+
+## Basic Usage
+
+Import components from the main package or from the components subpath:
+
+```tsx
+<script>
+  import { Button, TextField, Select } from 'tint'
+  // Or explicitly from components
+  import { Button } from 'tint/components'
+</script>
+
+<Button>Click me</Button>
+<TextField label="Name" placeholder="Enter your name" />
+<Select options={['Option 1', 'Option 2']} />
+```
+
+## Import Paths
+
+```javascript
+// Components
+import { Button, TextField } from 'tint'
+import { Button } from 'tint/components'
+
+// Actions (Svelte actions)
+import { tooltip, reorderable } from 'tint/actions'
+
+// Stores (Svelte stores)
+import { createRadioGroup, createCheckboxGroup } from 'tint/stores'
+
+// Fonts
+import { getFontPreloads, fonts } from 'tint/fonts'
+
+// Icons (direct asset imports)
+import addIcon from 'tint/icons/20-add.svg'
+```
+
+## Example: Form with Multiple Components
+
+```tsx
+<script>
+  import { Button, TextField, Select, Toggleable } from 'tint'
+
+  let name = $state('')
+  let email = $state('')
+  let country = $state('')
+  let newsletter = $state(false)
+
+  const countries = ['United States', 'Canada', 'United Kingdom', 'Germany']
+
+  function handleSubmit() {
+    console.log({ name, email, country, newsletter })
+  }
+</script>
+
+<form onsubmit={handleSubmit}>
+  <TextField
+    label="Name"
+    placeholder="Enter your name"
+    bind:value={name}
+  />
+
+  <TextField
+    label="Email"
+    type="email"
+    placeholder="your@email.com"
+    bind:value={email}
+  />
+
+  <Select
+    label="Country"
+    options={countries}
+    bind:value={country}
+  />
+
+  <Toggleable
+    label="Subscribe to newsletter"
+    bind:checked={newsletter}
+  />
+
+  <Button type="submit">Submit</Button>
+</form>
+```
+
+## Using Actions
+
+Tint provides Svelte actions for common behaviors:
+
+```tsx
+<script>
+  import { tooltip, reorderable } from 'tint/actions'
+
+  let items = $state(['Item 1', 'Item 2', 'Item 3'])
+
+  function handleReorder(event) {
+    items = event.detail.items
+  }
+</script>
+
+<!-- Tooltip action -->
+<button use:tooltip={{ content: 'Click to submit' }}>
+  Submit
+</button>
+
+<!-- Reorderable action -->
+<div use:reorderable={{ onReorder: handleReorder }}>
+  {#each items as item}
+    <div draggable="true">{item}</div>
+  {/each}
+</div>
+```
+
+## Using Stores
+
+Tint provides stores for managing grouped form controls:
+
+```tsx
+<script>
+  import { createRadioGroup, createCheckboxGroup } from 'tint/stores'
+
+  const radioGroup = createRadioGroup('option1')
+  const checkboxGroup = createCheckboxGroup(['option1'])
+</script>
+
+<!-- Radio group -->
+<label>
+  <input type="radio" value="option1" bind:group={$radioGroup} />
+  Option 1
+</label>
+<label>
+  <input type="radio" value="option2" bind:group={$radioGroup} />
+  Option 2
+</label>
+
+<!-- Checkbox group -->
+<label>
+  <input type="checkbox" value="option1" bind:group={$checkboxGroup} />
+  Option 1
+</label>
+<label>
+  <input type="checkbox" value="option2" bind:group={$checkboxGroup} />
+  Option 2
+</label>
+```
+
+## Using Icons
+
+Import SVG icons directly as modules:
+
+```tsx
+<script>
+  import addIcon from 'tint/icons/20-add.svg'
+  import closeIcon from 'tint/icons/14-close.svg'
+</script>
+
+<img src={addIcon} alt="Add" />
+<img src={closeIcon} alt="Close" />
+```
+
+Icons are available in two sizes: 14px and 20px. The naming pattern is
+`{size}-{name}.svg`.
+
+Browse available icons in the
+[Iconography Library](?path=/docs/iconography-library--docs).
+
+## TypeScript Support
+
+All components include full TypeScript definitions. Your IDE will provide
+autocomplete for props and type checking:
+
+```typescript
+import { Button } from 'tint'
+import type { ComponentProps } from 'svelte'
+
+type ButtonProps = ComponentProps<Button>
+```

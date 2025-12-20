@@ -454,7 +454,7 @@ export function isReorderKeyboardEvent(event) {
  *
  * Usage:
  *
- * ```svelte
+ * ```tsx
  * ;<ul
  *   use:reorderable={{
  *     itemSelector: 'li',
