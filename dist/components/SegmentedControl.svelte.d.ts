@@ -1,5 +1,5 @@
-declare class __sveltets_Render<T> {
-    props(): {
+declare function $$render<T>(): {
+    props: {
         id: string;
         value: T | undefined;
         items: {
@@ -18,11 +18,18 @@ declare class __sveltets_Render<T> {
         small?: boolean;
         'aria-describedby'?: string | undefined;
         element?: HTMLFieldSetElement | undefined;
-        onchange?: ((value: T) => void) | undefined;
+        onchange?: (value: T) => void;
         class?: string;
     };
-    events(): {};
-    slots(): {};
+    exports: {};
+    bindings: "element" | "value";
+    slots: {};
+    events: {};
+};
+declare class __sveltets_Render<T> {
+    props(): ReturnType<typeof $$render<T>>['props'];
+    events(): ReturnType<typeof $$render<T>>['events'];
+    slots(): ReturnType<typeof $$render<T>>['slots'];
     bindings(): "element" | "value";
     exports(): {};
 }

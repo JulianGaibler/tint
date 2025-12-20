@@ -1,26 +1,33 @@
 import type { GroupStore } from '../stores/index.js';
-declare class __sveltets_Render<T = unknown> {
-    props(): {
+declare function $$render<T = unknown>(): {
+    props: {
         id: string;
         type?: "checkbox" | "radio" | "switch";
         checked?: boolean;
         disabled?: boolean;
-        value?: T | undefined;
-        groupStore?: GroupStore<T> | undefined;
+        value?: T;
+        groupStore?: GroupStore<T>;
         element?: HTMLInputElement | HTMLButtonElement | undefined;
-        onchange?: ((event: {
+        onchange?: (event: {
             checked: boolean;
-            value?: T | undefined;
-            groupValue?: GroupStore<T> | undefined;
-        }) => void) | undefined;
-        onclick?: ((e: MouseEvent) => void) | undefined;
+            value?: T;
+            groupValue?: GroupStore<T>;
+        }) => void;
+        onclick?: (e: MouseEvent) => void;
         'aria-label'?: string | undefined;
         'aria-labelledby'?: string | undefined;
         'aria-describedby'?: string | undefined;
         class?: string;
     };
-    events(): {};
-    slots(): {};
+    exports: {};
+    bindings: "element" | "checked";
+    slots: {};
+    events: {};
+};
+declare class __sveltets_Render<T = unknown> {
+    props(): ReturnType<typeof $$render<T>>['props'];
+    events(): ReturnType<typeof $$render<T>>['events'];
+    slots(): ReturnType<typeof $$render<T>>['slots'];
     bindings(): "element" | "checked";
     exports(): {};
 }

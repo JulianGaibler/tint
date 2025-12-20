@@ -1,13 +1,13 @@
 import type { FullAutoFill } from 'svelte/elements';
-declare class __sveltets_Render<T> {
-    props(): {
+declare function $$render<T>(): {
+    props: {
         id: string;
         value: T[];
         items: {
             value: T;
             label: string;
         }[];
-        dynamicItems?: ((search: string) => {
+        dynamicItems?: (search: string) => {
             items: {
                 value: T;
                 label: string;
@@ -19,8 +19,8 @@ declare class __sveltets_Render<T> {
                 label: string;
             }[];
             allowAdd?: boolean;
-        }>) | undefined;
-        onitemadded?: ((label: string) => void) | undefined;
+        }>;
+        onitemadded?: (label: string) => void;
         label: string;
         placeholder?: string;
         autocomplete?: FullAutoFill | undefined;
@@ -32,8 +32,15 @@ declare class __sveltets_Render<T> {
         element?: HTMLInputElement | undefined;
         class?: string;
     };
-    events(): {};
-    slots(): {};
+    exports: {};
+    bindings: "element" | "value";
+    slots: {};
+    events: {};
+};
+declare class __sveltets_Render<T> {
+    props(): ReturnType<typeof $$render<T>>['props'];
+    events(): ReturnType<typeof $$render<T>>['events'];
+    slots(): ReturnType<typeof $$render<T>>['slots'];
     bindings(): "element" | "value";
     exports(): {};
 }
