@@ -38,7 +38,7 @@ $layer-names: tint-reset, tint-typography, tint-global
 
 // Prose styles for standardized content
 @mixin prose-styles()
-  .tint--type
+  .tint--type, .tint--type-sans
     // Headings
     h1
       @include typography.type-class(title-serif-1)
@@ -65,14 +65,6 @@ $layer-names: tint-reset, tint-typography, tint-global
       &:first-child
         margin-top: 0
 
-    // Paragraphs
-    p
-      @include typography.type-class(body-serif)
-      margin-bottom: utils.$size-16
-      line-height: 1.7
-      &:last-child
-        margin-bottom: 0
-
     // Links
     a
       color: var(--tint-text-link)
@@ -81,13 +73,6 @@ $layer-names: tint-reset, tint-typography, tint-global
         text-decoration: none
 
     // Lists
-    ul, ol
-      @include typography.type-class(body-serif)
-      margin-bottom: utils.$size-16
-      padding-left: utils.$size-24
-      line-height: 1.7
-      &:last-child
-        margin-bottom: 0
     li
       margin-bottom: utils.$size-8
       &:last-child
@@ -126,6 +111,49 @@ $layer-names: tint-reset, tint-typography, tint-global
     em
       font-style: italic
 
+    // Keyboard
+    kbd
+      @include typography.type-class(ui-small)
+      background: var(--tint-input-bg)
+      color: var(--tint-text)
+      padding: utils.$size-2 utils.$size-8
+      border-radius: utils.$size-4
+      border: 1px solid var(--tint-card-border)
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+      font-family: monospace
+
+    // Definition lists
+    dl
+      margin-bottom: utils.$size-16
+      &:last-child
+        margin-bottom: 0
+
+    // Horizontal rule
+    hr
+      border: none
+      border-top: 1px solid var(--tint-card-border)
+      margin-top: utils.$size-24
+      margin-bottom: utils.$size-24
+
+  // Serif variant (default)
+  .tint--type
+    // Paragraphs
+    p
+      @include typography.type-class(body-serif)
+      margin-bottom: utils.$size-16
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+
+    // Lists
+    ul, ol
+      @include typography.type-class(body-serif)
+      margin-bottom: utils.$size-16
+      padding-left: utils.$size-24
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+
     // Blockquote
     blockquote
       @include typography.type-class(body-serif)
@@ -143,22 +171,6 @@ $layer-names: tint-reset, tint-typography, tint-global
         &:last-child
           margin-bottom: 0
 
-    // Keyboard
-    kbd
-      @include typography.type-class(ui-small)
-      background: var(--tint-input-bg)
-      color: var(--tint-text)
-      padding: utils.$size-2 utils.$size-8
-      border-radius: utils.$size-4
-      border: 1px solid var(--tint-card-border)
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
-      font-family: monospace
-
-    // Definition lists
-    dl
-      margin-bottom: utils.$size-16
-      &:last-child
-        margin-bottom: 0
     dt
       @include typography.type-class(body-serif-bold)
       margin-top: utils.$size-12
@@ -170,12 +182,51 @@ $layer-names: tint-reset, tint-typography, tint-global
       margin-bottom: utils.$size-8
       line-height: 1.7
 
-    // Horizontal rule
-    hr
-      border: none
-      border-top: 1px solid var(--tint-card-border)
-      margin-top: utils.$size-24
-      margin-bottom: utils.$size-24
+  // Sans variant
+  .tint--type-sans
+    // Paragraphs
+    p
+      @include typography.type-class(body-sans)
+      margin-bottom: utils.$size-16
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+
+    // Lists
+    ul, ol
+      @include typography.type-class(body-sans)
+      margin-bottom: utils.$size-16
+      padding-left: utils.$size-24
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+
+    // Blockquote
+    blockquote
+      @include typography.type-class(body-sans)
+      color: var(--tint-text-secondary)
+      border-left: utils.$size-4 solid var(--tint-card-border)
+      padding-left: utils.$size-16
+      margin-left: 0
+      margin-bottom: utils.$size-16
+      line-height: 1.7
+      &:last-child
+        margin-bottom: 0
+      p
+        margin-bottom: utils.$size-12
+        &:last-child
+          margin-bottom: 0
+
+    dt
+      @include typography.type-class(body-sans-bold)
+      margin-top: utils.$size-12
+      &:first-child
+        margin-top: 0
+    dd
+      @include typography.type-class(body-sans)
+      margin-left: utils.$size-24
+      margin-bottom: utils.$size-8
+      line-height: 1.7
 
 // Define the tint base styles
 @mixin base()
