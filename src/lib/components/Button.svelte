@@ -171,7 +171,7 @@ a.tint--button
   vertical-align: top
   box-sizing: border-box
   min-height: tint.$size-48
-  padding: 8px 24px
+  padding: tint.$size-8 tint.$size-24
   background-color: transparent
   border: tint.$button-border-width solid var(--tint-action-secondary)
   color: var(--tint-action-secondary-text)
@@ -181,20 +181,20 @@ a.tint--button
   > :global(*)
     pointer-events: none
   &.icon
-    padding: 0px
+    padding: 0
     display: inline-flex
     justify-content: center
     align-items: center
-    width: 48px
-    height: 48px
+    width: tint.$size-48
+    height: tint.$size-48
   &.small
-    min-height: 32px
-    padding: 2px 16px
+    min-height: tint.$size-32
+    padding: tint.$size-2 tint.$size-16
     border-radius: tint.$button-radius-small
     &.icon
-      padding: 0px
-      width: 32px
-      height: 32px
+      padding: 0
+      width: tint.$size-32
+      height: tint.$size-32
   @media (forced-colors: none), (prefers-contrast: no-preference)
     &:global(.ghost)
       border-color: transparent
@@ -210,10 +210,7 @@ button.tint--button
       opacity: 0
   .loading-overlay
     position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
+    inset: 0
     display: flex
     align-items: center
     justify-content: center

@@ -192,7 +192,7 @@
   pointer-events: none;
 }
 .tint--button.icon {
-  padding: 0px;
+  padding: 0;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -205,7 +205,7 @@
   border-radius: 80px;
 }
 .tint--button.small.icon {
-  padding: 0px;
+  padding: 0;
   width: 32px;
   height: 32px;
 }
@@ -230,10 +230,7 @@ button.tint--button .button-content.visually-hidden {
 }
 button.tint--button .loading-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
