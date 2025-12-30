@@ -174,7 +174,7 @@
     padding: 12px 16px
     background: transparent
     border: none
-    text-align: left
+    text-align: start
 
   .drag-handle
     padding: 12px 8px

@@ -114,14 +114,14 @@
 <style lang="sass">
   .offset-row
     display: flex
-    gap: 16px
+    gap: tint.$size-16
     margin: 20px 0
 
   .demo-button
-    padding: 8px 16px
+    padding: tint.$size-8 tint.$size-16
     background: transparent
     border: 2px solid var(--tint-action-secondary)
-    border-radius: 8px
+    border-radius: tint.$size-8
     cursor: pointer
 
   .positioning-container
@@ -133,8 +133,8 @@
 
   .corner-button
     position: absolute
-    width: 40px
-    height: 40px
+    width: tint.$size-40
+    height: tint.$size-40
     display: flex
     align-items: center
     justify-content: center

@@ -38,7 +38,7 @@
     <input
       type="text"
       id={args.for}
-      style="margin-top: 8px; padding: 8px; border: 1px solid var(--tint-border-primary); border-radius: 4px; width: 100%;"
+      style="margin-block-start: 8px; padding: 8px; border: 1px solid var(--tint-border-primary); border-radius: 4px; width: 100%;"
       disabled={args.disabled}
     />
   </div>
