@@ -113,14 +113,7 @@ const svgoBasePlugins = [
   'removeOffCanvasPaths',
   'removeNonInheritableGroupAttrs',
   'sortAttrs',
-  {
-    name: 'preset-default',
-    params: {
-      overrides: {
-        removeViewBox: false,
-      },
-    },
-  },
+  'preset-default',
 ]
 
 function svgoRemoveAttrs(attrs) {
