@@ -107,6 +107,7 @@
 
 {#if type === 'switch'}
   <button
+    type="button"
     {disabled}
     {id}
     aria-checked={isSelected()}
