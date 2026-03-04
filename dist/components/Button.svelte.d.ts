@@ -1,13 +1,11 @@
-import type { HTMLButtonAttributes } from 'svelte/elements';
-interface Props extends HTMLButtonAttributes {
+import type { HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements';
+interface Props extends HTMLButtonAttributes, HTMLAnchorAttributes {
     variant?: 'primary' | 'secondary' | 'ghost';
     small?: boolean;
     icon?: boolean;
     toggled?: boolean | undefined;
     tooltip?: string | undefined;
-    href?: string | undefined;
     external?: boolean;
-    download?: string | undefined;
     disabled?: boolean;
     loading?: boolean;
     submit?: boolean;

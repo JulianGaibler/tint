@@ -1,12 +1,13 @@
+export declare const SELECT_SEPARATOR: unique symbol;
 import type { HTMLSelectAttributes } from 'svelte/elements';
 declare function $$render<T>(): {
     props: HTMLSelectAttributes & {
         value: T | undefined;
-        items: {
+        items: ({
             value: T;
             label: string;
             disabled?: boolean;
-        }[];
+        } | typeof SELECT_SEPARATOR)[];
         label: string;
         helperText?: string | undefined;
         error?: string | undefined;

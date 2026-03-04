@@ -1,9 +1,12 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import type {
+    HTMLButtonAttributes,
+    HTMLAnchorAttributes,
+  } from 'svelte/elements'
   import LoadingIndicator from './LoadingIndicator.svelte'
   import { tooltip } from '../actions'
 
-  interface Props extends HTMLButtonAttributes {
+  interface Props extends HTMLButtonAttributes, HTMLAnchorAttributes {
     // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
     variant?: 'primary' | 'secondary' | 'ghost'
     // Use small version of the button
@@ -14,12 +17,8 @@
     toggled?: boolean | undefined
     // Text to show in a tooltip when hovering over the button @type {string | undefined}
     tooltip?: string | undefined
-    // Button can act as a link if href is provided @type {string | undefined}
-    href?: string | undefined
     // If href is provided, this will open the link in a new tab
     external?: boolean
-    // If href is provided, this will download the link @type {string | undefined}
-    download?: string | undefined
     // Disables the button
     disabled?: boolean
     // Shows loading state for buttons (has no effect on links)
@@ -110,7 +109,7 @@
     class:icon
     class:small
     class={`tint--button tint--type-action ${_variant} ${className}`}
-    >{@render children?.()}</span
+    {...elementProps}>{@render children?.()}</span
   >
 {:else if href}
   <a
@@ -125,7 +124,8 @@
     class:small
     class={`tint--button tint--type-action ${_variant} ${className}`}
     rel={external ? 'noopener' : undefined}
-    target={external ? '_blank' : undefined}>{@render children?.()}</a
+    target={external ? '_blank' : undefined}
+    {...elementProps}>{@render children?.()}</a
   >
 {:else}
   <button

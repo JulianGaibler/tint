@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
-  import Select from '@lib/components/Select.svelte'
+  import Select, { SELECT_SEPARATOR } from '@lib/components/Select.svelte'
   import { fn } from 'storybook/test'
 
   const { Story } = defineMeta({
@@ -19,12 +19,35 @@
     { value: 3, label: 'Lemon', disabled: true },
     { value: 4, label: 'Pear' },
   ]
+
+  let itemsWithSeparators = [
+    { value: 1, label: 'Apple' },
+    { value: 2, label: 'Cherry' },
+    SELECT_SEPARATOR,
+    { value: 3, label: 'Lemon', disabled: true },
+    { value: 4, label: 'Pear' },
+  ]
 </script>
 
 <!-- Users can select an item from a dropdown list. -->
 <Story
   name="Basic"
   args={{ id: 'select', label: 'Fruit', value: undefined, items }}
+>
+  {#snippet children(args: any)}
+    <Select {...args} />
+  {/snippet}
+</Story>
+
+<!-- Items can be visually grouped using separators. -->
+<Story
+  name="With separators"
+  args={{
+    id: 'select-sep',
+    label: 'Fruit',
+    value: undefined,
+    items: itemsWithSeparators,
+  }}
 >
   {#snippet children(args: any)}
     <Select {...args} />

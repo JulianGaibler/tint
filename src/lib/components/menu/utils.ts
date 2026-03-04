@@ -198,6 +198,46 @@ export function calculatePosition(
       coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING
       coords.animationOrigin = 'top-right'
     }
+  } else if (depth === 0 && behavior === MenuBehavior.AUTOCOMPLETE) {
+    // > AUTOCOMPLETE ROOT MENU POSITIONING
+    // Proactively choose the side with more available space
+    coords.x = parentItemRect.x
+
+    const spaceBelow =
+      window.innerHeight -
+      WINDOW_PADDING -
+      (parentItemRect.y + parentItemRect.height)
+    const spaceAbove = parentItemRect.y - WINDOW_PADDING
+
+    if (menuRect.height <= spaceBelow && spaceBelow >= spaceAbove) {
+      // Fits below and below has more (or equal) space
+      coords.y = parentItemRect.y + parentItemRect.height
+      coords.animationOrigin = 'top-left'
+    } else if (menuRect.height <= spaceAbove && spaceAbove > spaceBelow) {
+      // Fits above and above has more space
+      coords.y = parentItemRect.y - menuRect.height
+      coords.animationOrigin = 'bottom-left'
+    } else if (spaceAbove > spaceBelow) {
+      // Neither fits fully, but more space above — constrain height above
+      coords.y = WINDOW_PADDING
+      coords.height = spaceAbove
+      coords.animationOrigin = 'bottom-left'
+    } else {
+      // Neither fits fully, but more space below (or equal) — constrain height below
+      coords.y = parentItemRect.y + parentItemRect.height
+      coords.height = spaceBelow
+      coords.animationOrigin = 'top-left'
+    }
+
+    // Handle horizontal overflow
+    if (coords.x + menuRect.width > window.innerWidth - WINDOW_PADDING) {
+      if (parentItemRect.width) {
+        coords.x = parentItemRect.x + parentItemRect.width - menuRect.width
+      } else {
+        coords.x = window.innerWidth - menuRect.width - WINDOW_PADDING
+      }
+      coords.animationOrigin = coords.animationOrigin.replace('left', 'right')
+    }
   } else if (depth === 0) {
     // > ROOT MENU POSITIONING
     // Position below and aligned with anchor
@@ -246,45 +286,8 @@ export function calculatePosition(
 
   // > VERTICAL OVERFLOW HANDLING
   if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {
-    if (behavior === MenuBehavior.AUTOCOMPLETE) {
-      // For autocomplete, check if there's more space above or below the parent
-      const spaceBelow =
-        window.innerHeight -
-        WINDOW_PADDING -
-        (parentItemRect.y + parentItemRect.height)
-      const spaceAbove = parentItemRect.y - WINDOW_PADDING
-
-      // Always try to position above if there's enough space
-      // Otherwise position below but constrain height if needed
-      if (spaceAbove >= menuRect.height) {
-        // Position above parent
-        coords.y = parentItemRect.y - menuRect.height
-        coords.animationOrigin =
-          coords.animationOrigin === 'top-right'
-            ? 'bottom-right'
-            : 'bottom-left'
-      } else if (spaceAbove > spaceBelow) {
-        // Not enough space above, but more than below - use constrained height above
-        coords.y = WINDOW_PADDING
-        coords.height = parentItemRect.y - WINDOW_PADDING
-        coords.animationOrigin =
-          coords.animationOrigin === 'top-right'
-            ? 'bottom-right'
-            : 'bottom-left'
-      } else {
-        // Stay below but constrain height to avoid overlap
-        coords.y = parentItemRect.y + parentItemRect.height
-        coords.height = Math.min(
-          menuRect.height,
-          window.innerHeight - coords.y - WINDOW_PADDING,
-        )
-        coords.animationOrigin =
-          coords.animationOrigin === 'bottom-right' ? 'top-right' : 'top-left'
-      }
-    } else {
-      // Regular menus are repositioned to fit
-      coords.y = window.innerHeight - menuRect.height - WINDOW_PADDING
-    }
+    // Regular menus are repositioned to fit
+    coords.y = window.innerHeight - menuRect.height - WINDOW_PADDING
 
     // Handle case where menu is still too tall after repositioning
     if (coords.y < WINDOW_PADDING) {
@@ -295,20 +298,7 @@ export function calculatePosition(
   // > TOP OVERFLOW HANDLING
   // This can happen with select menus due to relative positioning
   if (coords.y < WINDOW_PADDING) {
-    if (behavior === MenuBehavior.AUTOCOMPLETE) {
-      // For autocomplete, ensure we don't overlap parent when repositioning
-      const minY = Math.max(
-        WINDOW_PADDING,
-        parentItemRect.y + parentItemRect.height,
-      )
-      coords.y = minY
-      coords.height = Math.min(
-        menuRect.height,
-        window.innerHeight - coords.y - WINDOW_PADDING,
-      )
-    } else {
-      coords.y = WINDOW_PADDING
-    }
+    coords.y = WINDOW_PADDING
 
     // Re-check bottom overflow after top correction
     if (coords.y + menuRect.height > window.innerHeight - WINDOW_PADDING) {

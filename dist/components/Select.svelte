@@ -1,3 +1,7 @@
+<script lang="ts" module>
+  export const SELECT_SEPARATOR = Symbol('separator')
+</script>
+
 <script lang="ts">
   import type { HTMLSelectAttributes } from 'svelte/elements'
   import IconWarning from '../icons/20-warning.svg?raw'
@@ -13,8 +17,8 @@
   interface Props extends HTMLSelectAttributes {
     // Value of the current selected item (can use bind:value) @type {string|undefined}
     value: T | undefined
-    // The items of the select @type {SelectItem[]}
-    items: SelectItem[]
+    // The items of the select @type {(SelectItem | typeof SELECT_SEPARATOR)[]}
+    items: (SelectItem | typeof SELECT_SEPARATOR)[]
     // The label of the select @type {string}
     label: string
     // Adds a helper text to the select @type {string|undefined}
@@ -78,9 +82,14 @@
       {#if noValue(value)}
         <option value="" disabled selected hidden></option>
       {/if}
-      {#each items as item (item.value)}
-        <option value={item.value} disabled={item.disabled}>{item.label}</option
-        >
+      {#each items as item, i (item === SELECT_SEPARATOR ? `sep-${i}` : item.value)}
+        {#if item === SELECT_SEPARATOR}
+          <hr />
+        {:else}
+          <option value={item.value} disabled={item.disabled}
+            >{item.label}</option
+          >
+        {/if}
       {/each}
     </select>
     <label class="tint--type-input-small" for={id}>{label}</label>
