@@ -333,6 +333,18 @@
     }
   }
 
+  function onFocusOut(e: FocusEvent) {
+    if (!showMenu) return
+    const container = e.currentTarget as HTMLElement
+    const relatedTarget = e.relatedTarget as HTMLElement | null
+    if (relatedTarget && container.contains(relatedTarget)) return
+    requestAnimationFrame(() => {
+      if (!showMenu) return
+      if (container.contains(document.activeElement)) return
+      closeMenu()
+    })
+  }
+
   function onFocus() {
     if (justClosed) {
       justClosed = false
@@ -392,7 +404,7 @@
   })
 </script>
 
-<div class:error class:disabled class:fillWidth>
+<div class:error class:disabled class:fillWidth onfocusout={onFocusOut}>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
