@@ -23,7 +23,7 @@
   let itemsWithSeparators = [
     { value: 1, label: 'Apple' },
     { value: 2, label: 'Cherry' },
-    SELECT_SEPARATOR,
+    SELECT_SEPARATOR as typeof SELECT_SEPARATOR,
     { value: 3, label: 'Lemon', disabled: true },
     { value: 4, label: 'Pear' },
   ]
@@ -34,7 +34,7 @@
   name="Basic"
   args={{ id: 'select', label: 'Fruit', value: undefined, items }}
 >
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <Select {...args} />
   {/snippet}
 </Story>
@@ -49,7 +49,7 @@
     items: itemsWithSeparators,
   }}
 >
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <Select {...args} />
   {/snippet}
 </Story>

@@ -51,11 +51,13 @@
     ...elementProps
   }: Props = $props()
 
-  if (helperText && ariaDescribedby) {
-    throw new Error(
-      '[tint] You can not use both helperText and aria-describedby',
-    )
-  }
+  $effect.pre(() => {
+    if (helperText && ariaDescribedby) {
+      throw new Error(
+        '[tint] You can not use both helperText and aria-describedby',
+      )
+    }
+  })
 
   function noValue(val: T | undefined) {
     return val === undefined || val === ''

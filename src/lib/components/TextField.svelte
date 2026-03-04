@@ -28,6 +28,10 @@
     onfocus?: (e: Event) => void
     // Function to call when the text field is blurred @type {function}
     onblur?: (e: Event) => void
+    // Function to call when the value is committed (blur or Enter for input) @type {function}
+    oncommit?: (value: string) => void
+    // Function to call when the value is reverted (Escape) @type {function}
+    onrevert?: (value: string) => void
     // Input type for input variant
     type?: string
     // A space separated list of CSS classes.
@@ -47,6 +51,8 @@
     oninput = undefined,
     onfocus = undefined,
     onblur = undefined,
+    oncommit = undefined,
+    onrevert = undefined,
     disabled = false,
     id = undefined,
     name = undefined,
@@ -57,11 +63,13 @@
     ...elementProps
   }: Props = $props()
 
-  if (helperText && ariaDescribedby) {
-    throw new Error(
-      '[tint] You can not use both helperText and ariaDescribedby',
-    )
-  }
+  $effect.pre(() => {
+    if (helperText && ariaDescribedby) {
+      throw new Error(
+        '[tint] You can not use both helperText and ariaDescribedby',
+      )
+    }
+  })
 
   function setType(
     type: string | null | undefined,
@@ -91,6 +99,45 @@
     const textarea = element as HTMLTextAreaElement
     textarea.style.height = 'auto'
     textarea.style.height = `${textarea.scrollHeight + 4}px`
+  }
+
+  // Commit/revert support
+  let preEditValue: string | undefined = undefined
+
+  function handleFocus(e: Event) {
+    preEditValue = value
+    onfocus?.(e)
+  }
+
+  function handleBlur(e: Event) {
+    if (preEditValue !== undefined && value !== preEditValue) {
+      oncommit?.(value)
+    }
+    preEditValue = undefined
+    onblur?.(e)
+  }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && preEditValue !== undefined) {
+      e.preventDefault()
+      value = preEditValue
+      onrevert?.(preEditValue)
+      preEditValue = undefined
+      element?.blur()
+      return
+    }
+    if (
+      e.key === 'Enter' &&
+      variant === 'input' &&
+      preEditValue !== undefined
+    ) {
+      e.preventDefault()
+      if (value !== preEditValue) {
+        oncommit?.(value)
+      }
+      preEditValue = undefined
+      element?.blur()
+    }
   }
 
   $effect(() => {
@@ -133,8 +180,9 @@
         aria-errormessage={error ? 'textfield-helpertext' : undefined}
         aria-invalid={error ? 'true' : undefined}
         oninput={onTextAreaInput}
-        {onfocus}
-        {onblur}
+        onfocus={handleFocus}
+        onblur={handleBlur}
+        onkeydown={handleKeydown}
         bind:this={element}
         bind:value
         class:filled={value?.length > 0}
@@ -187,8 +235,9 @@
         aria-invalid={error ? 'true' : undefined}
         {autocomplete}
         {oninput}
-        {onfocus}
-        {onblur}
+        onfocus={handleFocus}
+        onblur={handleBlur}
+        onkeydown={handleKeydown}
         bind:this={element}
         bind:value
         class:filled={value?.length > 0}

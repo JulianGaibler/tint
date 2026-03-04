@@ -12,6 +12,8 @@ interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
     oninput?: (e: Event) => void;
     onfocus?: (e: Event) => void;
     onblur?: (e: Event) => void;
+    oncommit?: (value: string) => void;
+    onrevert?: (value: string) => void;
     type?: string;
     class?: string;
 }

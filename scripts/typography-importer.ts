@@ -1,3 +1,4 @@
+// @ts-expect-error -- Node.js built-in, no @types/node installed
 import fs from 'fs'
 
 const TYPOGRAPHY_FILE = 'src/lib/styles/typography.scss'
@@ -39,12 +40,12 @@ export default function typographyTransform() {
 
   return {
     name: 'typography-importer', // required, will show up in warnings and errors
-    resolveId(id) {
+    resolveId(id: string) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
       }
     },
-    load(id) {
+    load(id: string) {
       if (id !== resolvedVirtualModuleId) {
         return
       }

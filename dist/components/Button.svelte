@@ -6,48 +6,49 @@
   import LoadingIndicator from './LoadingIndicator.svelte'
   import { tooltip } from '../actions'
 
-  interface Props extends HTMLButtonAttributes, HTMLAnchorAttributes {
-    // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
-    variant?: 'primary' | 'secondary' | 'ghost'
-    // Use small version of the button
-    small?: boolean
-    // Expects an icon to be passed in the slot if true
-    icon?: boolean
-    // If true or false, the button will be a toggle button @type {boolean | undefined}
-    toggled?: boolean | undefined
-    // Text to show in a tooltip when hovering over the button @type {string | undefined}
-    tooltip?: string | undefined
-    // If href is provided, this will open the link in a new tab
-    external?: boolean
-    // Disables the button
-    disabled?: boolean
-    // Shows loading state for buttons (has no effect on links)
-    loading?: boolean
-    // If true, the button will be of type submit
-    submit?: boolean
-    // aria-label of the button @type {string | undefined}
-    title?: string | undefined
-    // ARIA label of the button @type {string | undefined}
-    'aria-label'?: string | undefined
-    // tabindex of the button @type {number | undefined}
-    tabindex?: number | undefined
-    // ARIA role override @type {string | undefined}
-    role?: string | undefined
-    // ARIA checked state for radio buttons @type {boolean | undefined}
-    'aria-checked'?: boolean | undefined
-    // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
-    element?:
-      | HTMLButtonElement
-      | HTMLAnchorElement
-      | HTMLSpanElement
-      | undefined
-    // Content of the button @type {Snippet | undefined}
-    children?: import('svelte').Snippet
-    // Click event handler @type {(e: MouseEvent) => void | undefined}
-    onclick?: (e: MouseEvent) => void
-    // A space separated list of CSS classes.
-    class?: string
-  }
+  type Props = HTMLButtonAttributes &
+    HTMLAnchorAttributes & {
+      // Type of the button. Valid values are @type {'primary' | 'secondary' | 'ghost'}
+      variant?: 'primary' | 'secondary' | 'ghost'
+      // Use small version of the button
+      small?: boolean
+      // Expects an icon to be passed in the slot if true
+      icon?: boolean
+      // If true or false, the button will be a toggle button @type {boolean | undefined}
+      toggled?: boolean | undefined
+      // Text to show in a tooltip when hovering over the button @type {string | undefined}
+      tooltip?: string | undefined
+      // If href is provided, this will open the link in a new tab
+      external?: boolean
+      // Disables the button
+      disabled?: boolean
+      // Shows loading state for buttons (has no effect on links)
+      loading?: boolean
+      // If true, the button will be of type submit
+      submit?: boolean
+      // aria-label of the button @type {string | undefined}
+      title?: string | undefined
+      // ARIA label of the button @type {string | undefined}
+      'aria-label'?: string | undefined
+      // tabindex of the button @type {number | undefined}
+      tabindex?: number | undefined
+      // ARIA role override @type {string | undefined}
+      role?: string | undefined
+      // ARIA checked state for radio buttons @type {boolean | undefined}
+      'aria-checked'?: boolean | undefined
+      // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
+      element?:
+        | HTMLButtonElement
+        | HTMLAnchorElement
+        | HTMLSpanElement
+        | undefined
+      // Content of the button @type {Snippet | undefined}
+      children?: import('svelte').Snippet
+      // Click event handler @type {(e: MouseEvent) => void | undefined}
+      onclick?: (e: MouseEvent) => void
+      // A space separated list of CSS classes.
+      class?: string
+    }
 
   let {
     variant = 'secondary',
@@ -76,15 +77,17 @@
     ...elementProps
   }: Props = $props()
 
-  if (icon && !title && !ariaLabel) {
-    throw new Error('[tint] Icon buttons need at least a title or aria-label')
-  }
-  if (variant === 'primary' && toggled !== undefined) {
-    throw new Error('[tint] Primary buttons cannot be toggled')
-  }
-  if (href && toggled !== undefined) {
-    throw new Error('[tint] Links cannot be toggled')
-  }
+  $effect.pre(() => {
+    if (icon && !title && !ariaLabel) {
+      throw new Error('[tint] Icon buttons need at least a title or aria-label')
+    }
+    if (variant === 'primary' && toggled !== undefined) {
+      throw new Error('[tint] Primary buttons cannot be toggled')
+    }
+    if (href && toggled !== undefined) {
+      throw new Error('[tint] Links cannot be toggled')
+    }
+  })
 
   let role = $derived(
     roleOverride || (toggled !== undefined ? 'switch' : undefined),
@@ -109,7 +112,7 @@
     class:icon
     class:small
     class={`tint--button tint--type-action ${_variant} ${className}`}
-    {...elementProps}>{@render children?.()}</span
+    {...elementProps as Record<string, unknown>}>{@render children?.()}</span
   >
 {:else if href}
   <a

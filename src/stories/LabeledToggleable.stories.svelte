@@ -8,7 +8,6 @@
   const { Story } = defineMeta({
     title: 'Components/LabeledToggleable',
     component: LabeledToggleable,
-    render: template,
     argTypes: {
       type: {
         control: 'inline-radio',
@@ -48,12 +47,6 @@
   const notificationPreference = createRadioGroup('important') // Pre-select important only
 </script>
 
-{#snippet template(args: any)}
-  <div>
-    <LabeledToggleable {...args} />
-  </div>
-{/snippet}
-
 <!-- Basic checkbox with text label and description -->
 <Story
   name="Checkbox with Text"
@@ -77,7 +70,13 @@
     // Should now be checked
     await expect(checkbox).toBeChecked()
   }}
-/>
+>
+  {#snippet template(args: any)}
+    <div>
+      <LabeledToggleable {...args} />
+    </div>
+  {/snippet}
+</Story>
 
 <!-- Checkbox with icon in label -->
 <Story
@@ -90,7 +89,13 @@
     icon: IconHome,
     description: 'Receive promotional offers and product updates',
   }}
-/>
+>
+  {#snippet template(args: any)}
+    <div>
+      <LabeledToggleable {...args} />
+    </div>
+  {/snippet}
+</Story>
 
 <!-- Radio button example -->
 <Story
@@ -115,7 +120,13 @@
     // Should now be checked
     await expect(radio).toBeChecked()
   }}
-/>
+>
+  {#snippet template(args: any)}
+    <div>
+      <LabeledToggleable {...args} />
+    </div>
+  {/snippet}
+</Story>
 
 <!-- Switch example -->
 <Story
@@ -139,7 +150,13 @@
     // Should now be checked
     await expect(switchElement).toHaveAttribute('aria-checked', 'true')
   }}
-/>
+>
+  {#snippet template(args: any)}
+    <div>
+      <LabeledToggleable {...args} />
+    </div>
+  {/snippet}
+</Story>
 
 <!-- Example with custom slots -->
 <Story name="Custom Slots">
@@ -179,7 +196,13 @@
     description: 'This option is currently disabled',
     disabled: true,
   }}
-/>
+>
+  {#snippet template(args: any)}
+    <div>
+      <LabeledToggleable {...args} />
+    </div>
+  {/snippet}
+</Story>
 
 <!-- Example with groupStore for checkboxes -->
 <Story name="Checkbox Group">

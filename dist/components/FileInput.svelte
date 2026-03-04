@@ -41,11 +41,13 @@
     class: className = '',
   }: Props = $props()
 
-  if (helperText && ariaDescribedby) {
-    throw new Error(
-      '[tint] You can not use both helperText and ariaDescribedby',
-    )
-  }
+  $effect.pre(() => {
+    if (helperText && ariaDescribedby) {
+      throw new Error(
+        '[tint] You can not use both helperText and ariaDescribedby',
+      )
+    }
+  })
 
   let dragging: HTMLElement | null = $state(null)
   let draggedOver = $state(false)

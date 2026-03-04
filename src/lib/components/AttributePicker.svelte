@@ -221,11 +221,13 @@
 
   // ---- Attribute validation
 
-  if (helperText && ariaDescribedby) {
-    throw new Error(
-      '[tint] You can not use both helperText and ariaDescribedby',
-    )
-  }
+  $effect.pre(() => {
+    if (helperText && ariaDescribedby) {
+      throw new Error(
+        '[tint] You can not use both helperText and ariaDescribedby',
+      )
+    }
+  })
 
   // ---- Event handlers
 

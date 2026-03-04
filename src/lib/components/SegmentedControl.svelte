@@ -52,15 +52,17 @@
     class: className = '',
   }: Props = $props()
 
-  if (!label && !ariaLabelledby) {
-    throw new Error(
-      '[tint] You must provide either a label or ariaLabelledby for accessibility',
-    )
-  }
+  $effect.pre(() => {
+    if (!label && !ariaLabelledby) {
+      throw new Error(
+        '[tint] You must provide either a label or ariaLabelledby for accessibility',
+      )
+    }
 
-  if (label && ariaLabelledby) {
-    throw new Error('[tint] You can not use both label and ariaLabelledby')
-  }
+    if (label && ariaLabelledby) {
+      throw new Error('[tint] You can not use both label and ariaLabelledby')
+    }
+  })
 
   // Track which button should be focusable
   let focusedIndex = $state<number>(0)

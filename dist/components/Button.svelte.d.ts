@@ -1,5 +1,5 @@
 import type { HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements';
-interface Props extends HTMLButtonAttributes, HTMLAnchorAttributes {
+type Props = HTMLButtonAttributes & HTMLAnchorAttributes & {
     variant?: 'primary' | 'secondary' | 'ghost';
     small?: boolean;
     icon?: boolean;
@@ -18,7 +18,7 @@ interface Props extends HTMLButtonAttributes, HTMLAnchorAttributes {
     children?: import('svelte').Snippet;
     onclick?: (e: MouseEvent) => void;
     class?: string;
-}
+};
 declare const Button: import("svelte").Component<Props, {}, "element">;
 type Button = ReturnType<typeof Button>;
 export default Button;

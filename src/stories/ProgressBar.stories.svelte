@@ -30,7 +30,7 @@
 
 <!-- Animated progress indicator with squiggly animation for active states -->
 <Story name="Default" args={{ progress: 75 }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>
@@ -39,7 +39,7 @@
 
 <!-- Progress bar with progress text -->
 <Story name="With Progress Text" args={{ progress: 45, showProgress: true }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>
@@ -48,7 +48,7 @@
 
 <!-- Inactive progress bar without animation -->
 <Story name="Inactive" args={{ progress: 60, active: false }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>
@@ -57,7 +57,7 @@
 
 <!-- Progress bar at 100% completion -->
 <Story name="Complete" args={{ progress: 100, showProgress: true }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>
@@ -66,7 +66,7 @@
 
 <!-- Progress bar with very low progress -->
 <Story name="Just Started" args={{ progress: 5, showProgress: true }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>
@@ -75,7 +75,7 @@
 
 <!-- Progress bar with no progress -->
 <Story name="No Progress" args={{ progress: 0, showProgress: true }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <div style="width: 300px;">
       <ProgressBar {...args} />
     </div>

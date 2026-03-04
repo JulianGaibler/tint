@@ -38,13 +38,13 @@
   let lastTimestamp = 0
 
   // Animated values
-  let currentProgress = $state(progress)
+  let currentProgress = $state(0)
   let currentAmplitude = 0
 
   // Animation tracking
   let progressStartTime: number | null = null
   let progressStartValue = 0
-  let progressTargetValue = progress
+  let progressTargetValue = 0
 
   let amplitudeStartTime: number | null = null
   let amplitudeStartValue = 0

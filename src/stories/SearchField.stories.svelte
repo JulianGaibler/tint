@@ -14,7 +14,7 @@
 
 <!-- Specialized text field for searches, meant to be used in a toolbar. -->
 <Story name="Basic" args={{ id: 'input' }}>
-  {#snippet children(args: any)}
+  {#snippet template(args: any)}
     <SearchField {...args} />
   {/snippet}
 </Story>
