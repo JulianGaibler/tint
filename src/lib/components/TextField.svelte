@@ -123,7 +123,6 @@
       value = preEditValue
       onrevert?.(preEditValue)
       preEditValue = undefined
-      element?.blur()
       return
     }
     if (

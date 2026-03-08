@@ -43,6 +43,10 @@ export default ts.config(
         svelteConfig: svelteConfig,
       },
     },
+    rules: {
+      // Svelte $bindable() props trigger false positives
+      'no-useless-assignment': 'off',
+    },
   },
   {
     rules: {

@@ -78,8 +78,10 @@
   }: Props = $props()
 
   $effect.pre(() => {
-    if (icon && !title && !ariaLabel) {
-      throw new Error('[tint] Icon buttons need at least a title or aria-label')
+    if (icon && !title && !ariaLabel && !tooltipText) {
+      throw new Error(
+        '[tint] Icon buttons need at least a title, aria-label, or tooltip',
+      )
     }
     if (variant === 'primary' && toggled !== undefined) {
       throw new Error('[tint] Primary buttons cannot be toggled')

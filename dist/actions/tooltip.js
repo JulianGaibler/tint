@@ -38,10 +38,9 @@ function positionTooltip(tooltip, anchor, offset = TOOLTIP_DEFAULT_OFFSET) {
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
     const arrow = tooltip.querySelector('.tint-tooltip-arrow');
-    let finalPlacement = 'top';
     // Auto placement logic
     const spaceBelow = viewportHeight - anchorRect.bottom;
-    finalPlacement = spaceBelow >= tooltipRect.height + offset ? 'bottom' : 'top';
+    const finalPlacement = spaceBelow >= tooltipRect.height + offset ? 'bottom' : 'top';
     // Update placement class for styling
     tooltip.classList.remove('tint-tooltip--top', 'tint-tooltip--bottom');
     tooltip.classList.add(`tint-tooltip--${finalPlacement}`);
@@ -168,6 +167,7 @@ export function tooltip(element, options) {
     };
     let opts = null;
     let tooltipId = null;
+    let didSetAriaLabel = false;
     let eventHandlers = null;
     function initializeTooltip(newOptions) {
         if (state.isInitialized)
@@ -180,6 +180,12 @@ export function tooltip(element, options) {
         tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         // Set up accessibility attributes
         element.setAttribute('aria-describedby', tooltipId);
+        // Auto-set aria-label if element has no accessible name
+        if (!element.hasAttribute('aria-label') &&
+            !element.hasAttribute('aria-labelledby')) {
+            element.setAttribute('aria-label', opts.text);
+            didSetAriaLabel = true;
+        }
         // Create tooltip element
         state.element = createTooltipElement();
         state.element.id = tooltipId;
@@ -314,6 +320,10 @@ export function tooltip(element, options) {
         }
         // Clean up accessibility attributes
         element.removeAttribute('aria-describedby');
+        if (didSetAriaLabel) {
+            element.removeAttribute('aria-label');
+            didSetAriaLabel = false;
+        }
         // Reset state
         state.isVisible = false;
         state.isInitialized = false;
@@ -349,6 +359,10 @@ export function tooltip(element, options) {
                     newOpts = { text: '' };
                 }
                 Object.assign(opts, newOpts);
+                // Update aria-label if we auto-set it
+                if (didSetAriaLabel) {
+                    element.setAttribute('aria-label', opts.text);
+                }
                 // Update tooltip text if it's currently visible
                 if (state.isVisible && state.element) {
                     const textElement = state.element.querySelector('.tint-tooltip-text');

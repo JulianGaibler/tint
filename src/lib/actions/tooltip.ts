@@ -69,11 +69,10 @@ function positionTooltip(
 
   const arrow = tooltip.querySelector('.tint-tooltip-arrow') as HTMLElement
 
-  let finalPlacement: 'top' | 'bottom' = 'top'
-
   // Auto placement logic
   const spaceBelow = viewportHeight - anchorRect.bottom
-  finalPlacement = spaceBelow >= tooltipRect.height + offset ? 'bottom' : 'top'
+  const finalPlacement: 'top' | 'bottom' =
+    spaceBelow >= tooltipRect.height + offset ? 'bottom' : 'top'
 
   // Update placement class for styling
   tooltip.classList.remove('tint-tooltip--top', 'tint-tooltip--bottom')
@@ -231,6 +230,7 @@ export function tooltip(
 
   let opts: TooltipOptions | null = null
   let tooltipId: string | null = null
+  let didSetAriaLabel = false
   let eventHandlers: {
     handleMouseEnter: () => void
     handleMouseLeave: () => void
@@ -254,6 +254,15 @@ export function tooltip(
 
     // Set up accessibility attributes
     element.setAttribute('aria-describedby', tooltipId)
+
+    // Auto-set aria-label if element has no accessible name
+    if (
+      !element.hasAttribute('aria-label') &&
+      !element.hasAttribute('aria-labelledby')
+    ) {
+      element.setAttribute('aria-label', opts.text)
+      didSetAriaLabel = true
+    }
 
     // Create tooltip element
     state.element = createTooltipElement()
@@ -431,6 +440,10 @@ export function tooltip(
 
     // Clean up accessibility attributes
     element.removeAttribute('aria-describedby')
+    if (didSetAriaLabel) {
+      element.removeAttribute('aria-label')
+      didSetAriaLabel = false
+    }
 
     // Reset state
     state.isVisible = false
@@ -467,6 +480,11 @@ export function tooltip(
         }
 
         Object.assign(opts, newOpts)
+
+        // Update aria-label if we auto-set it
+        if (didSetAriaLabel) {
+          element.setAttribute('aria-label', opts.text)
+        }
 
         // Update tooltip text if it's currently visible
         if (state.isVisible && state.element) {
