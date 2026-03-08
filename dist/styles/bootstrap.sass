@@ -30,7 +30,7 @@
 // Define layers order. If you have more layers, you can use the variable
 $layer-names: tint-reset, tint-typography, tint-global
 @mixin layers()
-  @layer $layer-names
+  @layer #{$layer-names}
 
 // Define the tint typography classes
 @mixin type-classes()
