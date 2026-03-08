@@ -16,20 +16,33 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+
     backgrounds: {
       grid: {
         cellSize: 8,
         cellAmount: 8,
       },
     },
+
     docs: {
       components: { h1: Heading1 },
       theme: tintTheme,
     },
+
     options: {
       storySort: {
-        order: ['Getting Started', ['Installation', 'Styles', 'Fonts', 'Components']],
+        order: [
+          'Getting Started',
+          ['Installation', 'Styles', 'Fonts', 'Components'],
+        ],
       },
+    },
+
+    a11y: {
+      // 'todo' - show a11y violations in the test UI only
+      // 'error' - fail CI on a11y violations
+      // 'off' - skip a11y checks entirely
+      test: 'todo',
     },
   },
 

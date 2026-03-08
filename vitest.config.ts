@@ -1,7 +1,6 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vitest/config'
 
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
@@ -17,7 +16,6 @@ export default defineConfig({
       {
         extends: 'vite.config.ts',
         plugins: [
-          svelte(),
           storybookTest({ configDir: path.join(dirname, '.storybook') }),
         ],
         test: {
@@ -29,6 +27,14 @@ export default defineConfig({
             instances: [{ browser: 'chromium' }],
           },
           setupFiles: ['.storybook/vitest.setup.ts'],
+        },
+      },
+      {
+        extends: 'vite.config.ts',
+        test: {
+          name: 'unit',
+          include: ['src/**/*.test.ts'],
+          environment: 'jsdom',
         },
       },
     ],

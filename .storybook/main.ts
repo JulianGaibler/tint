@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import typographyImporter from '../scripts/typography-importer.ts'
 import type { StorybookConfig } from '@storybook/svelte-vite'
 import { mergeConfig, loadConfigFromFile } from 'vite'
@@ -6,15 +8,15 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|ts|svelte)'],
 
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-svelte-csf',
-    '@storybook/addon-a11y',
-    '@storybook/addon-docs',
-    '@storybook/addon-vitest'
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-svelte-csf"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("@storybook/addon-vitest")
   ],
 
   framework: {
-    name: '@storybook/svelte-vite',
+    name: getAbsolutePath("@storybook/svelte-vite"),
     options: {},
   },
 
@@ -47,3 +49,7 @@ const config: StorybookConfig = {
   }
 }
 export default config
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}
