@@ -72,7 +72,7 @@
   width: 100%;
   line-height: normal;
 }
-.box > :global(button) {
+.box > :global(button.tint--button) {
   position: absolute;
   right: 0;
   margin: 8px;
@@ -116,7 +116,7 @@
   padding-inline-start: 24px;
   background-color: var(--tint-input-bg);
 }
-.input:focus + :global(button), .input.filled + :global(button), .input:-webkit-autofill + :global(button) {
+.input:focus + :global(button.tint--button), .input.filled + :global(button.tint--button), .input:-webkit-autofill + :global(button.tint--button) {
   visibility: visible;
 }
 
@@ -124,7 +124,7 @@
   padding-inline-start: 24px;
   background-color: var(--tint-input-bg);
 }
-.input:autofill + :global(button) {
+.input:autofill + :global(button.tint--button) {
   visibility: visible;
 }
 

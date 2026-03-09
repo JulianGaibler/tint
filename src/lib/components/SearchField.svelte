@@ -70,7 +70,7 @@
   height: tint.$size-48
   width: 100%
   line-height: normal
-  > :global(button)
+  > :global(button.tint--button)
     position: absolute
     right: 0
     margin: tint.$size-8
@@ -99,13 +99,13 @@
 .input:focus, .input.filled, .input:-webkit-autofill
   padding-inline-start: tint.$size-24
   background-color: var(--tint-input-bg)
-  & + :global(button)
+  & + :global(button.tint--button)
     visibility: visible
 // has to be seperate as chrome doesn't apply the rule when using :autofill
 .input:autofill
   padding-inline-start: tint.$size-24
   background-color: var(--tint-input-bg)
-  & + :global(button)
+  & + :global(button.tint--button)
     visibility: visible
 
 @media (forced-colors: active)
