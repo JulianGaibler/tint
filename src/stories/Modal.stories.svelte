@@ -19,7 +19,10 @@
   <div>
     <Button onclick={() => (modalOpen = true)}>Open modal</Button>
     <Modal bind:open={modalOpen} {...args}>
-      <div class="content">
+      <div
+        class="content"
+        style={args.fullscreen ? 'max-width: 600px; margin-inline: auto' : ''}
+      >
         <h2 class="tint--type">This is a modal</h2>
         {#if !args.notClosable}
           <p>You can press the Escape key to close it.</p>
@@ -49,6 +52,13 @@
   The reason for this is, that in Chromium-based browsers, there is a limitation where you cannot force a modal to stay open. Specifically, if the user presses the Escape key a second time, the dialog will close even if you call `preventDefault` on the event.
 -->
 <Story name="Not closable" args={{ notClosable: true }} />
+
+<!--
+  When `fullscreen` is set, the dialog fills the viewport minus a small gap
+  on all sides. Content inside should use `max-width` and `margin-inline: auto`
+  to center itself within the full-width dialog.
+-->
+<Story name="Fullscreen" args={{ fullscreen: true }} />
 
 <style lang="sass">
   .content

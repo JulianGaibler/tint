@@ -7,6 +7,8 @@
     open?: boolean
     // If true, the modal cannot be closed by user actions @type {boolean | undefined}
     notClosable?: boolean
+    // If true, the dialog fills the viewport minus a small gap @type {boolean | undefined}
+    fullscreen?: boolean
     // Event handler for when the modal is closed @type {() => void | undefined}
     onclose?: () => void
     // Content of the modal @type {Snippet | undefined}
@@ -18,6 +20,7 @@
   let {
     open = $bindable(false),
     notClosable = false,
+    fullscreen = false,
     onclose,
     children,
     class: className = '',
@@ -111,6 +114,7 @@
   onclose={onCloseEvent}
   class="tint--card tint--plain {className}"
   class:manual-modal={notClosable}
+  class:fullscreen
 >
   {@render children()}
 </dialog>
@@ -148,6 +152,10 @@ dialog::backdrop {
   forced-color-adjust: none;
   background-color: rgba(0, 0, 0, 0);
   animation: openBackdrop var(--ease-time) var(--ease-curve) forwards;
+}
+dialog.fullscreen {
+  width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
 }
 dialog.manual-modal {
   z-index: 9999;

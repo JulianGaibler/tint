@@ -1,6 +1,7 @@
 interface Props {
     open?: boolean;
     notClosable?: boolean;
+    fullscreen?: boolean;
     onclose?: () => void;
     children: import('svelte').Snippet;
     class?: string;
