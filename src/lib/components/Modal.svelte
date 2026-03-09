@@ -128,6 +128,9 @@
     --ease-curve: cubic-bezier(0.42, 1.67, 0.21, 0.90)
     --ease-time: 350ms
   dialog
+    box-sizing: border-box
+    max-width: 100vw
+    overflow-x: clip
     position: fixed
     inset: 0
     margin: auto

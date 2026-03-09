@@ -129,6 +129,9 @@
 }
 
 dialog {
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: clip;
   position: fixed;
   inset: 0;
   margin: auto;
