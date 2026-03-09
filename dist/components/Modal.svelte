@@ -59,6 +59,7 @@
     if (open == isOpen) return
     untrack(() => {
       if (open && dialogElement) {
+        document.body.style.overflow = 'hidden'
         if (notClosable) {
           // Use show() for non-closable modals to maintain control
           if (!dialogElement.open) {
@@ -89,6 +90,7 @@
           trap.deactivate()
         }
 
+        document.body.style.overflow = ''
         dialogElement.close()
         isOpen = false
         if (!notClosable) {
@@ -98,12 +100,13 @@
     })
   })
 
-  // Cleanup focus trap on component destroy
+  // Cleanup on component destroy
   $effect(() => {
     return () => {
       if (trap) {
         trap.deactivate()
       }
+      document.body.style.overflow = ''
     }
   })
 </script>
@@ -136,6 +139,7 @@ dialog {
   box-sizing: border-box;
   max-width: 100vw;
   overflow-x: clip;
+  overscroll-behavior: contain;
   position: fixed;
   inset: 0;
   margin: auto;
@@ -154,8 +158,10 @@ dialog::backdrop {
   animation: openBackdrop var(--ease-time) var(--ease-curve) forwards;
 }
 dialog.fullscreen {
-  width: calc(100vw - 16px);
-  max-height: calc(100vh - 16px);
+  width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  max-height: calc(100% - 16px);
 }
 dialog.manual-modal {
   z-index: 9999;
