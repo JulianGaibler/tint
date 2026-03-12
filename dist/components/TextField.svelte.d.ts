@@ -15,6 +15,7 @@ interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
     oncommit?: (value: string) => void;
     onrevert?: (value: string) => void;
     type?: string;
+    commitOnEnter?: boolean;
     class?: string;
 }
 declare const TextField: import("svelte").Component<Props, {}, "element" | "value">;

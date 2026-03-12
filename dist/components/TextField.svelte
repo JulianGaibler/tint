@@ -34,6 +34,10 @@
     onrevert?: (value: string) => void
     // Input type for input variant
     type?: string
+    // When true, Enter commits the value and blurs (for standalone inline-edit fields).
+    // When false (default), Enter fires oncommit but does not preventDefault or blur,
+    // allowing native form submission.
+    commitOnEnter?: boolean
     // A space separated list of CSS classes.
     class?: string
   }
@@ -53,6 +57,7 @@
     onblur = undefined,
     oncommit = undefined,
     onrevert = undefined,
+    commitOnEnter = false,
     disabled = false,
     id = undefined,
     name = undefined,
@@ -130,12 +135,14 @@
       variant === 'input' &&
       preEditValue !== undefined
     ) {
-      e.preventDefault()
       if (value !== preEditValue) {
         oncommit?.(value)
       }
       preEditValue = undefined
-      element?.blur()
+      if (commitOnEnter) {
+        e.preventDefault()
+        element?.blur()
+      }
     }
   }
 

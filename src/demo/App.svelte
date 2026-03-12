@@ -14,6 +14,8 @@
   import AttributePicker from '@src/lib/components/AttributePicker.svelte'
   import Autocomplete from '@src/lib/components/Autocomplete.svelte'
   import Modal from '@src/lib/components/Modal.svelte'
+  import Toaster from '@src/lib/components/Toaster.svelte'
+  import { toast } from '@src/lib/stores/toast.js'
   import Dialog, { type OpenDialog } from '@src/lib/components/Dialog.svelte'
   import LoadingIndicator from '@src/lib/components/LoadingIndicator.svelte'
   import ProgressIndicator from '@src/lib/components/ProgressBar.svelte'
@@ -509,6 +511,42 @@
         </div>
       </div>
       <div class="category tint--card">
+        <h2>Toast</h2>
+        <div class="rows">
+          <div class="row">
+            <Button onclick={() => toast('This is a toast message')}
+              >Default</Button
+            >
+            <Button onclick={() => toast.success('Success toast')}
+              >Success</Button
+            >
+            <Button onclick={() => toast.error('Error toast')}>Error</Button>
+            <Button onclick={() => toast.warning('Warning toast')}
+              >Warning</Button
+            >
+            <Button onclick={() => toast.info('Info toast')}>Info</Button>
+            <Button onclick={() => toast.loading('Loading toast')}
+              >Loading</Button
+            >
+          </div>
+          <div class="row">
+            <Button
+              onclick={() =>
+                toast('Event created', {
+                  description: 'Scheduled for tomorrow at 3pm.',
+                })}>With Description</Button
+            >
+            <Button
+              onclick={() =>
+                toast.promise(
+                  new Promise((resolve) => setTimeout(resolve, 2000)),
+                  { loading: 'Saving...', success: 'Saved!', error: 'Failed!' },
+                )}>Promise</Button
+            >
+          </div>
+        </div>
+      </div>
+      <div class="category tint--card">
         <h2>Tooltips</h2>
         <div class="rows">
           <div class="row">
@@ -536,6 +574,7 @@
       devices
     </p>
   </Dialog>
+  <Toaster />
   <Dialog
     bind:openDialog={openDialog2}
     heading="Images deleted"

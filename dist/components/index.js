@@ -11,3 +11,4 @@ export { default as SearchField } from './SearchField.svelte';
 export { default as ButtonMenu } from './Menu.svelte';
 export { default as FileInput } from './FileInput.svelte';
 export { default as Autocomplete } from './Autocomplete.svelte';
+export { default as Toaster } from './Toaster.svelte';
