@@ -22,6 +22,11 @@ export interface ReorderableOptions {
     ondragended?: (detail: DragEventDetail) => void;
     /** Enable keyboard reordering with Ctrl+Shift+Arrow keys. Defaults to true */
     enableKeyboardReorder?: boolean;
+    /**
+     * Identifier for cross-container drag-and-drop. Containers sharing the same
+     * dropGroup accept drops from each other.
+     */
+    dropGroup?: string;
 }
 export interface ReorderEventDetail {
     /** The element that was dragged */

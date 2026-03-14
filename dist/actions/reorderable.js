@@ -13,7 +13,16 @@ let activeDragHandler = null;
 function setActiveDragHandler(handler) {
     activeDragHandler = handler;
 }
+function isInSameGroup(a, b) {
+    return a.dropGroup !== undefined && a.dropGroup === b.dropGroup;
+}
 class ReorderableHandler {
+    get dropGroup() {
+        return this.options.dropGroup;
+    }
+    getDraggedElement() {
+        return this.draggedElement;
+    }
     constructor(element, options) {
         this.draggedElement = null;
         this.dropTargetInfo = null;
@@ -86,7 +95,9 @@ class ReorderableHandler {
             draggedElement.classList.add('dragging');
         };
         this.onDragOver = (event) => {
-            if (activeDragHandler !== null && activeDragHandler !== this)
+            if (activeDragHandler !== null &&
+                activeDragHandler !== this &&
+                !isInSameGroup(activeDragHandler, this))
                 return;
             this.dropTargetInfo = this.getDropTargetInfo(event);
             // Ensure indicator exists
@@ -139,38 +150,46 @@ class ReorderableHandler {
             }
         };
         this.onDrop = (event) => {
-            var _a, _b;
-            if (activeDragHandler !== null && activeDragHandler !== this)
+            var _a, _b, _c, _d;
+            if (activeDragHandler !== null &&
+                activeDragHandler !== this &&
+                !isInSameGroup(activeDragHandler, this))
                 return;
+            const draggedElement = (_b = (_a = this.draggedElement) !== null && _a !== void 0 ? _a : activeDragHandler === null || activeDragHandler === void 0 ? void 0 : activeDragHandler.getDraggedElement()) !== null && _b !== void 0 ? _b : null;
             this.dropTargetInfo = this.getDropTargetInfo(event);
-            if (!this.draggedElement || !this.dropTargetInfo) {
+            if (!draggedElement || !this.dropTargetInfo) {
                 return;
             }
             // Don't emit the reorder event if the dragged element is dropped on itself
-            if (this.draggedElement === this.dropTargetInfo.targetElement) {
+            if (draggedElement === this.dropTargetInfo.targetElement) {
                 this.onDragEnd();
                 return;
             }
             // Don't emit the reorder event if inserting after the previous element
             // or before the next element (no actual reordering needed)
-            const draggedIndex = this.getItemIndex(this.draggedElement);
+            const draggedIndex = this.getItemIndex(draggedElement);
             const targetIndex = this.dropTargetInfo.targetIndex;
             const position = this.dropTargetInfo.position;
-            if ((position === 0 && targetIndex === draggedIndex - 1) || // Inserting after previous element
-                (position === -1 && targetIndex === draggedIndex + 1) // Inserting before next element
-            ) {
-                this.onDragEnd();
-                return;
+            if (draggedIndex !== -1) {
+                if ((position === 0 && targetIndex === draggedIndex - 1) || // Inserting after previous element
+                    (position === -1 && targetIndex === draggedIndex + 1) // Inserting before next element
+                ) {
+                    this.onDragEnd();
+                    return;
+                }
             }
             event.preventDefault();
             event.stopPropagation();
-            (_b = (_a = this.options).onreorder) === null || _b === void 0 ? void 0 : _b.call(_a, {
-                draggedElement: this.draggedElement,
+            (_d = (_c = this.options).onreorder) === null || _d === void 0 ? void 0 : _d.call(_c, {
+                draggedElement,
                 targetElement: this.dropTargetInfo.targetElement,
                 position: this.dropTargetInfo.position,
                 draggedIndex,
                 targetIndex,
             });
+            if (this.indicator) {
+                this.indicator.hidden = true;
+            }
             this.onDragEnd();
         };
         this.onDragEnd = () => {

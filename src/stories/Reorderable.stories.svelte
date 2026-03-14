@@ -73,6 +73,83 @@
     ondragstarted: fn().mockName('ondragstarted'),
     ondragended: fn().mockName('ondragended'),
   }
+
+  let listA = $state(['Group A - 1', 'Group A - 2', 'Group A - 3'])
+  let listB = $state(['Group B - 1', 'Group B - 2', 'Group B - 3'])
+
+  function handleCrossContainerReorder(detail: any) {
+    const { draggedElement, targetElement, position } = detail
+
+    const draggedId = draggedElement.dataset.itemId
+    const targetId = targetElement.dataset.itemId
+
+    // Find source list and index
+    let sourceList: string[] | undefined
+    let sourceIndex = -1
+    for (const list of [listA, listB]) {
+      const idx = list.indexOf(draggedId)
+      if (idx !== -1) {
+        sourceList = list
+        sourceIndex = idx
+        break
+      }
+    }
+
+    // Find target list and index
+    let targetList: string[] | undefined
+    let targetIndex = -1
+    for (const list of [listA, listB]) {
+      const idx = list.indexOf(targetId)
+      if (idx !== -1) {
+        targetList = list
+        targetIndex = idx
+        break
+      }
+    }
+
+    if (!sourceList || !targetList || sourceIndex === -1 || targetIndex === -1)
+      return
+
+    // Remove from source
+    const [item] = sourceList.splice(sourceIndex, 1)
+
+    // Adjust target index if same list and source was before target
+    if (sourceList === targetList && sourceIndex < targetIndex) {
+      targetIndex--
+    }
+
+    // Insert into target
+    if (position === -1) {
+      targetList.splice(targetIndex, 0, item)
+    } else {
+      targetList.splice(targetIndex + 1, 0, item)
+    }
+
+    // Trigger reactivity
+    listA = [...listA]
+    listB = [...listB]
+  }
+
+  function resetCrossContainerItems() {
+    listA = ['Group A - 1', 'Group A - 2', 'Group A - 3']
+    listB = ['Group B - 1', 'Group B - 2', 'Group B - 3']
+  }
+
+  const crossContainerOptionsA: ReorderableOptions = {
+    itemSelector: 'li',
+    dropGroup: 'shared',
+    onreorder: handleCrossContainerReorder,
+    ondragstarted: fn().mockName('ondragstarted'),
+    ondragended: fn().mockName('ondragended'),
+  }
+
+  const crossContainerOptionsB: ReorderableOptions = {
+    itemSelector: 'li',
+    dropGroup: 'shared',
+    onreorder: handleCrossContainerReorder,
+    ondragstarted: fn().mockName('ondragstarted'),
+    ondragended: fn().mockName('ondragended'),
+  }
 </script>
 
 <!-- A list where items can be reorderable by dragging and dropping -->
@@ -156,6 +233,58 @@
   </div>
 </Story>
 
+<!-- Two lists sharing a dropGroup, allowing items to be dragged between them -->
+<Story name="Cross-Container">
+  <div>
+    <h3 class="tint--type">Cross-Container Drag and Drop</h3>
+    <p>
+      Drag items between the two groups. Both lists share <code
+        >dropGroup: 'shared'</code
+      >:
+    </p>
+
+    <div class="cross-container-layout">
+      <div>
+        <h4 class="tint--type">Group A</h4>
+        <ul
+          class="reorderable-list tint--card"
+          use:reorderable={crossContainerOptionsA}
+        >
+          {#each listA as item (item)}
+            <li class="list-item" data-item-id={item}>
+              <button class="item-content tint--type-input">
+                {item}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="tint--type">Group B</h4>
+        <ul
+          class="reorderable-list tint--card"
+          use:reorderable={crossContainerOptionsB}
+        >
+          {#each listB as item (item)}
+            <li class="list-item" data-item-id={item}>
+              <button class="item-content tint--type-input">
+                {item}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    </div>
+
+    <div class="controls">
+      <Button variant="secondary" onclick={resetCrossContainerItems}
+        >Reset</Button
+      >
+    </div>
+  </div>
+</Story>
+
 <style lang="sass">
   .reorderable-list
     list-style: none
@@ -187,5 +316,11 @@
   .controls
     display: flex
     gap: 12px
+    margin: 20px 0
+
+  .cross-container-layout
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 20px
     margin: 20px 0
 </style>
