@@ -116,7 +116,9 @@ class ReorderableHandler {
         };
         this.onDragLeave = (event) => {
             const target = event.target;
-            if (!target.matches(this.options.itemSelector)) {
+            // Allow dragleave on both items and the container itself
+            if (!target.matches(this.options.itemSelector) &&
+                target !== this.element) {
                 return;
             }
             let relatedTarget = event.relatedTarget;
