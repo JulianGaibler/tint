@@ -49,6 +49,13 @@ export interface DragEventDetail {
 const REORDER_PROP = '__reorderableIndex'
 const DRAG_DATA_TYPE_PREFIX = 'text/reorderable-item/'
 
+/** Tracks which handler instance owns the current drag operation */
+let activeDragHandler: ReorderableHandler | null = null
+
+function setActiveDragHandler(handler: ReorderableHandler | null) {
+  activeDragHandler = handler
+}
+
 interface ElementWithIndex extends Element {
   [REORDER_PROP]?: number
 }
@@ -284,9 +291,13 @@ class ReorderableHandler {
     }
 
     this.draggedElement = draggedElement
+    setActiveDragHandler(this)
+    draggedElement.classList.add('dragging')
   }
 
   private onDragOver = (event: DragEvent) => {
+    if (activeDragHandler !== null && activeDragHandler !== this) return
+
     this.dropTargetInfo = this.getDropTargetInfo(event)
 
     // Ensure indicator exists
@@ -354,6 +365,8 @@ class ReorderableHandler {
   }
 
   private onDrop = (event: DragEvent) => {
+    if (activeDragHandler !== null && activeDragHandler !== this) return
+
     this.dropTargetInfo = this.getDropTargetInfo(event)
     if (!this.draggedElement || !this.dropTargetInfo) {
       return
@@ -408,7 +421,9 @@ class ReorderableHandler {
     if (this.indicator) {
       this.indicator.hidden = true
     }
+    this.draggedElement.classList.remove('dragging')
     this.draggedElement = null
+    activeDragHandler = null
   }
 
   private onKeyDown = (event: KeyboardEvent) => {
@@ -548,6 +563,10 @@ class ReorderableHandler {
   }
 
   destroy() {
+    if (activeDragHandler === this) {
+      activeDragHandler = null
+    }
+
     // Remove container classes from the element
     this.element.classList.remove('tint--reorderable-container')
     this.element.classList.remove('tint--handle')

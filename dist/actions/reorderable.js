@@ -8,6 +8,11 @@
  */
 const REORDER_PROP = '__reorderableIndex';
 const DRAG_DATA_TYPE_PREFIX = 'text/reorderable-item/';
+/** Tracks which handler instance owns the current drag operation */
+let activeDragHandler = null;
+function setActiveDragHandler(handler) {
+    activeDragHandler = handler;
+}
 class ReorderableHandler {
     constructor(element, options) {
         this.draggedElement = null;
@@ -77,8 +82,12 @@ class ReorderableHandler {
                 event.dataTransfer.effectAllowed = 'move';
             }
             this.draggedElement = draggedElement;
+            setActiveDragHandler(this);
+            draggedElement.classList.add('dragging');
         };
         this.onDragOver = (event) => {
+            if (activeDragHandler !== null && activeDragHandler !== this)
+                return;
             this.dropTargetInfo = this.getDropTargetInfo(event);
             // Ensure indicator exists
             this.potentiallyCreateIndicator();
@@ -131,6 +140,8 @@ class ReorderableHandler {
         };
         this.onDrop = (event) => {
             var _a, _b;
+            if (activeDragHandler !== null && activeDragHandler !== this)
+                return;
             this.dropTargetInfo = this.getDropTargetInfo(event);
             if (!this.draggedElement || !this.dropTargetInfo) {
                 return;
@@ -176,7 +187,9 @@ class ReorderableHandler {
             if (this.indicator) {
                 this.indicator.hidden = true;
             }
+            this.draggedElement.classList.remove('dragging');
             this.draggedElement = null;
+            activeDragHandler = null;
         };
         this.onKeyDown = (event) => {
             var _a, _b;
@@ -395,6 +408,9 @@ class ReorderableHandler {
         this.addDraggableAttribute();
     }
     destroy() {
+        if (activeDragHandler === this) {
+            activeDragHandler = null;
+        }
         // Remove container classes from the element
         this.element.classList.remove('tint--reorderable-container');
         this.element.classList.remove('tint--handle');
